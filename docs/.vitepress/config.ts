@@ -2,16 +2,12 @@ import { defineConfig } from "vitepress";
 import llmstxt from "vitepress-plugin-llms";
 import { teekConfig } from "./teekConfig";
 
-const description = [
-  "欢迎来到 vitepress-theme-teek 使用文档",
-  "Teek 是一个基于 VitePress 构建的主题，是在默认主题的基础上进行拓展，支持 VitePress 的所有功能、配置",
-  "Teek 拥有三种典型的知识管理形态：结构化、碎片化、体系化，可以轻松构建一个结构化知识库，适用个人博客、文档站、知识库等场景",
-].toString();
+const description = "代码、思考与生活.";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   extends: teekConfig,
-  title: "vitepress-theme-teek",
+  title: "lilchanz'house",
   description: description,
   cleanUrls: false,
   lastUpdated: true,
@@ -24,13 +20,13 @@ export default defineConfig({
     ["link", { rel: "icon", type: "image/png", href: "/teek-logo-mini.png" }],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:locale", content: "zh-CN" }],
-    ["meta", { property: "og:title", content: "Teek | VitePress Theme" }],
-    ["meta", { property: "og:site_name", content: "Teek" }],
+    ["meta", { property: "og:title", content: "lilchanz in the houses" }],
+    ["meta", { property: "og:site_name", content: "lilchanz in the houses" }],
     ["meta", { property: "og:image", content: "" }],
     ["meta", { property: "og:url", content: "" }],
     ["meta", { property: "og:description", description }],
     ["meta", { name: "description", description }],
-    ["meta", { name: "author", content: "Teek" }],
+    ["meta", { name: "author", content: "lilchanz" }],
     // 禁止浏览器缩放
     // [
     //   "meta",
@@ -87,35 +83,28 @@ export default defineConfig({
       prev: "上一页",
       next: "下一页",
     },
+    sidebar: {
+      "/博客/": [
+        {
+          text: "博客文章",
+          items: [
+            { text: "第一篇博客", link: "/博客/2026-05-03-第一篇博客" },
+            { text: "程序员效率工具推荐", link: "/博客/2026-05-01-程序员效率工具推荐" },
+            { text: "MacBook Pro M3 使用感受", link: "/博客/2026-04-15-MacBook-Pro-M3-使用感受" },
+          ],
+        },
+      ],
+    },
     nav: [
       { text: "首页", link: "/" },
-      {
-        text: "指南",
-        link: "/guide/intro",
-        activeMatch: "/01.指南/",
-      },
-      { text: "配置", link: "/reference/config", activeMatch: "/10.配置/" },
-      { text: "开发", link: "/develop/intro", activeMatch: "/15.主题开发/" },
-      {
-        text: "功能页",
-        items: [
-          { text: "归档页", link: "/archives" },
-          { text: "清单页", link: "/articleOverview" },
-          { text: "登录页", link: "/login" },
-          {
-            text: "风险链接提示页",
-            link: "/risk-link?target=https://vp.teek.top",
-          },
-          { text: "分类页", link: "/categories" },
-          { text: "标签页", link: "/tags" },
-        ],
-      },
-      { text: "✨ 赞赏", link: "/personal/" },
+      { text: "博客", link: "/articleOverview" },
+      { text: "归档", link: "/archives" },
+      { text: "关于", link: "/关于/关于" },
     ],
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/Kele-Bingtang/vitepress-theme-teek",
+        link: "https://github.com/lilchanz88",
       },
     ],
     search: {
@@ -124,7 +113,7 @@ export default defineConfig({
     editLink: {
       text: "在 GitHub 上编辑此页",
       pattern:
-        "https://github.com/Kele-Bingtang/vitepress-theme-teek/edit/master/docs/:path",
+        "https://github.com/lilchanz88/lilchanz88.github.io/edit/main/docs/:path",
     },
   },
   vite: {
