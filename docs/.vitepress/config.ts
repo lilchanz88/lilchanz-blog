@@ -84,18 +84,7 @@ export default defineConfig({
       prev: "上一页",
       next: "下一页",
     },
-    sidebar: {
-      "/博客/": [
-        {
-          text: "博客文章",
-          items: [
-            { text: "第一篇博客", link: "/博客/2026-05-03-第一篇博客" },
-            { text: "程序员效率工具推荐", link: "/博客/2026-05-01-程序员效率工具推荐" },
-            { text: "MacBook Pro M3 使用感受", link: "/博客/2026-04-15-MacBook-Pro-M3-使用感受" },
-          ],
-        },
-      ],
-    },
+    sidebar: {},
     nav: [
       { text: "首页", link: "/" },
       { text: "博客", link: "/articleOverview" },
