@@ -7,6 +7,7 @@ const description = "代码、思考与生活.";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   extends: teekConfig,
+  base: '/lilchanz-blog/',
   title: "lilchanz'house",
   description: description,
   cleanUrls: false,
