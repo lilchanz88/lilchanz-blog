@@ -1,5 +1,6 @@
 import Teek from "vitepress-theme-teek";
 import TeekLayoutProvider from "./components/TeekLayoutProvider.vue";
+import BlogOverview from "./components/BlogOverview.vue";
 
 // Teek 在线主题包引用（需安装 Teek 在线版本）
 import "vitepress-theme-teek/index.css";
@@ -18,8 +19,14 @@ import "vitepress-theme-teek/theme-chalk/tk-fade-up-animation.css"; // 首次加
 
 import "./styles/code-bg.scss";
 import "./styles/iframe.scss";
+import "./styles/article-experience.scss";
+import "./styles/visual-polish.scss";
 
 export default {
   extends: Teek,
   Layout: TeekLayoutProvider,
+  enhanceApp(ctx) {
+    Teek.enhanceApp?.(ctx);
+    ctx.app.component("BlogOverview", BlogOverview);
+  },
 };

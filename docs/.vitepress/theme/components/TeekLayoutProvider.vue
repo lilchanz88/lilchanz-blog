@@ -2,7 +2,7 @@
 import Teek from "vitepress-theme-teek";
 import ContributeChart from "./ContributeChart.vue";
 import NotFound from "./404.vue";
-
+import ChatWidget from "./ChatWidget.vue";
 </script>
 
 <template>
@@ -13,6 +13,17 @@ import NotFound from "./404.vue";
 
     <template #not-found>
       <NotFound />
+    </template>
+
+    <template #teek-home-banner-content-after>
+      <div class="home-hero-actions">
+        <a class="home-hero-actions__primary" href="/lilchanz-blog/articleOverview.html">开始阅读</a>
+        <a class="home-hero-actions__secondary" href="/lilchanz-blog/archives.html">时间归档</a>
+      </div>
+    </template>
+
+    <template #layout-bottom>
+      <ChatWidget />
     </template>
   </Teek.Layout>
 </template>

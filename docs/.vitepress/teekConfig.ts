@@ -6,6 +6,16 @@ export const teekConfig = defineTeekConfig({
   vpHome: false, // 隐藏 VP 默认首页
   sidebarTrigger: true, // 侧边栏折叠功能
   author: { name: "lilchanz", link: "https://github.com/lilchanz88" },
+  banner: {
+    name: "lilchanz'house",
+    bgStyle: "fullImg",
+    imgSrc: "/blog/legendary-warrior-hero-4k.jpg",
+    imgWaves: false,
+    mask: true,
+    maskBg: "rgba(0, 0, 0, 0.42)",
+    description: "代码、思考与生活",
+    descStyle: "default",
+  },
   footerInfo: {
     theme: {
       name: `Theme By Teek@${version}`,
