@@ -40,6 +40,13 @@
     padding:8px 18px;border-radius:8px;font-size:14px;cursor:pointer}
   .nav button:disabled{opacity:.35;cursor:default}
   .stats{font-size:12px;color:var(--sub)}
+  .mark-badge{position:absolute;bottom:34px;right:16px;font-size:12px;padding:3px 10px;border-radius:10px;font-weight:600}
+  .mark-badge.g{color:var(--green);background:rgba(74,222,129,.12)}
+  .mark-badge.y{color:var(--amber);background:rgba(251,191,36,.12)}
+  .mark-badge.r{color:var(--red);background:rgba(248,113,113,.12)}
+  #resetBtn{background:none;border:1px solid var(--line);color:var(--sub);font-size:12px;
+    padding:4px 10px;border-radius:8px;cursor:pointer;margin-left:10px}
+  #resetBtn:hover{color:var(--red);border-color:var(--red)}
 </style>
 </head>
 <body data-page-node-id="wMOLgmRyykL7PDYq6MDNTq">
@@ -55,7 +62,10 @@
 <div class="nav" data-page-node-id="G281VNYdpmCbapXB1hGGgx">
   <button id="prevBtn" onclick="move(-1)" data-page-node-id="T03ys3kNFmR63VUswetsKu">← 上一张</button>
   <span class="stats" id="stats" data-page-node-id="1kbdIGeHjbg8c7FJD7EBl8"></span>
-  <button id="nextBtn" onclick="move(1)" data-page-node-id="93rrJphnyAlh8eX1E8zkXj">下一张 →</button>
+  <span>
+    <button id="resetBtn" onclick="resetMarks()">🗑 重置记录</button>
+    <button id="nextBtn" onclick="move(1)" data-page-node-id="93rrJphnyAlh8eX1E8zkXj">下一张 →</button>
+  </span>
 </div>
 
 <script>
@@ -119,8 +129,17 @@ const CARDS = [
 ];
 
 let filtered = CARDS.map((c,i)=>i), idx = 0, flipped = false;
-const marks = {};
-let curBranch = "全部";
+const STORE_KEY = 'flashcard-marks-2026dd';
+const marks = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');  // 持久化：刷新/重开浏览器不丢
+const save = ()=>localStorage.setItem(STORE_KEY, JSON.stringify(marks));
+let curBranch = "全部", weakOnly = false;
+
+const applyFilter = ()=>{
+  filtered = CARDS.map((c,i)=>i)
+    .filter(i=>curBranch==="全部"||CARDS[i].b===curBranch)
+    .filter(i=>!weakOnly||(marks[i]&&marks[i]!=='会'));  // 薄弱 = 标过「模糊/不会」的
+  idx=0; flipped=false; render();
+};
 
 const branches = ["全部", ...new Set(CARDS.map(c=>c.b))];
 const filtersEl = document.getElementById('filters');
@@ -129,18 +148,26 @@ branches.forEach(b=>{
   btn.textContent = b;
   if(b==="全部") btn.classList.add('active');
   btn.onclick = ()=>{ curBranch=b;
-    document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.filters button[data-branch]').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
-    filtered = CARDS.map((c,i)=>i).filter(i=>b==="全部"||CARDS[i].b===b);
-    idx=0; flipped=false; render();
+    applyFilter();
   };
+  btn.dataset.branch = b;
   filtersEl.appendChild(btn);
 });
+// 只看薄弱卡开关（与分支筛选叠加）
+const weakBtn = document.createElement('button');
+weakBtn.textContent = '🔥 只看薄弱';
+weakBtn.dataset.weak = '1';
+weakBtn.onclick = ()=>{ weakOnly = !weakOnly; weakBtn.classList.toggle('active', weakOnly); applyFilter(); };
+filtersEl.appendChild(weakBtn);
 
 function render(){
   const i = filtered[idx], c = CARDS[i];
+  const badge = marks[i] ? {会:['g','😎 会了'],模糊:['y','🤔 模糊'],不会:['r','😵 不会']}[marks[i]] : null;
   const el = document.getElementById('card');
   el.innerHTML = `<span class="tag">${c.b}</span><span class="num">${idx+1} / ${filtered.length}</span>` +
+    (badge ? `<span class="mark-badge ${badge[0]}">${badge[1]}</span>` : '') +
     (flipped
       ? `<div class="a"><b>Q：${c.q}</b><br><br>${c.a}</div>`
       : `<div class="q">【Q】${c.q}</div><div class="hint">点击翻面看答案</div>`);
@@ -149,11 +176,16 @@ function render(){
   document.getElementById('nextBtn').disabled = idx===filtered.length-1;
   const m = Object.values(marks);
   document.getElementById('stats').textContent =
-    `已标 ${m.length} 张 · 会 ${m.filter(x=>x==='会').length} · 模糊 ${m.filter(x=>x==='模糊').length} · 不会 ${m.filter(x=>x==='不会').length}`;
+    `已标 ${m.length} 张 · 会 ${m.filter(x=>x==='会').length} · 模糊 ${m.filter(x=>x==='模糊').length} · 不会 ${m.filter(x=>x==='不会').length}（已保存）`;
 }
 function flip(){ flipped = !flipped; render(); }
 function move(d){ if(idx+d>=0 && idx+d<filtered.length){ idx+=d; flipped=false; render(); } }
-function mark(v){ marks[filtered[idx]] = v; move(1); }
+function mark(v){ marks[filtered[idx]] = v; save(); move(1); }
+function resetMarks(){
+  if(!confirm('确定清空所有「会/模糊/不会」标记吗？此操作不可恢复。')) return;
+  Object.keys(marks).forEach(k=>delete marks[k]);
+  save(); applyFilter();
+}
 render();
 </script>
 </body>
