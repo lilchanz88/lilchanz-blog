@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="blog-agent rag flow">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#064e3b"/></linearGradient>
+    <style>
+      .title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#ecfeff}
+      .sub{font:500 16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#a7f3d0}
+      .box{fill:#10231f;stroke:#2dd4bf;stroke-width:1.5;rx:15}
+      .label{font:700 20px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#f8fafc}
+      .small{font:500 14px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#ccfbf1}
+      .code{font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#bef264}
+      .arrow{stroke:#5eead4;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5eead4"/></marker>
+  </defs>
+  <rect width="1200" height="640" fill="url(#bg)"/>
+  <text x="55" y="58" class="title">RAG 在 blog-agent 里的真实流程</text>
+  <text x="55" y="88" class="sub">RAG 不是大脑，它是证据系统。模型负责组织语言，检索负责提供依据。</text>
+
+  <rect x="70" y="145" width="210" height="105" class="box"/>
+  <text x="96" y="183" class="label">读取博客文档</text>
+  <text x="96" y="214" class="small">Markdown + llms-full</text>
+  <text x="96" y="236" class="code">loader.py</text>
+
+  <rect x="350" y="145" width="210" height="105" class="box"/>
+  <text x="376" y="183" class="label">解析 Frontmatter</text>
+  <text x="376" y="214" class="small">标题、草稿、正文</text>
+  <text x="376" y="236" class="code">parse_frontmatter()</text>
+
+  <rect x="630" y="145" width="210" height="105" class="box"/>
+  <text x="656" y="183" class="label">切块与分词</text>
+  <text x="656" y="214" class="small">标题段落 + 中英文 token</text>
+  <text x="656" y="236" class="code">chunk_document()</text>
+
+  <rect x="910" y="145" width="210" height="105" class="box"/>
+  <text x="936" y="183" class="label">写入索引文件</text>
+  <text x="936" y="214" class="small">public / admin 两套</text>
+  <text x="936" y="236" class="code">build_index()</text>
+
+  <rect x="210" y="380" width="230" height="105" class="box"/>
+  <text x="236" y="418" class="label">用户问题分词</text>
+  <text x="236" y="449" class="small">中文单字 + bigram</text>
+  <text x="236" y="471" class="code">tokenize(query)</text>
+
+  <rect x="500" y="380" width="230" height="105" class="box"/>
+  <text x="526" y="418" class="label">计算相关度</text>
+  <text x="526" y="449" class="small">TF-IDF 风格打分</text>
+  <text x="526" y="471" class="code">score_chunk()</text>
+
+  <rect x="790" y="380" width="230" height="105" class="box"/>
+  <text x="816" y="418" class="label">返回来源证据</text>
+  <text x="816" y="449" class="small">title/path/score/excerpt</text>
+  <text x="816" y="471" class="code">retrieve()</text>
+
+  <path d="M280 198 L350 198" class="arrow"/>
+  <path d="M560 198 L630 198" class="arrow"/>
+  <path d="M840 198 L910 198" class="arrow"/>
+  <path d="M1015 250 C1015 330 905 350 905 380" class="arrow"/>
+  <path d="M440 433 L500 433" class="arrow"/>
+  <path d="M730 433 L790 433" class="arrow"/>
+</svg>

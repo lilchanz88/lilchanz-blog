@@ -3,6 +3,10 @@ import { readFileSync } from "node:fs";
 import { createRewrites } from "vitepress-theme-teek/config";
 import llmstxt from "vitepress-plugin-llms";
 import { teekConfig } from "./teekConfig";
+// 构建时排除 draft: true 的文章（teek 主题的 draft 只在前端隐藏列表）
+import { draftSrcExclude } from "./drafts";
+// 构建时生成 RSS 订阅源（dist/rss.xml）
+import { generateRss } from "./rss";
 
 const base = "/lilchanz-blog/";
 const siteOrigin = "https://lilchanz88.github.io";
@@ -110,6 +114,7 @@ export default defineConfig({
   description,
   cleanUrls: false,
   rewrites: createRewrites({ srcDir: "docs" }),
+  srcExclude: draftSrcExclude.length ? draftSrcExclude : undefined,
   lastUpdated: true,
   lang: "zh-CN",
   head: [
@@ -123,14 +128,6 @@ export default defineConfig({
     ["meta", { property: "og:site_name", content: siteTitle }],
     ["meta", { property: "og:image", content: `${siteUrl}teek-logo-large.png` }],
     ["meta", { name: "author", content: "lilchanz" }],
-    // 禁止浏览器缩放
-    // [
-    //   "meta",
-    //   {
-    //     name: "viewport",
-    //     content: "width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no",
-    //   },
-    // ],
     ["meta", { name: "keywords", content: keywords }],
   ],
   transformPageData(pageData) {
@@ -248,8 +245,7 @@ export default defineConfig({
   vite: {
     plugins: [llmstxt() as any],
   },
-  // transformHtml: (code, id, context) => {
-  //   if (context.page !== "404.md") return code;
-  //   return code.replace("404 | ", "");
-  // },
+  buildEnd(siteConfig) {
+    generateRss(siteConfig.outDir);
+  },
 });

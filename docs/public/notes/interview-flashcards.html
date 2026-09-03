@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="irFa4lvhnkFiqi2E1NRXKA">
+<head data-page-node-id="F2AbWJxKBEGmHNciIrcEYB">
+<meta charset="UTF-8" data-page-node-id="e3QznceOaz3HFD4QvFcm7K">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="4BrnfS1ThKDbCjEVzhG3PT">
+<title>闪卡自测 · 2026数据开发面试</title>
+<style>
+  :root{
+    --bg:#0f1117; --panel:#1a1d27; --card:#212532; --line:#2e3342;
+    --text:#e8eaf0; --sub:#9aa1b2; --accent:#6c8cff; --green:#4ade80; --amber:#fbbf24; --red:#f87171;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  body{background:var(--bg);color:var(--text);padding:24px;max-width:960px;margin:0 auto}
+  h1{font-size:20px;margin-bottom:4px}
+  .meta{color:var(--sub);font-size:13px;margin-bottom:18px}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .filters button{background:var(--panel);border:1px solid var(--line);color:var(--sub);
+    padding:6px 12px;border-radius:18px;font-size:13px;cursor:pointer;transition:.15s}
+  .filters button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    min-height:300px;padding:26px;margin-bottom:14px;cursor:pointer;
+    display:flex;flex-direction:column;justify-content:center;position:relative;transition:.2s}
+  .card:hover{border-color:var(--accent)}
+  .tag{position:absolute;top:14px;left:16px;font-size:12px;color:var(--accent);background:rgba(108,140,255,.12);
+    padding:3px 10px;border-radius:10px}
+  .num{position:absolute;top:14px;right:16px;font-size:12px;color:var(--sub)}
+  .q{font-size:19px;font-weight:600;line-height:1.55}
+  .a{font-size:15px;line-height:1.8;color:var(--text)}
+  .a b{color:var(--amber)}
+  .followup{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--sub);line-height:1.7}
+  .hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:var(--sub)}
+  .score{display:flex;gap:10px;margin-bottom:16px}
+  .score button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel);color:var(--text);font-size:14px;cursor:pointer}
+  .score .g{border-color:var(--green);color:var(--green)}
+  .score .y{border-color:var(--amber);color:var(--amber)}
+  .score .r{border-color:var(--red);color:var(--red)}
+  .nav{display:flex;justify-content:space-between;align-items:center;color:var(--sub);font-size:13px}
+  .nav button{background:var(--panel);border:1px solid var(--line);color:var(--text);
+    padding:8px 18px;border-radius:8px;font-size:14px;cursor:pointer}
+  .nav button:disabled{opacity:.35;cursor:default}
+  .stats{font-size:12px;color:var(--sub)}
+</style>
+</head>
+<body data-page-node-id="wMOLgmRyykL7PDYq6MDNTq">
+<h1 data-page-node-id="JmqoZrf8RNy3ktfFChMDL9">🎴 闪卡自测 · 2026数据开发面试</h1>
+<div class="meta" data-page-node-id="WLHzFWvfTPNzu5IFCB8iBl">共 55 张 · 点击卡片翻面 · 用「会/模糊/不会」标记，先攻薄弱分支</div>
+<div class="filters" id="filters" data-page-node-id="71rgC8rqBlrVPOJtyJ3aQR"></div>
+<div class="card" id="card" onclick="flip()" data-page-node-id="wDhYtpCAuLin5hJAqUC3nW"></div>
+<div class="score" id="scoreBar" style="display:none" data-page-node-id="lL7aAhYOKaIs0HxPOU3Z7q">
+  <button class="g" onclick="mark('会')" data-page-node-id="1V5WMxE2I3YyBtiRSijBzo">😎 会了</button>
+  <button class="y" onclick="mark('模糊')" data-page-node-id="nGcJ9kMzp1Sf56VF4QXVkC">🤔 模糊</button>
+  <button class="r" onclick="mark('不会')" data-page-node-id="pjEe9uGmJkQSkHGDG3bfgV">😵 不会</button>
+</div>
+<div class="nav" data-page-node-id="G281VNYdpmCbapXB1hGGgx">
+  <button id="prevBtn" onclick="move(-1)" data-page-node-id="T03ys3kNFmR63VUswetsKu">← 上一张</button>
+  <span class="stats" id="stats" data-page-node-id="1kbdIGeHjbg8c7FJD7EBl8"></span>
+  <button id="nextBtn" onclick="move(1)" data-page-node-id="93rrJphnyAlh8eX1E8zkXj">下一张 →</button>
+</div>
+
+<script>
+const CARDS = [
+{b:"OneData与总线",q:"总线架构是怎么设计的？",a:"<b>业务过程 × 一致性维度 = 交点</b>——行是业务过程，列是一致性维度。三步：①划分数据域、确立业务过程 ②确定公共一致性维度和度量 ③判断业务过程与维度的关联。case：订单域交易成功，行拆下单/支付/发货/确认发货，列是商品/品牌/类目+城市/金额。"},
+{b:"OneData与总线",q:"为什么用业务划分主题域，而不是其他方式？",a:"<b>3 种划分：部门 / 系统 / 业务</b>。没跨部门数据→排除部门；系统划分适合传统数仓（电信证券，系统稳定耦合低）；选业务划分：抽象实体（用户/商品/订单）+ 动作（浏览/下单/退款）→ 组合成用户域、商品域、订单域。"},
+{b:"OneData与总线",q:"一致性维度表是什么？",a:"不同事实表<b>共享同一套维度表</b>，统一定义+唯一主键。收益：准确性↑、复用性↑、开发维护成本↓。本质：提供<b>统一的业务视角</b>。"},
+{b:"OneData与总线",q:"一致性事实表是什么？",a:"消除指标歧义——<b>一个指标一个口径</b>。例：销售额算不算运费、扣不扣退款，先定唯一口径，派生指标在此基础上再算。"},
+{b:"OneData与总线",q:"OneData 是什么？三个 One 分别是什么？",a:"阿里方法论，目标统一、规范、可共享。<b>OneModel</b> 模型统一（分层/数据域/总线矩阵）；<b>OneID</b> 实体统一（核心实体跨系统唯一标识）；<b>OneService</b> 服务统一（统一数据出口/接口）。"},
+{b:"OneData与总线",q:"Kimball 和范式模型的区别？维度建模四步？",a:"对比：<b>业务驱动 vs 数据驱动</b>。Kimball 快速建集市、事实表+维度表、星型/雪花；范式模型企业级全局设计、避免冗余、周期长。四步口诀：<b>过程-粒度-维度-事实</b>（选业务过程→声明粒度→确定维度→确定事实）。"},
+{b:"OneData与总线",q:"星型 vs 雪花？还有别的模型吗？",a:"星型=事实表+<b>一层</b>维度表，允许冗余，<b>空间换时间</b>；雪花=维度表再分层，省存储但多层 join 伤查询。case：星型订单事实+商品/用户维表；雪花商品维表再延伸行业/类目。另有<b>星系模型</b>：多事实表共享同一套维度表。"},
+{b:"OneData与总线",q:"DWS 会跨域吗？",a:"会。历史原因存在跨域，但主体边界明确；特殊的是<b>用户、商家这类实体宽表一定会跨域</b>。"},
+{b:"OneData与总线",q:"建模三条经验？",a:"<b>①高内聚低耦合</b>（业务相近/粒度相同放一起，高概率同时访问的放一起）②<b>公共逻辑下沉 DWS</b>（口径统一）③<b>核心/扩展模型分离</b>（高复用字段进核心表）。追问：同义字段必须同名，用规范定义名称。"},
+{b:"分层与表设计",q:"数仓四层怎么分工？",a:"口诀<b>贴源-明细-汇总-应用</b>：ODS 贴源（同构抽取+技术字段）；DWD 明细（清洗转换维度退化，按业务过程拆事实表）；DWS 汇总（轻度汇总：商家×用户/渠道/商品，算人数/客单价）；ADS 应用（报表：转化率、留存、画像）。"},
+{b:"分层与表设计",q:"每层大概多少张表？几个主题域？",a:"ODS 100-200 / DWD 约100 / DWS 约150 / ADS 上百-上千 / DIM 约150。主题域 <b>7 个</b>：用户、行为、商品、广告、订单、触点、商家。"},
+{b:"分层与表设计",q:"维度退化是什么？哪些适合退化？力度怎么把握？",a:"把关键维度属性<b>直接冗余进事实表</b>。三类：①高基数（订单编号/发票号）②简单维度（订单状态/优惠券类型）③高复用属性（交易时间戳）。力度：<b>DWD 谨慎退化</b>（保原子性一致性），<b>DWS 积极退化</b>（优化查询）。"},
+{b:"分层与表设计",q:"维度表是怎么建设/处理的？",a:"四步：①识别维度（源表从 ODS 取）②定业务主键（唯一）+描述属性（商品维表主键 sku，属性品类/品牌）③维度退化处理 ④缓慢变化维处理（SCD1/2/3）。"},
+{b:"分层与表设计",q:"缓慢变化维怎么处理？",a:"<b>3 招</b>：①覆盖（历史数据有错，如手机号注册错）②<b>新加一行</b>（起始/有效时间标记生命周期）③<b>新加一列</b>（历史值写进新字段）。"},
+{b:"分层与表设计",q:"拉链表怎么设计？",a:"记录生命周期：起始时间+有效时间标记，<b>开链/闭链</b>。新数据：起始时间=今天、有效时间=无穷大，同时<b>闭链</b>历史记录（改其有效时间）。"},
+{b:"分层与表设计",q:"除了事务事实表还有哪些事实表？",a:"<b>3 种</b>：①事务事实表（每行一个事件）②<b>周期快照</b>（记录周期末状态，月表按月产出）③<b>累计快照</b>（一行=一个业务全生命周期，订单从下单到售后）。"},
+{b:"分层与表设计",q:"退款周期15天，事实表怎么处理？",a:"每天增量写 → 用<b>更宽的时间范围筛选</b>：退款周期15天就筛过去一个月数据，取状态=退款且退款时间=昨天的，增量写入。"},
+{b:"分层与表设计",q:"订单全链路明细宽表放哪层？为什么？字段越来越多怎么办？",a:"放 <b>DWD</b>——只是多表关联明细，没做聚合。不放 DWM：我们为简化层级没设 DWM（DWM=粒度不变/轻度聚合+宽表，DWS=高度聚合）。字段多：①核心/扩展模型分离 ②技术上数据湖（Iceberg）。"},
+{b:"分层与表设计",q:"订单各环节时效怎么算（1号下单/5号支付/10号发货）？",a:"关键词<b>数据回刷</b>：先建单事务事实表（各业务过程状态进各自分区）→建多事务宽表，<b>回刷过去30天</b>，下单表作左表 left join 各状态表取事件时间，写回对应分区。SQL 套路：INSERT OVERWRITE+PARTITION+多 LEFT JOIN+CASE WHEN 定位状态。"},
+{b:"指标与质量",q:"OSM 指标体系怎么搭？",a:"<b>目标→策略→度量</b>。O=提升 GMV；S=提单量/提客单价/降退款/提履约。指标三级：一级（战略）GMV、订单完成金额；二级（策略）订单数/转化率/客单价/退款率；三级（诊断）分渠道/品类/新老客/地区/时段。"},
+{b:"指标与质量",q:"UJM 是什么？和 OSM 什么关系？拆解六要素？",a:"UJM=用户旅程地图，以用户为中心描述接触→兴趣→下单→复购全路径。关系：<b>OSM 定宏观目标，UJM 把策略具体化成每个触点的优化点和指标</b>。六要素：用户行为/业务目标/接触点/潜在痛点/机会点/衡量指标。"},
+{b:"指标与质量",q:"数据一致性怎么保证？",a:"<b>3 个层面</b>：①模型层：统一出入口，公共逻辑下沉 DWS，一致性维度表 ②平台规范层：指标管理平台统一口径+命名/开发规范 ③质量层：表级（量级波动）+字段级（空值率/主键唯一）监控+交叉验证。"},
+{b:"指标与质量",q:"质量监控体系怎么搭？任务时效怎么保证？",a:"三类监控对象：<b>表</b>（唯一性/量级波动）、<b>字段</b>（空值率/数值枚举范围）、<b>任务</b>（重要任务挂基线，报错/延迟即告警）。治理四步：规范制定→内部宣讲→事后复盘→规避问题。"},
+{b:"指标与质量",q:"一条记录=5，怎么判断它是对的？",a:"<b>4 重验证</b>：①源数据直查 ②质量监控（波动/阈值告警）③<b>多源交叉验证</b>（5个订单↔5个包裹↔库存扣减）④业务合理性（对比近30天）。"},
+{b:"指标与质量",q:"ETL 流程说一下？清洗转换怎么做的？",a:"三段式<b>抽-转-载</b>：抽取（增量/全量判断，wedata 平台）→转换→加载（增量/全量）。清洗：表级去重、字段级完整性/正确性/一致性、缺失值错误值处理。转换：格式标准化、字段拆合、关联维表、衍生指标。"},
+{b:"指标与质量",q:"怎么评价数仓做得好？",a:"三个视角：①质量：时效正确、不破基线 ②应用：口径一致、<b>模型复用率高</b>（大部分指标 DWS 直接取）③业务：有效赋能、交付效率高、数据资产价值。"},
+{b:"指标与质量",q:"大促转化率提升2.5pp 怎么做到的？怎么流程化？",a:"路径：打通跨设备 ID（idmapping）→用户行为宽表作标签底表→<b>三类标签</b>（统计类：累计消费；规则类：近30天消费>500=高价值流失人群；算法类：流失风险分）→BI 平台圈人。流程化：标签注入资产管理平台，运营拖拉拽组业务流一键执行。"},
+{b:"计算引擎",q:"Hadoop 三大组件？",a:"<b>HDFS+MapReduce+YARN</b>。HDFS 主从：NameNode 存元数据，DataNode 存数据块，<b>默认3副本</b>，一次写入多次读取。MapReduce 分而治之。YARN：RM 全局资源、NM 节点资源，AM 申请容器执行任务。"},
+{b:"计算引擎",q:"MapReduce 流程？shuffle 参与了哪些工作？",a:"map：切片→kv→环形缓冲区→溢写磁盘；reduce 拉取同 key 分区处理。Shuffle <b>map3+reduce3</b>：map 侧①分区（hash%Reduce数）②排序溢写③归并合并；reduce 侧①拷贝②归并③输入计算。"},
+{b:"计算引擎",q:"MapReduce 框架优势？",a:"<b>3 条</b>：①数据本地性（移动计算不移动数据）②容错（失败换节点重启，作业不重来）③并行海量数据。"},
+{b:"计算引擎",q:"Spark 提交后的执行流程？宽窄依赖？",a:"四步链：惰性记录 RDD 依赖→生成 DAG 逻辑计划→DAGScheduler 按宽依赖切 stage→TaskScheduler 分发 task 给 executor 线程池。宽=一父对多子（groupByKey/reduceByKey）需 shuffle；窄=一对一（map/filter）无需 shuffle。"},
+{b:"计算引擎",q:"Spark SQL 执行过程？",a:"两计划：①Catalyst 解析 SQL→逻辑计划：未解析→<b>Catalog</b> 绑定元数据→优化（<b>谓词下推、列值剪裁</b>）②逻辑→物理计划，<b>Tungsten 生成字节码</b>→转 RDD 集群执行。"},
+{b:"计算引擎",q:"Spark 相对 MapReduce 的优势？（重点）",a:"<b>5 条，前3重点</b>：①基于内存计算 vs 磁盘 IO ②DAG 执行引擎 vs 固定两阶段 ③Lineage 血缘容错（只重算丢失分区）④多线程 vs 多进程（省 JVM 启动）⑤shuffle 非必要不排序。"},
+{b:"计算引擎",q:"RDD 怎么理解？",a:"弹性分布式数据集，三切面：①<b>依赖</b>：宽窄依赖划分 stage ②<b>容错</b>：血缘重算不从头回溯 ③<b>操作</b>：转换算子（map/filter/join，惰性）+行动算子（count/collect，触发计算）。"},
+{b:"计算引擎",q:"数据倾斜怎么优化？（必考）真实 case？",a:"三类三招：①<b>聚合倾斜</b>→两阶段聚合+加盐打散 ②<b>join 倾斜</b>→大表小表广播/热点分离加盐（两表都加）；大表大表<b>分桶 join</b> 免 shuffle ③<b>空值倾斜</b>→随机值替换/分离处理 UNION ALL。捷径：Spark3 开 AQE。case：个别 task 慢→UI 判断→group by 查量级发现百万级 vs 常态几千→清历史数据。"},
+{b:"计算引擎",q:"系统优化整体框架？参数优化四点？",a:"三分类<b>参数/倾斜/SQL</b>；记不住就按流程说：读取阶段（分区列剪裁）→计算阶段（加盐聚合、join 优化、with 替子查询）。参数四点：executor 核数内存、shuffle 分区数（默认200，瓶颈在内存适当调大）、AQE、小文件自动合并。"},
+{b:"计算引擎",q:"Spark shuffle 演进？默认哪种？3种写入器？",a:"<b>Hash(M×R 爆炸)→合并 Hash(Core×R)→Sort(默认，2×M：1数据+1索引)</b>。Sort 内部 3 写入器自动选：①Bypass（无聚合+分区≤200）②Unsafe（无聚合+二进制排序省内存，分区≤2²⁴）③SortShuffle（通用，内存→溢写，key 排序）。"},
+{b:"计算引擎",q:"小文件过多危害与治理？OOM 区分？",a:"三危害：①NameNode 元数据内存耗尽 ②海量 task 调度开销>计算时间 ③资源利用率低吞吐降。治理：<b>事前</b> repartition/coalesce 控制数量；<b>事后</b>定期合并。OOM 分 driver（collect/加大内存）和 executor（合理分区/加大内存/调比例）。"},
+{b:"计算引擎",q:"reduceByKey vs groupByKey？",a:"一句话<b>先本地聚合再 shuffle</b>——groupByKey 全量走网络性能差；reduceByKey 节点内先聚，大幅减少 shuffle 量。"},
+{b:"计算引擎",q:"Flink 四大关键特性？数据湖/湖仓一体？",a:"Flink 主从（JM 调度/checkpoint，TM 计算），<b>4 特性</b>：①时间语义（事件/处理/摄入，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（异步快照→HDFS，精准一次）。湖：原始格式全存，<b>Schema-on-Read</b>，灵活但治理难；湖仓一体三优势：事务支持/开放格式/流批统一。"},
+{b:"计算引擎",q:"UDF 写过吗？写过哪两个？",a:"spark sql 的 udf。例①getLastMonthDays 上月天数：上月第一天+1月-1天求差值。例②getUpdateCycle 表更新周期：按分区字段数据长度判断日/周/月更。"},
+{b:"SQL套路",q:"三个排名函数的区别？",a:"数据 a,b,b,c,c：<b>ROW_NUMBER=1,2,3,4,5（不并列）；DENSE_RANK=1,2,2,3,3（并列不跳号）；RANK=1,2,2,4,4（并列跳号）</b>。另有 lead/lag over、聚合 over。"},
+{b:"SQL套路",q:"分区 vs 分桶？分桶函数和场景？",a:"分区=HDFS <b>目录</b>，分桶=目录里的<b>文件</b>；有分桶直接定位文件少扫描。函数：ntile over、hash。场景：①大表 join 按 key 分桶，同 key 落同号桶免 shuffle ②高效随机抽样。"},
+{b:"SQL套路",q:"行转列 / 列转行？",a:"行转列=<b>max(case when subject='数学' then score end)+group by 学生</b>；列转行=多段 union all，每段固定 subject 字面量。"},
+{b:"SQL套路",q:"中位数怎么求？",a:"两法：①row_number 排名+count(*) over 总数，<b>取 rnk in (floor((n+1)/2), ceil((n+1)/2))</b> 再 avg ②percentile_approx(salary, 0.5) 近似。"},
+{b:"SQL套路",q:"直播间最大在线人数？",a:"套路<b>enter=+1，leave=-1，按时间累计求和取 max</b>：先 group by 时间点算净值 flag，再 sum(flag) over(order by time) 得在线曲线，取 max。"},
+{b:"SQL套路",q:"最大连续登录天数？间隔1天也算连续？连续登录月？",a:"核心套路<b>日期减排名=连续组号</b>：date_sub(login_date, row_number()) 相同即连续→group 组号 count→max。间隔1天算连续：改 lag+<b>date_diff≤2 打标</b>，sum(flag) over 生成组号。连续月：按 yyyy-MM 去重取月首日，date_sub(月首日, interval rnk month) 分组。"},
+{b:"SQL套路",q:"双向好友对数怎么统计？",a:"两法：①自 join 反转匹配+<b>where f1.user1 &lt; f1.user2</b> 防重复计数 ②每对按小大归一 group by 后 <b>having count(*)&gt;1</b> 即双向。"},
+{b:"SQL套路",q:"留存率 / TopN / 连续3次 / 波峰波谷？",a:"一套思路：<b>留存</b>：min(event_date)=注册日→date_add(register,n)=event_date 打标→人数比值；<b>TopN</b>：row_number over(partition by 部门 order by 薪资 desc)≤N；<b>连续3次</b>：id-row_number() over(partition by num) 分组 having count≥3；<b>波峰波谷</b>：lag/lead 取前后价 case when 双向比较。"},
+{b:"Doris与叙事",q:"Doris 整体架构？",a:"<b>FE+BE</b> 两类节点。FE（Frontend）：元数据管理、查询解析、查询规划、集群管理——大脑；BE（Backend）：数据存储和查询执行——肌肉。元数据用 <b>BDB JE（类 Paxos 多数派）</b>保证一致性。"},
+{b:"Doris与叙事",q:"Doris 为什么快？（MPP 关键词）",a:"<b>3 个快</b>：①MPP 架构：多节点并行，多副本分摊查询 ②列存+前缀索引（有序稀疏索引）加速过滤 ③预聚合模型：建表即选定聚合方式，查询直接读结果。"},
+{b:"Doris与叙事",q:"Doris 三种数据模型？",a:"①Duplicate：不去重存明细 ②Aggregate：建表指定聚合（SUM/MAX/MIN/REPLACE）预聚合 ③Unique：主键唯一，REPLACE 语义更新。选型口诀<b>明细用 Duplicate、报表用 Aggregate、更新用 Unique</b>。"},
+{b:"Doris与叙事",q:"Doris 分区分桶怎么设计？",a:"两层：<b>分区按时间/范围切</b>（利于裁剪、冷热分离）；<b>分桶按高基数 join key 哈希</b>，桶数经验值=BE数×核数左右，单桶 1-10G 为佳。"},
+{b:"Doris与叙事",q:"Doris 和 Hive 系数仓怎么分工？",a:"<b>Hive/Spark 管离线批量加工</b>（T+1 大规模 ETL），<b>Doris 管交互式查询和高并发报表</b>（亚秒级）。链路：DWD/DWS 结果经 Broker Load/例行导入进 Doris 对外服务。关键词<b>湖仓加工、MPP 服务</b>。"},
+{b:"Doris与叙事",q:"讲一下你最擅长的项目（叙事框架）？难点？",a:"<b>基建10个月+质量2-3个月</b>：①调研1-2月：数据域、分层、命名规范 ②建设：ODS 1-2/DWD 2-3/DWS 2-3/ADS 1-2月 ③质量规则+告警+报表2-3月，之后日常迭代。难点：指标不一致（模型/规范/监控三层解）、数据质量差（质量监控+交叉验证）；兜底说复杂业务抽象建模。"},
+{b:"Doris与叙事",q:"开放题三板斧：棘手问题/职业发展/数仓未来？",a:"①棘手问题：口径对不齐被投诉→统一机制平台+公共逻辑下沉 DWS ②职业发展：内部基建→数据理解→赋能业务价值/结合 AI ③数仓未来 AI 三方向：开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。"},
+];
+
+let filtered = CARDS.map((c,i)=>i), idx = 0, flipped = false;
+const marks = {};
+let curBranch = "全部";
+
+const branches = ["全部", ...new Set(CARDS.map(c=>c.b))];
+const filtersEl = document.getElementById('filters');
+branches.forEach(b=>{
+  const btn = document.createElement('button');
+  btn.textContent = b;
+  if(b==="全部") btn.classList.add('active');
+  btn.onclick = ()=>{ curBranch=b;
+    document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    filtered = CARDS.map((c,i)=>i).filter(i=>b==="全部"||CARDS[i].b===b);
+    idx=0; flipped=false; render();
+  };
+  filtersEl.appendChild(btn);
+});
+
+function render(){
+  const i = filtered[idx], c = CARDS[i];
+  const el = document.getElementById('card');
+  el.innerHTML = `<span class="tag">${c.b}</span><span class="num">${idx+1} / ${filtered.length}</span>` +
+    (flipped
+      ? `<div class="a"><b>Q：${c.q}</b><br><br>${c.a}</div>`
+      : `<div class="q">【Q】${c.q}</div><div class="hint">点击翻面看答案</div>`);
+  document.getElementById('scoreBar').style.display = flipped ? 'flex' : 'none';
+  document.getElementById('prevBtn').disabled = idx===0;
+  document.getElementById('nextBtn').disabled = idx===filtered.length-1;
+  const m = Object.values(marks);
+  document.getElementById('stats').textContent =
+    `已标 ${m.length} 张 · 会 ${m.filter(x=>x==='会').length} · 模糊 ${m.filter(x=>x==='模糊').length} · 不会 ${m.filter(x=>x==='不会').length}`;
+}
+function flip(){ flipped = !flipped; render(); }
+function move(d){ if(idx+d>=0 && idx+d<filtered.length){ idx+=d; flipped=false; render(); } }
+function mark(v){ marks[filtered[idx]] = v; move(1); }
+render();
+</script>
+</body>
+</html>

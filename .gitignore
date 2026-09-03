@@ -29,3 +29,6 @@ coverage
 *.sw?
 
 /**/.vitepress/cache/*
+
+# VitePress temp files
+config.ts.timestamp-*

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>示例 HTML 笔记</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      max-width: 760px; margin: 0 auto; padding: 48px 24px;
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.8; color: #1f2328; background: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { color: #e6e6e6; background: #14171a; }
+      a { color: #6cb6ff; }
+      code { background: #262c33; }
+    }
+    h1 { border-bottom: 2px solid #42b883; padding-bottom: 8px; }
+    code {
+      background: #f0f2f5; padding: 2px 6px; border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em;
+    }
+    pre {
+      background: #f0f2f5; padding: 16px; border-radius: 8px; overflow-x: auto;
+    }
+    pre code { background: none; padding: 0; }
+    .meta { color: #888; font-size: 0.9em; margin-bottom: 32px; }
+  </style>
+</head>
+<body>
+  <h1>示例 HTML 笔记</h1>
+  <p class="meta">2026-09-02 · 这是 HTML 格式笔记的示例文件</p>
+
+  <p>把 <code>.html</code> 文件放进博客仓库的 <code>docs/public/notes/</code> 目录，
+  push 后就能通过 <code>/lilchanz-blog/notes/文件名.html</code> 直接访问。</p>
+
+  <p>HTML 笔记适合放交互式内容（图表、demo 页、可视化实验），
+  普通文字笔记用 Markdown 更省事，还会自动进入博客列表、搜索和 RSS。</p>
+
+  <h2>代码示例</h2>
+  <pre><code>console.log("hello from an html note");</code></pre>
+</body>
+</html>
