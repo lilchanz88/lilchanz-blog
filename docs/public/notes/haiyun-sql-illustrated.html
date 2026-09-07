@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html data-page-node-id="RL9DRZ49fpJhWwE4ZjYICA" lang="zh-CN">
+<head data-page-node-id="A650qJGjo9puG0P4X2AKnZ">
+
+<meta data-page-node-id="8FwJX7ogki8RrfYSzEBynK" charset="UTF-8">
+<meta data-page-node-id="dk8bFuOfG7rINoO2o6Y0Id" content="width=device-width, initial-scale=1.0" name="viewport">
+<title data-page-node-id="aRsZP1HvizkdhmBuEvsVfN" data-pnid-children="5bTtxVGdDTytxxUMbESO4j">海运数仓 SQL 图解学习手册 · 分页版</title>
+<style data-page-node-id="uC869PK6gZCOaufCgFtMaj" data-pnid-children="OS8aj0op4DOI8hqUOKbffG">
+  :root{color-scheme:dark}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#151519;color:#E8E8E2;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+  button{font-family:inherit}
+
+  /* ===== 顶部 ===== */
+  .topbar{position:sticky;top:0;background:rgba(21,21,25,.92);border-bottom:1px solid #2a2a30;padding:10px 16px;z-index:20;backdrop-filter:blur(8px)}
+  .topbar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .brand{font-size:14px;font-weight:600;color:#FAC775;margin-right:6px;white-space:nowrap}
+  .tab{border:1px solid #33333b;background:#1f1f25;color:#b5b5bd;border-radius:999px;padding:5px 14px;font-size:13px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .tab:hover{border-color:#7F77DD;color:#fff}
+  .tab.on{background:#4a42c9;border-color:#6d64e8;color:#fff;font-weight:500}
+
+  /* ===== 进度条 ===== */
+  .progbar{height:3px;background:#26262e;position:sticky;top:47px;z-index:19}
+  .progbar i{display:block;height:100%;background:linear-gradient(90deg,#4a42c9,#1D9E75);width:14.3%;transition:width .3s}
+
+  /* ===== 页面 ===== */
+  .page{max-width:820px;margin:0 auto;padding:30px 22px 110px;display:none;animation:fade .25s}
+  .page.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .pagehead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .qtag{background:#4a42c9;border-radius:10px;padding:2px 14px;font-size:18px;font-weight:600;color:#fff;letter-spacing:1px}
+  h1{font-size:24px;font-weight:600}
+  .stars{color:#EF9F27;font-size:15px;letter-spacing:2px}
+  .sub{color:#9a9a94;font-size:13px;margin:2px 0 6px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 16px}
+  .tag{font-size:12px;background:#1f2a26;color:#9FE1CB;border:1px solid #27423a;border-radius:6px;padding:2px 9px}
+
+  h3{font-size:15px;font-weight:600;color:#FAC775;margin:26px 0 10px;padding-left:10px;border-left:3px solid #7F77DD}
+  .steps{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 16px}
+  .step{font-size:12.5px;border-radius:8px;padding:5px 11px;border:1px solid #33333b;background:#1f1f25;color:#c9c9c2;line-height:1.5}
+  .step b{color:#EDEDF7;font-weight:600}
+
+  .tip{background:#1f1f25;border:1px solid #33333b;border-left:3px solid #7F77DD;border-radius:8px;padding:11px 14px;font-size:13px;color:#c9c9c2;margin:14px 0}
+  .warn{background:#2a1e1e;border:1px solid #5a2f2f;border-left:3px solid #E24B4A;border-radius:8px;padding:11px 14px;font-size:13px;color:#F0A5A5;margin:14px 0}
+  .warn b{color:#F7C1C1}
+  .good{background:#1a2621;border:1px solid #274a3a;border-left:3px solid #1D9E75;border-radius:8px;padding:11px 14px;font-size:13px;color:#9FE1CB;margin:14px 0}
+  .good b{color:#5DCAA5}
+
+  .code{background:#1b1b20;border:1px solid #2e2e36;border-radius:10px;padding:13px 16px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.7;overflow-x:auto;margin:12px 0;white-space:pre}
+  .kw{color:#85B7EB}.fn{color:#9FE1CB}.str{color:#FAC775}.cm{color:#6d6d76}.num{color:#EF9F27}
+
+  .card{background:#1f1f25;border:1px solid #33333b;border-radius:12px;padding:15px 18px;margin:14px 0}
+  .card b.t{color:#FAC775;font-weight:600}
+  .cm-line{color:#8b8b93;font-size:12.5px;margin-top:7px;line-height:1.6}
+
+  svg{width:100%;height:auto;display:block;margin:16px 0}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0}
+  td,th{border:1px solid #33333b;padding:8px 11px;text-align:left}
+  th{background:#1f1f25;color:#FAC775;font-weight:600}
+  tr:nth-child(even) td{background:#191920}
+
+  /* 举一反三 */
+  .quiz{background:#1c1b2b;border:1px dashed #4a42c9;border-radius:12px;padding:14px 18px;margin:18px 0}
+  .quiz b.t{color:#AFA9EC;font-weight:600}
+  .quiz p{font-size:13px;color:#c9c9c2;margin:6px 0}
+
+  /* 翻页 */
+  .pager{display:flex;justify-content:space-between;align-items:center;margin-top:34px;gap:10px}
+  .pbtn{border:1px solid #33333b;background:#1f1f25;color:#d5d5dc;border-radius:10px;padding:9px 20px;font-size:14px;cursor:pointer;transition:.15s}
+  .pbtn:hover{border-color:#7F77DD;color:#fff}
+  .pbtn.ghost{opacity:0}
+
+  .footer-nav{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:20;background:rgba(21,21,25,.85);padding:8px 14px;border-radius:999px;border:1px solid #33333b;backdrop-filter:blur(6px)}
+  .fnb{border:none;background:#2a2a33;color:#d5d5dc;border-radius:999px;padding:7px 18px;font-size:13px;cursor:pointer;transition:.15s}
+  .fnb:hover{background:#4a42c9;color:#fff}
+  .fnb.dim{opacity:.35;pointer-events:none}
+
+  .kbd{display:inline-block;background:#2a2a33;border:1px solid #44444d;border-radius:4px;padding:0 6px;font-size:11px;color:#8b8b93;margin:0 2px}
+
+  @media(max-width:640px){ h1{font-size:20px} .page{padding:22px 16px 110px} }
+</style>
+</head>
+<body data-page-node-id="u8qA5Gr3iB8uFmvNHmHWsq">
+
+<div data-page-node-id="85bgCKoasgmHjcyjNshnLu" class="topbar">
+  <div data-page-node-id="OL8lIPFEFDC9IMluAXU8Ge" class="topbar-in">
+    <span data-page-node-id="9lrD7ALAHS9beH1Jz8JIdh" class="brand"><!--pnid:1fEBdHefLICCje0JipYxte-->海运 SQL 图解手册</span>
+    <button data-page-node-id="2LHFjhCpnjA6lcCraOWDcy" class="tab on" onclick="go(0)"><!--pnid:yNOhzWIImyaq9vMScdp1eM-->开篇</button>
+    <button data-page-node-id="hlqiulkTnTay5tnFaBq6UN" class="tab" onclick="go(1)"><!--pnid:u3ViU7gNIiMZ3i1UdbPn5k-->Q1 迁</button>
+    <button data-page-node-id="YZLkxPneMbFWxKo3hV6B3Q" class="tab" onclick="go(2)"><!--pnid:mqDsuiQvwRacLmBoNgUbsb-->Q2 异</button>
+    <button data-page-node-id="LHfZJCKZyw4lzoPlfDV77I" class="tab" onclick="go(3)"><!--pnid:CPklG6rWprjzIEPdHrHWKq-->Q3 排</button>
+    <button data-page-node-id="LFm0AADiBmKC26SX75XOIB" class="tab" onclick="go(4)"><!--pnid:sFo93qWjVA8CTpwSDIoMav-->Q4 溯</button>
+    <button data-page-node-id="0EmjDtPvQM8glGc69iyu5V" class="tab" onclick="go(5)"><!--pnid:IT32EIzKiIXk1v6EFjw4py-->Q5 倾</button>
+    <button data-page-node-id="ZoYDmoTdUEst3zatcxrYL7" class="tab" onclick="go(6)"><!--pnid:Tj5mu8CNy8vv2AEmTQDe4j-->口诀</button>
+  </div>
+</div>
+<div data-page-node-id="kJk7EEP0SMXAk3bKnONMPV" class="progbar"><i data-page-node-id="CsLkanSMaitXCJEdJNMdJQ" id="prog"></i></div>
+
+<!--pnid:NWX34Gtjf1KYb9n0AxuWwR--><!-- ============ 第0页 开篇 ============ -->
+<section data-page-node-id="00yC2eIeKB0QpUrHQM8ZlS" class="page on" id="p0">
+  <div data-page-node-id="sdfB36ECBmmp9SAj1tuLCa" class="pagehead"><span data-page-node-id="I04ocuDwhxmIAfNG2VbHFx" class="qtag"><!--pnid:hK4KlhO6QKdh9bbU92msbg-->开篇</span><h1 data-page-node-id="11wqiLtiDQcRT21DrHCmug"><!--pnid:ZbnI8yFZl65xEJmZcrkcza-->SQL 是四步憋出来的</h1></div>
+  <div data-page-node-id="cClwm60Fni6O9gfA4eUUDf" class="sub"><!--pnid:2JtosAXD9SojY9WTG9A9sW-->先吃透方法论，再逐题进入。口诀导航：迁 · 异 · 排 · 溯 · 倾</div>
+
+  <svg data-page-node-id="rdShxKLHW4pVBZNqQUGEYC" aria-label="四步思维法" role="img" viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg">
+    <defs data-page-node-id="ApsoaXPphSNDsfFKwBKhFN"><marker data-page-node-id="amYKHicGoKf8lP8SLwR6lg" id="a1" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="8" refY="5" viewBox="0 0 10 10"><path data-page-node-id="6kE36dX8IR6z42smUGb8xr" d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-linecap="round" stroke-width="1.5"/></marker></defs>
+    <rect data-page-node-id="aYbLXQHtbSZ6TonHjSnHeg" fill="#3C3489" height="64" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="132" x="40" y="30"/><text data-page-node-id="rLrZ3YCJeq4OJ6EAKyRAVr" fill="#EDEDF7" font-size="14" font-weight="500" text-anchor="middle" x="106" y="50"><!--pnid:QBgP9Ca8TzXan9S0TnXHFd-->① 定口径</text><text data-page-node-id="etdTLmCaCcHfA9UaVjGSPf" fill="#AFA9EC" font-size="12" text-anchor="middle" x="106" y="72"><!--pnid:TJke9RHlCLquItVI93t6BQ-->过滤规则+异常定义</text>
+    <rect data-page-node-id="7ECN1COaRbqQ9xla1Vo1fm" fill="#0F6E56" height="64" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="132" x="196" y="30"/><text data-page-node-id="s1ASCh8OL6ZAO0iS4bNFNz" fill="#EDEDF7" font-size="14" font-weight="500" text-anchor="middle" x="262" y="50"><!--pnid:YgEsOBSNWEjwMs7IBti5cp-->② 画表关系</text><text data-page-node-id="YHualdRJxHD9jg6bO81arB" fill="#9FE1CB" font-size="12" text-anchor="middle" x="262" y="72"><!--pnid:tomEqy1YG4C2vteTV5aPaL-->谁是主表/join键</text>
+    <rect data-page-node-id="T2H3wA3kKLRPiKjwII1OYw" fill="#185FA5" height="64" rx="10" stroke="#85B7EB" stroke-width="0.5" width="132" x="352" y="30"/><text data-page-node-id="hNwMrBZRFs1gmIS9ZaalEO" fill="#EDEDF7" font-size="14" font-weight="500" text-anchor="middle" x="418" y="50"><!--pnid:E1xlXerkbqEQgs1TpsZJXi-->③ 拆 CTE</text><text data-page-node-id="OvxQTpzhhhqRffYWlaRvpx" fill="#85B7EB" font-size="12" text-anchor="middle" x="418" y="72"><!--pnid:Th9CAPwLuJ5xF8AcHxyEhl-->每步一个中间结果</text>
+    <rect data-page-node-id="EmQ2ImJUEz4RzsDxgwI6iw" fill="#854F0B" height="64" rx="10" stroke="#FAC775" stroke-width="0.5" width="132" x="508" y="30"/><text data-page-node-id="XcJsDCP7iQc9bkSuetMiWU" fill="#EDEDF7" font-size="14" font-weight="500" text-anchor="middle" x="574" y="50"><!--pnid:XvPtkCEYMH2wmDgZmlMzYS-->④ 组装输出</text><text data-page-node-id="y126I4BkiMp0TDjrEuwzBW" fill="#FAC775" font-size="12" text-anchor="middle" x="574" y="72"><!--pnid:6KMrPXBPvkvIFF8I8mQZRK-->聚合/窗口/补0</text>
+    <path data-page-node-id="9xRLFeacANGIcYPIt75Iqi" d="M172 62 L192 62" fill="none" marker-end="url(#a1)" stroke="#888780" stroke-width="1.5"/><path data-page-node-id="V6vR7s300ySsNulssltuSu" d="M328 62 L348 62" fill="none" marker-end="url(#a1)" stroke="#888780" stroke-width="1.5"/><path data-page-node-id="WJlq6sh0Tz8prYQJciAqLV" d="M484 62 L504 62" fill="none" marker-end="url(#a1)" stroke="#888780" stroke-width="1.5"/>
+    <text data-page-node-id="GqAbfnDD2nUU5kl1G3EjR4" fill="#B4B2A9" font-size="12" x="40" y="128"><!--pnid:h6gjkpqSGw4MiLWBP7jMSe-->① 中文需求 → where 条件清单，先不写 SQL，只列规则</text>
+    <text data-page-node-id="GIBg7pKNyuZcNzjcIzwZvI" fill="#B4B2A9" font-size="12" x="40" y="150"><!--pnid:5IXfRkraZc1hQLbpO5GYmf-->② 主表选谁？其他表按什么键挂上来</text>
+    <text data-page-node-id="RVSbAcEMAgC9K63IomKpD7" fill="#B4B2A9" font-size="12" x="40" y="172"><!--pnid:ec06BHmXVYkxMFP03kIZs1-->③ 大白话每句 = 一个 CTE；写不下去就回 ② 补关系</text>
+    <text data-page-node-id="5NDlVLCkQjsmZJ1M4ByKjh" fill="#B4B2A9" font-size="12" x="40" y="194"><!--pnid:RDpRLT9kjfgVVnZt1MqYu7-->④ 最后才聚合/开窗，对齐输出字段，检查补0、精度、防除零</text>
+  </svg>
+
+  <h3 data-page-node-id="fUxUlKQWSEDCDGvY278a2y"><!--pnid:ViZ3lx7KtwSkrbDhWABGpF-->五题难度阶梯</h3>
+  <svg data-page-node-id="xAOJjmeuYjpvggWaXFiDWI" aria-label="五题难度阶梯" role="img" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg">
+    <rect data-page-node-id="p32My0DRZUQId0nm6gUvK3" fill="#085041" height="56" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="110" x="40" y="220"/><text data-page-node-id="wUPpGZwkDhv0iccN0qxOHT" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="95" y="242"><!--pnid:9HfM0dLUTkY1sRsGLQzbmk-->Q1 迁</text><text data-page-node-id="9y2YUDMzNM5eTRhFQC4FAL" fill="#9FE1CB" font-size="11" text-anchor="middle" x="95" y="260"><!--pnid:hrGtAfkKw18B3R8MAuV5MT-->换柜口径迁移</text>
+    <rect data-page-node-id="bX5hyLRWmSsg9CbRumhtt8" fill="#0C447C" height="96" rx="10" stroke="#85B7EB" stroke-width="0.5" width="110" x="162" y="180"/><text data-page-node-id="xQqZdvbJS0JPr1W9EyBAA2" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="217" y="210"><!--pnid:jpxYV2mbyb95KNt94LdYv9-->Q2 异</text><text data-page-node-id="5qxNnl0mlzuZAcqHHDTcd8" fill="#85B7EB" font-size="11" text-anchor="middle" x="217" y="230"><!--pnid:PxhyTU2PGN88ecQ2lyKc6m-->四类异常柜</text><text data-page-node-id="eYsEJC8a4XfKisQo2uZDIE" fill="#85B7EB" font-size="11" text-anchor="middle" x="217" y="248"><!--pnid:nkMnpV0Hfm9KjSz42cFBbt-->条件聚合打标</text>
+    <rect data-page-node-id="p2r133MymvrN37L1oULOay" fill="#3C3489" height="136" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="110" x="284" y="140"/><text data-page-node-id="ZrCsVHhwnwdSKKqsl47HXl" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="339" y="175"><!--pnid:oCgxH9gEN4EKU5LXuWTB4V-->Q3 排</text><text data-page-node-id="08Ho7YspUoMBAqQGIBXvFE" fill="#AFA9EC" font-size="11" text-anchor="middle" x="339" y="195"><!--pnid:o50BJNCIZT0zMMSOWIjx8K-->时效小时数</text><text data-page-node-id="ydE3QhLne193bgDvGBz8ic" fill="#AFA9EC" font-size="11" text-anchor="middle" x="339" y="213"><!--pnid:e8AuDZFkW030scL9Rq24Ri-->DENSE_RANK</text>
+    <rect data-page-node-id="H6nfE0BD8CKNzCZaTmhggl" fill="#534AB7" height="176" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="110" x="406" y="100"/><text data-page-node-id="gsCGWX0hGE9bmeMCNjffYf" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="461" y="140"><!--pnid:eprRsgJtg12EzKwHl2oWFq-->Q4 溯</text><text data-page-node-id="szLFZ9TsFBIZdZgRPDzTBs" fill="#AFA9EC" font-size="11" text-anchor="middle" x="461" y="160"><!--pnid:rRORrCMDE36Gj0f7M8emp2-->每日快照</text><text data-page-node-id="GWr3h2RBY57oBTDUcJQOni" fill="#AFA9EC" font-size="11" text-anchor="middle" x="461" y="178"><!--pnid:25TWma54iCWdOGNpNUgSgQ-->最新快照修正</text>
+    <rect data-page-node-id="OUet3xWCVOapPjUhAHFtXE" fill="#854F0B" height="216" rx="10" stroke="#FAC775" stroke-width="0.5" width="110" x="528" y="60"/><text data-page-node-id="EakOv121qbc4nKGfCCcb7E" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="583" y="105"><!--pnid:FiEGX0NqXnNQf3ac7EakBW-->Q5 倾</text><text data-page-node-id="v6R9c0lSu9GoTKtXAbY9uT" fill="#FAC775" font-size="11" text-anchor="middle" x="583" y="125"><!--pnid:vp7RBt2xsbS17AGmT8wuQJ-->拼柜评分</text><text data-page-node-id="6Goow7aFsRhmcbVd7fh7r2" fill="#FAC775" font-size="11" text-anchor="middle" x="583" y="143"><!--pnid:T9B86IEenrAdPMFwTkd0nT-->两阶段聚合</text><text data-page-node-id="ykS0XXHBGtbRbfHm2WEP2t" fill="#FAC775" font-size="11" text-anchor="middle" x="583" y="161"><!--pnid:NbetyDG8UTBqZ0YIwy4NYc-->加盐/MapJoin</text>
+    <text data-page-node-id="piVgwMHtdEGPGkC12xA99t" fill="#B4B2A9" font-size="12" x="40" y="40"><!--pnid:SfmIRCJ4ms2AGhTazlxc1L-->同一套四步法，每题只换最后一步的武器</text>
+  </svg>
+
+  <div data-page-node-id="B5whrn2QDTE6MxUYGnfUZo" class="tip"><b data-page-node-id="Hg0v1qlcD8MqXXE45EvXBB"><!--pnid:uaJbhT31E7Wn3xctf9kx2h-->通用过滤四件套</b><!--pnid:uTylOyYCJxCjF9V5BJlyUm-->（每题第一段 CTE 先写它）：<span data-page-node-id="u075s1XTr20Q9E0wpmkAYL" class="fn"><!--pnid:laW1Cf6ptt7x2K9DpysldC-->del_flag=0</span><!--pnid:YHsbhEjiMvRpnDu9LM8dTE--> ＋ <span data-page-node-id="qlGAZqmaPCAJsxPU1QN3En" class="fn"><!--pnid:kok4kIA9Vw2LFX5y2YriMN-->data_status='有效'</span><!--pnid:uAEVFEgO8YENk9wZXpOpAz--> ＋ 剔测试 ＋ 按题意定退仓口径。</div>
+  <div data-page-node-id="fPN8G185KhIK9swRD5wprY" class="good"><b data-page-node-id="eMM15JZEyxHEUL5S2GW1QZ"><!--pnid:XGZ0MUrAKWlNcwFaIetmdH-->完整可运行 SQL 与造数脚本</b><!--pnid:AWg3jD3rjApAWOVsCOteYV--> 见配套文档《海运数仓SQL_完整答案与造数.md》，本手册专注「看懂思路」。</div>
+
+  <div data-page-node-id="THEFMGVU30fN6GplhMYO2Z" class="pager"><span data-page-node-id="CxHfNG5g0x0IE3WdTLyKrl"></span><button data-page-node-id="Vdroj6jOq5tUQSSMB8fdEv" class="pbtn" onclick="go(1)"><!--pnid:gYTwOaFvzwZzBXQmQChA0e-->下一页：Q1 迁 →</button></div>
+</section>
+
+<!--pnid:Gp0IVRBi3Pba2siEKWo33F--><!-- ============ 第1页 Q1 ============ -->
+<section data-page-node-id="0MTrm7x4oVv2k0rLjFjUd1" class="page" id="p1">
+  <div data-page-node-id="D7Zt4MpiiFCZzUMfuJ1mNy" class="pagehead"><span data-page-node-id="8Ez3MtQtuOuoNC3RSYCPlt" class="qtag"><!--pnid:eRGMEoxCDms4qJ4195o0ss-->Q1</span><h1 data-page-node-id="PpEuUDIWGhyMIEtIzV5QN8"><!--pnid:466x2BqxVqw9zilJbnzKpD-->换柜数据精准统计</h1><span data-page-node-id="N4YxMOpujCCZzUCywpV1bG" class="stars"><!--pnid:aH5VrTbAy3VDGWT71m3emI-->★★☆☆☆</span></div>
+  <div data-page-node-id="FySq2QU75xr4KJVnmdSmFW" class="sub"><!--pnid:l0uKp5l8OXOQ01mcxBai22-->数据清洗 + 口径修正 · 货物换柜后旧柜数据残留，导致按柜统计失真</div>
+  <div data-page-node-id="234vulg2tO2SanjnRhYFJk" class="tags"><span data-page-node-id="Bb5OeyCNQe16TQlMn5ykOa" class="tag"><!--pnid:zcE71LbTpjPoUkliGwahPq-->数据清洗</span><span data-page-node-id="ko1NiBbW3IcTzlB3LcoYIB" class="tag"><!--pnid:POTRFpg8CFANdehy6Awwrg-->换柜迁移</span><span data-page-node-id="teEhIx1n28a4jmWX8YzoUu" class="tag"><!--pnid:XKy5kKhB2z91Lpuhsjgb7K-->LEFT JOIN 补0</span><span data-page-node-id="JtBq0abhG7JTlgFlObGEZU" class="tag"><!--pnid:IpXu7gOqOXeAtR04hPX4AX-->ROW_NUMBER 取最新</span></div>
+  <div data-page-node-id="DvjqVLv5ITkJvBO3OWu44e" class="steps">
+    <span data-page-node-id="BPhgynGgvXTFhH01LIHaoO" class="step"><b data-page-node-id="no99UGcwvj5LppZvwjjvXe"><!--pnid:gt50jIcmEWDoxROtq6aWwN-->①口径</b><!--pnid:vsO6Jsi4idNz3xpJfHDJvH--> 7月入库 / 有效 / 剔退仓 / 最新柜号归属 / 补0</span>
+    <span data-page-node-id="Y7UD3eu7cy1eQTpmthp9fk" class="step"><b data-page-node-id="qzcDXtn5HHmOQUibCR2x2g"><!--pnid:TsTKuDAP0NOOIr9TUVS73M-->②关系</b><!--pnid:c4y7oobG7WKR4HJCXWuJpq--> 主表=柜清单</span>
+    <span data-page-node-id="3Uf65ZBTKjqmeNi0UytpSv" class="step"><b data-page-node-id="AyIhyBzydA67bwDkkC44l5"><!--pnid:QStyPsNSxewd6UFhC219cf-->③CTE</b><!--pnid:PpN6mPwIr5vUWW6lp2FYyK--> 映射→过滤→迁移</span>
+    <span data-page-node-id="WiA4Kfvr5UEDsuVDhcuDRy" class="step"><b data-page-node-id="ZBJAdbC1sJIQcObju98X5W"><!--pnid:zxQTOWw8jYiKUzs0qYdyiR-->④组装</b><!--pnid:atZCAqBj21OVAaWGFTWsmq--> LEFT JOIN + GROUP BY</span>
+  </div>
+
+  <svg data-page-node-id="1K5F1SDX26sKTarP7qT8oz" aria-label="Q1 数据流水线" role="img" viewBox="0 0 680 470" xmlns="http://www.w3.org/2000/svg">
+    <defs data-page-node-id="ibLUUlsefbwdH9kimpCvT6"><marker data-page-node-id="Rl8Xyf8zW65ivQtQm5ZPKx" id="b1" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="8" refY="5" viewBox="0 0 10 10"><path data-page-node-id="gYvo68vWOWodyWhP2ybhE4" d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-linecap="round" stroke-width="1.5"/></marker></defs>
+    <rect data-page-node-id="byeD1uzBCnTdUqat7BSHbz" fill="#085041" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="180" x="40" y="20"/><text data-page-node-id="gTUCDxIrNuwhM2MBcDf679" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="130" y="42"><!--pnid:6zOWLxoxocIhDnBvLHXrO4-->表3 换柜流水</text><text data-page-node-id="ez5wUntr8HKQJotRB9M41l" fill="#9FE1CB" font-size="12" text-anchor="middle" x="130" y="62"><!--pnid:scLWMXKzndI9n6B5Mn7df9-->old→new + 时间</text>
+    <rect data-page-node-id="w4LWu3QtvXxf3H2FLBxhmB" fill="#0C447C" height="60" rx="10" stroke="#85B7EB" stroke-width="0.5" width="180" x="250" y="20"/><text data-page-node-id="IZnZtFrAUWLkH93m3MSxKF" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="42"><!--pnid:H8O4jaeVXeZyRiAlf5PWfY-->表2 入库明细</text><text data-page-node-id="YKJ4ZgoI3SoUjcJlzXl4Up" fill="#85B7EB" font-size="12" text-anchor="middle" x="340" y="62"><!--pnid:p7KiPh1msZHYPN2TnS0Vdo-->每条操作记录</text>
+    <rect data-page-node-id="u4iZoPuW8Iw2unH427AtFA" fill="#3C3489" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="180" x="460" y="20"/><text data-page-node-id="cDzAH77MeW7LTxMxhy96j8" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="550" y="42"><!--pnid:tkPkt39cxuuFFrsTvDVGT5-->表1 柜清单快照</text><text data-page-node-id="zT24KtlsC5V94Ty3szmZbx" fill="#AFA9EC" font-size="12" text-anchor="middle" x="550" y="62"><!--pnid:KVMdchlHh3kmbxNRxlyPE2-->全部柜=主表</text>
+    <rect data-page-node-id="0ts1w0aNezHHzqOHlbBEaB" fill="#085041" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="240" x="55" y="140"/><text data-page-node-id="RvKTOHnU4JkurcSRLX40Tb" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="175" y="162"><!--pnid:PdowRInyVPp6WNSuMQuxhu-->CTE1 换柜映射</text><text data-page-node-id="SeDiVAgMFUdLHDeOl3DU4d" fill="#9FE1CB" font-size="12" text-anchor="middle" x="175" y="182"><!--pnid:usVnt1NRP6fs5uVy3ZV6jC-->ROW_NUMBER 取最新柜号</text>
+    <rect data-page-node-id="UCLeNPKogjL6PRB2G5mAYr" fill="#0C447C" height="60" rx="10" stroke="#85B7EB" stroke-width="0.5" width="240" x="385" y="140"/><text data-page-node-id="VyznfzAcPiVQ6igBOpYPTz" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="505" y="162"><!--pnid:Y8LXxQiKCzDDCoeXDfdIMI-->CTE2 有效入库</text><text data-page-node-id="gZh54EtK4E1qQHIBUd3bPF" fill="#85B7EB" font-size="12" text-anchor="middle" x="505" y="182"><!--pnid:WNA8UR6KORBvMF43ISt3iu-->过滤四件套+剔退仓</text>
+    <path data-page-node-id="rhZ4xSzIidT0kWf3EV9GOm" d="M130 80 C130 110 150 115 168 136" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="b83k7eJX2CURzNG9vmYFLQ" d="M340 80 C340 110 460 115 496 136" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="LhvTekb21jagFxbyu9Y5os" d="M550 80 C550 200 430 225 330 246" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-dasharray="4 3" stroke-width="1.5"/>
+    <rect data-page-node-id="IjlHlq0T6iZdjjDprKIFfP" fill="#0F6E56" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="380" x="150" y="250"/><text data-page-node-id="9pofeik5ibIAFjWmznNxiy" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="272"><!--pnid:zTuksE4wfxL4JG2xuouYjW-->CTE3 换柜迁移</text><text data-page-node-id="xkrtNkdg3yTEjVHMwEjL6H" fill="#9FE1CB" font-size="12" text-anchor="middle" x="340" y="292"><!--pnid:TSl7GxAIhXYt5TFCcClMu7-->旧柜号换成最新柜号</text>
+    <path data-page-node-id="3CrBoqdmp8Bm4EPlVoYiQg" d="M175 200 C175 230 250 235 285 246" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="N2FfYRcCksmHhGMTlNsEAC" d="M505 200 C505 230 430 235 395 246" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="LVlfKBhoX5E6mTKStFFVD4" fill="#534AB7" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="380" x="150" y="340"/><text data-page-node-id="ZOiEwGdhHGO20fDN7iw39P" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="362"><!--pnid:ViCLKKxkF6gUFQNJnDeBIo-->LEFT JOIN 主表=柜清单</text><text data-page-node-id="rsjMoNWfaysMLPVa9yfvGo" fill="#AFA9EC" font-size="12" text-anchor="middle" x="340" y="382"><!--pnid:lCpPbivJkJA2mp6yJCifJB-->无入库的柜 COALESCE 补 0</text>
+    <rect data-page-node-id="pO1FV6r6E5UNUjPVE15BZf" fill="#854F0B" height="36" rx="8" stroke="#FAC775" stroke-width="0.5" width="240" x="220" y="420"/><text data-page-node-id="H1BYoqoVhLOZF9nMT5sxXW" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="438"><!--pnid:P8FYwi2TOm9B84gn19rT7y-->GROUP BY 柜号 → 4 字段</text>
+    <path data-page-node-id="R16PvEIsZt0CRS6kKQUx8H" d="M340 310 L340 336" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="ask1zFXvO5HyRGuSnaRPAz" d="M340 400 L340 416" fill="none" marker-end="url(#b1)" stroke="#888780" stroke-width="1.5"/>
+    <text data-page-node-id="c0Bnu3kpGCFdGaw0vETl6C" fill="#B4B2A9" font-size="12" x="60" y="120"><!--pnid:7p65EWj1bsQ622uhB5LD8G-->每个框=一个 CTE；箭头=JOIN；虚线=主表基准</text>
+  </svg>
+
+  <div data-page-node-id="c4VZCSuEmzZ4igSH597w94" class="card"><b data-page-node-id="oC8YNs8NY3SMao8AfNr7YO" class="t"><!--pnid:LZnxZKdDKEd9ESNOhlARXw-->CTE1 container_map</b><!--pnid:FJMNIWh7pfSSgC6X1qN6cf--> · 换柜映射框
+    <div data-page-node-id="Q1sBLQaxbKsxDzaW01qnE0" class="code"><span data-page-node-id="c9aPln7slmesfsmxrVwmkO" class="kw"><!--pnid:FypxHDmAafHRlbwHsKRa7K-->SELECT</span><!--pnid:48rglSy58JZt0ayQmcYw6E--> cargo_no, new_container_no <span data-page-node-id="w1q2Yow4I1ZtDwmlqXeDTG" class="kw"><!--pnid:94W6ntmtNoSUgIhygqZLXz-->AS</span><!--pnid:sBp2I68jcNPJwjYXUcnYKf--> latest_no,
+       ROW_NUMBER() <span data-page-node-id="iXMdP5nRx1gUAnR0VDwro9" class="kw"><!--pnid:gyP16JdK9nBrt1z3Hu39ZV-->OVER</span><!--pnid:zSqKw3OtKqH21eNy3NLCSc-->(<span data-page-node-id="OtyS7jFM6o8Ac41yVmzDnT" class="kw"><!--pnid:qz3AXk5TK8FDwC9bZe0s8y-->PARTITION BY</span><!--pnid:b6H2ALGzgPMn7GJTsveb0w--> cargo_no <span data-page-node-id="zCGwaTr1AP5fuvScjvLPeQ" class="kw"><!--pnid:0rR0nYACeA091V0RWvBurU-->ORDER BY</span><!--pnid:pVWIHLxcVLniIrNpIfu9yz--> change_time <span data-page-node-id="cAEhNkGGD0HW4T0dNARjwK" class="kw"><!--pnid:LPoD60SeYmHLJTIeBQY5GE-->DESC</span><!--pnid:jppXednSfu8KzyYQaKaNRd-->) <span data-page-node-id="CXU1eFi5SpiK2wA7I1OQfZ" class="kw"><!--pnid:j26JRdfq76PuVKY1mLnrbK-->AS</span><!--pnid:ZCRMTNOJzbqAael4tRmlM5--> rn
+<span data-page-node-id="Q6WerMtk0aCO4ZYGjQr4N6" class="kw"><!--pnid:anuOBbm1RtQqKC7sXgimxi-->FROM</span><!--pnid:t2gQV1A4vfzyyQ6cgupZKN--> dwd_sea_container_change</div>
+    <div data-page-node-id="GrHkVQVo6AmzLUfCcmc2Zc" class="cm-line"><!--pnid:BXdYY3pJnqBY6np4uyU2nS-->→ 每票货按换柜时间倒序编号，<span data-page-node-id="7fpUg9BZ50Wun1V9FJxHfk" class="fn"><!--pnid:F7ApTsldJXcXzUn9yiKtUC-->rn=1</span><!--pnid:BUIKpLsouiVTpE4ekUkOdk--> 就是最新柜号</div></div>
+
+  <div data-page-node-id="n5rF8qvWjKEDCSWMESRT3i" class="card"><b data-page-node-id="DRfzXysLyDHs6cqh2p1qsc" class="t"><!--pnid:JsOgzkUuj91oosPauMsEVW-->CTE2 valid_inbound</b><!--pnid:29OM0UFi0d9xsr08FnVqYO--> · 有效入库框
+    <div data-page-node-id="lT54XUVb3D52WHWoNaRV4N" class="code"><span data-page-node-id="nd2bKaUVvEOUDPsZNelCqW" class="kw"><!--pnid:pOfxUw2ZuxZ8dJyzu9AGys-->SELECT</span><!--pnid:CPEN6GqQDEZioylMoV2wDI--> * <span data-page-node-id="AEtZWgEFTVJNUbfCgC5z6Z" class="kw"><!--pnid:Xd6Y66CXMlOIdoRJetofCZ-->FROM</span><!--pnid:jdxnLT8XxCzR5NC29yFDRD--> dwd_sea_goods_inbound_full
+<span data-page-node-id="J23svllHPjISbEXxDKN0YR" class="kw"><!--pnid:r9wbVPhOapZf0HIlLGNbqv-->WHERE</span><!--pnid:h4bjv6qigVvLioId1Ew5Nh--> data_status=<span data-page-node-id="tnaZzC1CsXaglaIDmY7FAI" class="str"><!--pnid:1BV8OXf556fz0clV06eDKh-->'有效'</span>
+  <span data-page-node-id="Aa9DtGFBrkOEcG65V2qphz" class="kw"><!--pnid:uoVqwD7h43t8Kq27GchC94-->AND</span><!--pnid:ugTqsXanfbZLgxVzuNpA3I--> inbound_type&lt;&gt;<span data-page-node-id="HGyECgddAVRlY1eHZnk6ps" class="str"><!--pnid:CtN9R7Qkz7GzqPbD4XZ7rW-->'退仓'</span>
+  <span data-page-node-id="dSkDpyCDvv53EmMrQ77Ag1" class="kw"><!--pnid:zSeS0FoD3SEtVnrxCaTCjj-->AND</span><!--pnid:PSTf63j29hoNffvA2PmQCo--> inbound_time &gt;= <span data-page-node-id="mXAL2YmkCx5OJ1CaBUUBCm" class="str"><!--pnid:3lZMbwHrKfjrF1BLl7tuBG-->'2026-07-01'</span> <span data-page-node-id="MHGqt8kFkCqsTZAXu8MSwA" class="kw"><!--pnid:oKIt2LLfMoLnKDRhkGNtto-->AND</span><!--pnid:jI9TNyCqd6sVNT4U7cE8CD--> inbound_time &lt; <span data-page-node-id="bZXDD6DrGtBAzYrfWKONGn" class="str"><!--pnid:8sADyuBSVKVE0ocjw6vBku-->'2026-08-01'</span></div>
+    <div data-page-node-id="xnGJ1Hv0JOcu56UVWXdJpo" class="cm-line"><!--pnid:AUOHUwa3qmd5bz64SkNy85-->→ Q1 剔退仓负数；<b data-page-node-id="9kUd3Q0S6qd9v7qI3PoTAt" style="color:#F7C1C1"><!--pnid:EMxLIOFCO1S8Rv7KqvNHMa-->Q2 保留</b><!--pnid:KGOTevN4oStBqntPYZl5Vk-->（口径不同，最易被追问）</div></div>
+
+  <div data-page-node-id="Ftz3GIsNnSKog96B28GuVK" class="card"><b data-page-node-id="t2ZwGgO4LRVSe8eveVAL50" class="t"><!--pnid:pcVuCVNIMSxxho29mXQj5I-->CTE3 migrated</b><!--pnid:1JxIgNTbC124wO7MXlKrxr--> · 换柜迁移框
+    <div data-page-node-id="f2rhTCDeF851GMK3vUk37S" class="code"><span data-page-node-id="85J82ZbrNXFD5an5CMS7rS" class="kw"><!--pnid:nFUGIN5W870Qwp8toxKyZe-->SELECT</span><!--pnid:Lkw0e5vG7E5nuB57p4Rq1p--> COALESCE(m.latest_no, i.container_no) <span data-page-node-id="gFvSpOT9OKkGShFN8ECRE2" class="kw"><!--pnid:HNLhnIH94fNwOkNe9DYr09-->AS</span><!--pnid:nyVNLx3TZ1B8iXQiU0wWEw--> final_container,
+       i.cargo_no, i.actual_weight, i.actual_volume
+<span data-page-node-id="sZlWDKcxHdrDMwoNa3Mczx" class="kw"><!--pnid:qw1HpnPGlVCuRv7KDWOqFg-->FROM</span><!--pnid:CWDomZarIuSDCrJm3mUbwu--> valid_inbound i
+<span data-page-node-id="w85wmnnn2yBG7ik7cplDvm" class="kw"><!--pnid:IttsmoFklhj93oQPLKXBPh-->LEFT JOIN</span><!--pnid:83macxrv2JlhWZUe5XlkTj--> container_map m
+  <span data-page-node-id="HVDuZW8o11BSzgHI4ymD5g" class="kw"><!--pnid:U4VIHtmRTj4NmHoM6xPMnO-->ON</span><!--pnid:QmGOCQvPUtsxI51ogsx2tb--> i.cargo_no=m.cargo_no <span data-page-node-id="I3NeMp579dt6aar75VMvJF" class="kw"><!--pnid:qcVmX4TJTez4tmC3fXa3Zx-->AND</span><!--pnid:HbyGkoLoPysZszthTS5AfE--> m.rn=1</div>
+    <div data-page-node-id="J8oUgtFogYOt7ZfygQiXj7" class="cm-line"><!--pnid:X5S200zHXBhsFQbZNVGJsf-->→ 换过柜：历史记录挂到最新柜号；没换过：保持原样</div></div>
+
+  <div data-page-node-id="G7N7WgblYH3Rtz3UTneCD2" class="card"><b data-page-node-id="mujLEDABnBPcfrkW1L9czJ" class="t"><!--pnid:UsLF9gG5nALzHEiGDl9YAm-->最终 SELECT</b><!--pnid:wZs2WdaGFA9dOA4FdebhQr--> · 主表 JOIN + 聚合框
+    <div data-page-node-id="rFfvvzzxYdtfI6rBwcGzrM" class="code"><span data-page-node-id="QKqRZVrFrr7LNcDGaT0RD0" class="kw"><!--pnid:39tAgRzBBxHj04rghLhjQm-->SELECT</span><!--pnid:qXkFc22XCPwR6Co77F3wUM--> b.container_no,
+       COALESCE(SUM(g.actual_weight),<span data-page-node-id="0YSvlXmWxdnyfX7xR8HZeH" class="num"><!--pnid:GmFCnnInvH8TRz7QCOufuE-->0</span><!--pnid:A1oRuplWjse5GJgGmAqLRz-->) <span data-page-node-id="zgZFuivHWHzGAIPr9Mdpa3" class="kw"><!--pnid:2OzXvK8UujOhHUAbcyW5Kh-->AS</span><!--pnid:cyBHi0JaQytCU0QOd2XmO6--> final_total_weight,
+       COALESCE(SUM(g.actual_volume),<span data-page-node-id="mGARuvmttNmfGY3QkGvyQH" class="num"><!--pnid:g4poCTZTQX2anPCNgmHaqV-->0</span><!--pnid:ZdfNIsmQ8iu4nLSzJ2RndY-->) <span data-page-node-id="XNvyOFDcNX8lFm2BW4ZYII" class="kw"><!--pnid:leuB3bRIcd8PXOKLMK5Nsq-->AS</span><!--pnid:0EaspAXZXyB7Fe8sXZijUB--> final_total_volume,
+       COUNT(DISTINCT g.cargo_no)       <span data-page-node-id="1ffGv5DBhYYVrQYmQQqqv1" class="kw"><!--pnid:5rIMGDysXKZIConE4NcsQb-->AS</span><!--pnid:sKkwWkqLhh68o6cjlT4vXn--> cargo_ticket_cnt
+<span data-page-node-id="eFWuAFYGs5WDuZByaWUIc1" class="kw"><!--pnid:tk53V5RS8I7oQZrReGO3yu-->FROM</span><!--pnid:6gg3ilZOExf7L5b9M4zwoT--> 柜清单 b
+<span data-page-node-id="KHdAfx3yTBoTOsbeoXr3Ar" class="kw"><!--pnid:jyiJsVQICLWYHufz6PZfXd-->LEFT JOIN</span><!--pnid:dKNQby3dJpH3ZZg7qxKxKg--> migrated g <span data-page-node-id="gB43gUzXsCyfYHJVpNAjXm" class="kw"><!--pnid:XY1GUHKWbEFrRfeo3KbJZ3-->ON</span><!--pnid:I8osNuINFRgh71viTQnhkb--> b.container_no=g.final_container
+<span data-page-node-id="1920gHrnJUDxGLCwGMAf9E" class="kw"><!--pnid:bkZWWXquBCyjoqMeA8Q0fG-->WHERE</span><!--pnid:IIHAJgcaRHBUE73InNRSai--> b.dt=<span data-page-node-id="PsTUqWnBnUrRJbN5bdIwV9" class="str"><!--pnid:St8ixQKzpLVCRdcD0EfsQ9-->'2026-07-31'</span> <span data-page-node-id="hFIBQQjKRfCdopREFCzdOO" class="kw"><!--pnid:UDr3YKGnVeyGIyiFW9Jj2c-->AND</span><!--pnid:bWPzwubAFJfsCDVjmBjyAp--> b.del_flag=0
+<span data-page-node-id="xOKrmWUqSOqE82Vti6W1Fw" class="kw"><!--pnid:rwy6gahOqZEcE73qPK6XB9-->GROUP BY</span><!--pnid:Pv2DurIKIGzk6YIM7PNi0x--> b.container_no</div>
+    <div data-page-node-id="gInlOjGmCD01IbuV9WVa2k" class="cm-line"><!--pnid:fLRYQNSmkle1dNaEhFjISH-->→ 主表必须是柜清单（空柜才在结果里）；SUM 碰 NULL 用 COALESCE 补 0</div></div>
+
+  <div data-page-node-id="Z7VeSi44v7TFXE1THl0F1y" class="warn"><b data-page-node-id="o7fQjbNlna0up4gXywXKlT"><!--pnid:K1wHL4jzmxUwakUoVidRNA-->⚠ 追问点：</b><!--pnid:YXkqPC6vufGUmjB4hlMxnq-->表2 的 container_no 若被业务库「回刷」成最新柜号，CTE1/CTE3 都不用写——写码前先和业务确认口径。</div>
+
+  <div data-page-node-id="0Vte5prSxzSUnYmecKOi6V" class="quiz"><b data-page-node-id="LReBzDYYWTZ0et5ajxfK78" class="t"><!--pnid:3se7WsokDRzPfKIrXvWoCe-->举一反三：</b><p data-page-node-id="YYYZEaY5b4vLuX8Z9sxghQ"><!--pnid:gWlsCk0cxFfrxniz6fh67p-->把需求改成「统计每个<b data-page-node-id="w277CM75WcBUFnszy5WIOx"><!--pnid:dt1U04ktza8gMSI4B4WHy2-->客户</b><!--pnid:UxrRbc0zjRV0hDjWHwfckE-->的总重量体积」——只需把最终 SELECT 的 GROUP BY 和输出从 container_no 换成 cust_id，主表换表1 的客户维度即可。试试自己改。</p></div>
+
+  <div data-page-node-id="hR436uXjDYkITaRVuD6bGu" class="pager"><button data-page-node-id="OLX5CJdkQEzrrJWCq1wstI" class="pbtn" onclick="go(0)"><!--pnid:fQQe5tromk7DrmlvX0xsUj-->← 开篇</button><button data-page-node-id="0wopuyCJQmjxppTIQL7GCj" class="pbtn" onclick="go(2)"><!--pnid:LnyZeiCi48OFkmJi4VRSD5-->下一页：Q2 异 →</button></div>
+</section>
+
+<!--pnid:0XFwG4W0PaAuYRfsBWBIOc--><!-- ============ 第2页 Q2 ============ -->
+<section data-page-node-id="UkQDFqb2CfalnSo3IDep89" class="page" id="p2">
+  <div data-page-node-id="HFUJqbl7NmNJb4939LHLy0" class="pagehead"><span data-page-node-id="UUr5jxR2GOtaPYsyabrxLM" class="qtag"><!--pnid:kti2NpAS4dH6u8HppywCz8-->Q2</span><h1 data-page-node-id="0bKLvgJK2MDgZWAAF2s6A6"><!--pnid:HzZzuZtMw8LG5ieIyMjydJ-->海运进仓异常数据统计</h1><span data-page-node-id="BDdb8nA0GxwAmdNPu00AlG" class="stars"><!--pnid:CKHuvD9nz0QFTfV7rsd8Fh-->★★★☆☆</span></div>
+  <div data-page-node-id="5FHolwwTGFvUarv1BOK6uL" class="sub"><!--pnid:b6abZ0yygePNjnv543Qpkd-->异常指标计算 · 四类异常柜 → 客户级风控复盘</div>
+  <div data-page-node-id="c1dMLqCupX23wXsIot5vGQ" class="tags"><span data-page-node-id="lABynHyaIuqLjWOokEu1lv" class="tag"><!--pnid:RQjw8EoCf50apvzg7ZEiun-->条件聚合</span><span data-page-node-id="CMWCzxOXg0i2LNsGEMcBgu" class="tag"><!--pnid:uDBseoZUabGQgnJhQN9Wq2-->COUNT(IF)</span><span data-page-node-id="QUC1Q9PI6m6U5Ua3zrP95C" class="tag"><!--pnid:MSodqgjqYGDGOyYfPfDG40-->异常监控</span><span data-page-node-id="63c8fpGR8gtFvt4azGXV97" class="tag"><!--pnid:4qQOdhnYwDgPLvi7FaT1EE-->多口径</span></div>
+  <div data-page-node-id="DAQCRMrDeLug55oX8XZjtu" class="steps">
+    <span data-page-node-id="yma0jzg0KUqiouv6C9MoJc" class="step"><b data-page-node-id="hlL4caWer0rdYdTGPjV7n8"><!--pnid:xopq8oIyot4up0x2Ix1k4K-->①口径</b><!--pnid:PStsM5wN58tvz7Dq5hyvem--> 7月计划开船 / 有效 / 退仓保留</span>
+    <span data-page-node-id="NwhGtYvk94rcmPIU1OlDYG" class="step"><b data-page-node-id="7Doq0Smrpt3iCKYIjIZvqa"><!--pnid:q6Iorn8iZpufKiJiZ3Cotw-->②关系</b><!--pnid:t6uVib37xjszQYepGonGAl--> 柜全集 LEFT JOIN 柜级事实</span>
+    <span data-page-node-id="PRLfCVvFnTYBaMkDNiBkSG" class="step"><b data-page-node-id="FHCpwM6XnEmZFHiYSzxkUA"><!--pnid:vtyZzVBCMz9O1rVqy6RQ8Y-->③CTE</b><!--pnid:GNcGNSocW9DkeC3Y1HLjB4--> 柜级聚合打标</span>
+    <span data-page-node-id="4mxTfkySc6wOgKbhWelLAp" class="step"><b data-page-node-id="LihEDn3qQwvPhK0u85GZuT"><!--pnid:JDrKopVS9YFwmmTDTGLNJw-->④组装</b><!--pnid:7YdqlR50cbxcwFjZFATQ7i--> GROUP BY cust_id</span>
+  </div>
+
+  <svg data-page-node-id="AWxFB7NDUCWFCQgeHB73K1" aria-label="Q2 数据流水线" role="img" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg">
+    <defs data-page-node-id="BCPYRbbKuqznab4VeXQPEH"><marker data-page-node-id="0DxiJFsdVx1RtfXs73ZBwv" id="b2" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="8" refY="5" viewBox="0 0 10 10"><path data-page-node-id="wQLHAKWnXAu5wvrsDYAMLA" d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-linecap="round" stroke-width="1.5"/></marker></defs>
+    <rect data-page-node-id="8ERoBCq2TJljGoWJdQQZLC" fill="#3C3489" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="250" x="60" y="20"/><text data-page-node-id="2VAhYRJhGzAt4SiCan4maK" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="185" y="42"><!--pnid:vdBZQTEKzPLuBFjlBqUgfM-->CTE1 7月有效柜全集</text><text data-page-node-id="zctEeqkfphgQHAC9h0mEKD" fill="#AFA9EC" font-size="12" text-anchor="middle" x="185" y="62"><!--pnid:um9rNWy95JussFqUgDl3dz-->del_flag=0 + 计划开船在7月</text>
+    <rect data-page-node-id="7eI4Q4DLJNhtzVZtlm7I2e" fill="#0C447C" height="60" rx="10" stroke="#85B7EB" stroke-width="0.5" width="250" x="370" y="20"/><text data-page-node-id="5ryZ865aS4I38bKD22Gu1I" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="495" y="42"><!--pnid:Dba9JzsFQx7BQ1YtULxP8C-->CTE2 有效入库（含退仓!）</text><text data-page-node-id="vL5gq6eaHwdHR4i5lBNWfX" fill="#85B7EB" font-size="12" text-anchor="middle" x="495" y="62"><!--pnid:xGRfmTQMbtMs6UTgiyUftO-->data_status=有效</text>
+    <rect data-page-node-id="bIQyAwcCDde8ASiQrWvED9" fill="#0F6E56" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="250" x="215" y="140"/><text data-page-node-id="Dxs4rYVevp0CiQy1RQ9v1U" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="162"><!--pnid:j6liW1HHPJpefQtir2TNd7-->CTE3 柜级聚合</text><text data-page-node-id="SR1gx5wIr7RABVa1OXAhbf" fill="#9FE1CB" font-size="12" text-anchor="middle" x="340" y="182"><!--pnid:rxk3I3GaOZSQMxVZMhkxnj-->SUM总重 / COUNT笔数 / MIN首入时间</text>
+    <path data-page-node-id="N3STcIH8EP8YGjpPWF3SBE" d="M185 80 C185 110 280 115 305 136" fill="none" marker-end="url(#b2)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="x7yOIlugt2IG0jEq0ggH6K" d="M495 80 C495 110 400 115 375 136" fill="none" marker-end="url(#b2)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="9jf2P9d2NBHbui9zAmJ3un" fill="#534AB7" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="420" x="130" y="260"/><text data-page-node-id="u1vXHSN5NHxlleZjbMxtTG" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="282"><!--pnid:L0yPMhwKlKwkQMFNFZdDGC-->柜级打标：COUNT(IF(条件,1,NULL))</text><text data-page-node-id="SdKTsLKndemdQO3M83BHBW" fill="#AFA9EC" font-size="12" text-anchor="middle" x="340" y="302"><!--pnid:SKel4NIlESb6337gD2ruZ4-->超量 / 全额退仓(total_w=0) / 空柜(无匹配) / 延期</text>
+    <path data-page-node-id="raxRFq3jcXwqtL6uBCAiUS" d="M340 200 L340 256" fill="none" marker-end="url(#b2)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="ax0mu0CQo9ihXCxHWZtGrS" fill="#854F0B" height="36" rx="8" stroke="#FAC775" stroke-width="0.5" width="250" x="215" y="350"/><text data-page-node-id="GiJAQBsGfJiHkbRhSXJ5Sp" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="368"><!--pnid:vEVlQPWdddYyxdqXO2Xw1b-->GROUP BY cust_id + 异常占比</text>
+    <path data-page-node-id="gCzIf86oW2M28B5asSz5jN" d="M340 320 L340 346" fill="none" marker-end="url(#b2)" stroke="#888780" stroke-width="1.5"/>
+  </svg>
+
+  <div data-page-node-id="dBuDp55fneKDoAAU3l1zLS" class="card"><b data-page-node-id="og3sjuYxQYbo6rTTkCw9lL" class="t"><!--pnid:J1ttN4OODsNNrppScON0Dt-->核心骨架</b>
+    <div data-page-node-id="xW7hq7JRh9tkEDVFaJa0TK" class="code"><span data-page-node-id="QjjEqERk1qmABWV2L78CyH" class="cm"><!--pnid:PusjlOCSteadRYXDavgCeG-->-- CTE3 柜级聚合：一次算出四个判定条件</span>
+<span data-page-node-id="aAfnnjqRTEp3QNZEuOKdQu" class="kw"><!--pnid:PVSurLTx6Rk4L3kSyO56U1-->SELECT</span><!--pnid:y9K9APMmnnHX4Nnthpvd83--> container_no,
+       SUM(actual_weight) <span data-page-node-id="sHAOq6s2R5ucM2HXnNOr1S" class="kw"><!--pnid:0CvtqZE1ixjEWMzwJ8hsmL-->AS</span><!--pnid:1tvXGVFumoUKA028kJLCNk--> total_w,      <span data-page-node-id="Lqq2MIVpEVwy3PPxhFuet1" class="cm"><!--pnid:mPF64CYYwzeCR2O0CqbELx-->-- 全额退仓判定</span><!--pnid:H2KcFVICSfK9hP2efqIrza-->
+       COUNT(1)           <span data-page-node-id="fQdaz7gTay6cAW8k9dqGb0" class="kw"><!--pnid:KRTrZc8FRsO1phSxt7jVLo-->AS</span><!--pnid:ZhCK5vRnydfxndPWOk6yhK--> inbound_cnt,   <span data-page-node-id="vzG07nRPDwwxtCpF2T2XpS" class="cm"><!--pnid:Uo0ZtqvGfaLh8pA8yJG370-->-- 空柜判定</span><!--pnid:OwstbEUs0bjrF0LkzDupod-->
+       MIN(inbound_time)  <span data-page-node-id="CkRIJoA6TlO40Ks7JCQbz5" class="kw"><!--pnid:02pdzWBTUOnF3io1XMtyV7-->AS</span><!--pnid:Zkdk4wpbNU6TaAK3T5u93N--> first_time    <span data-page-node-id="VTXFveImNf2LjlX8CSFImN" class="cm"><!--pnid:aRchNOj3o94IkpYngbgZvJ-->-- 延期判定</span>
+<span data-page-node-id="3FFwHBN12XkMDjgAZK5zQo" class="kw"><!--pnid:Jv22VKJZwwSmLkd3UMKM0K-->FROM</span><!--pnid:NzOAXwzqEsbgr4KO5SF0FY--> valid_inbound <span data-page-node-id="DzxI1fgvvCWwB8dJhDjAtE" class="kw"><!--pnid:j0v8FJqTDupEBuQKfNh6pe-->GROUP BY</span><!--pnid:v1snP3rkUrysa3qlHvOkG1--> container_no;
+
+<span data-page-node-id="PHnT5RHUbpomt9zRMCm6jj" class="cm"><!--pnid:LupIeeoyLPfS1kiXqoecp2-->-- ④ 柜级打标 → 客户级汇总</span>
+<span data-page-node-id="qlWwkFzntuB8v24B68DijY" class="kw"><!--pnid:sSUIzrRVxXusZ3hcLGf5l6-->SELECT</span><!--pnid:c6vBmj7RC9lBNB9T8fbfXx--> v.cust_id, COUNT(1) <span data-page-node-id="RqGZ3O2ZBGgNC23FLmdhY1" class="kw"><!--pnid:ID2AoG4mTS8tqSBExL2xyN-->AS</span><!--pnid:tICBXGlP5GGF4nIgCD0AOx--> total_container_cnt,
+  COUNT(<span data-page-node-id="KD3fLVJAtRTEgCMKVc6JFW" class="kw"><!--pnid:l4Ll0HpwUmQFJ1rhu7W0JX-->IF</span><!--pnid:EwM7luFS66AY3hNhTsoNgP-->(c.total_w &gt; v.book_weight,<span data-page-node-id="IArDBBOO8PCCRY0BxnIuL3" class="num"><!--pnid:l6ubOqEglOPITzhdWhYrYa-->1</span><!--pnid:7Kgsr3VxbTBmpMmAnEX1N5-->,<span data-page-node-id="8eBIax0FXsEZsFnZ5EOfHo" class="kw"><!--pnid:v9d3iKYTm3u0Ub1C3hS6TZ-->NULL</span><!--pnid:90xj7bmVDA95YiVro6N86m-->)) <span data-page-node-id="DBwDTklSZzJHePCldXD0rK" class="kw"><!--pnid:YyZGSGgdhVMVRbL29CMArG-->AS</span><!--pnid:zvrtTqARWddYBpMXseHQOA--> over_weight_cnt,
+  COUNT(<span data-page-node-id="DLqM6aijxVFcaHi0MI7UoB" class="kw"><!--pnid:jKRIkMBNYD4YbHSEBKrZ9O-->IF</span><!--pnid:OqVoO6yTDdJGOg1dVEKOxM-->(c.total_w = <span data-page-node-id="rUjFHk3GEjhQtFj4bEjWWR" class="num"><!--pnid:DYe0IM27V0YzPdK9PuTALK-->0</span><!--pnid:rKNN6EbQdjcdI40vgjMIZL-->,<span data-page-node-id="Mr29As3A9IVopAOfwuERXE" class="num"><!--pnid:ZBjTd7OuISPwlXmMY8rHWy-->1</span><!--pnid:Df4aE0xUegDu1DRfXt1DeL-->,<span data-page-node-id="eE6rmLeKjZWTaKjAUihS3L" class="kw"><!--pnid:iD5fAiSStOQfnkpGIsRKGT-->NULL</span><!--pnid:hHCUzL8QQYVLoeUoFEDGa5-->))            <span data-page-node-id="jkXQ467vpBZ9mCVUJQz0Zw" class="kw"><!--pnid:OzBMmdrbZkvSiM0u9bO73x-->AS</span><!--pnid:0NeyLie83bFeRzZ6zzH22E--> full_refund_cnt,
+  COUNT(<span data-page-node-id="TNWrUjCrzvckTQ82Zfliq5" class="kw"><!--pnid:dB40aXREO27I7rQBUcq7Un-->IF</span><!--pnid:onavy2IqimoKTvTXsYrp1Y-->(c.inbound_cnt <span data-page-node-id="Nt6L7iBnzeezoxwzmNBasX" class="kw"><!--pnid:ztIzGM9vnMdbdg8Zab3Sfh-->IS NULL</span><!--pnid:Zu1tt8EXByP7f9r398JhlC-->,<span data-page-node-id="X7FLFdrqytWOrga8zcRggZ" class="num"><!--pnid:tk5YvGiKmrzboQHz4SlNg1-->1</span><!--pnid:o9BDyHkF2ozUMRXg0nJJ1h-->,<span data-page-node-id="ZHnrHyrjjNgZkGSsGS5ZDV" class="kw"><!--pnid:1cdCvvL6YN9y4m4uuye4kL-->NULL</span><!--pnid:kGbOQ23iXVt3BaIWn1PamY-->))    <span data-page-node-id="cYOlCgbpmoJfuBDD157YPE" class="kw"><!--pnid:35d6nxAbxKAh64psalamCP-->AS</span><!--pnid:bQPr9y02PFOIKsi77CFum6--> empty_cnt,
+  COUNT(<span data-page-node-id="V77rpuAagFOmBouQ5MGQD0" class="kw"><!--pnid:FFhhZ3hpC2hojrA8TcDyxy-->IF</span><!--pnid:uRHxbxwSpiDQramCNRfWBW-->(c.first_time &gt; CONCAT(<span data-page-node-id="KHxfWEwpECRDyDyu3q5bFy" class="kw"><!--pnid:VkKalP71nP1ghoY1mElXE9-->STRING</span><!--pnid:fCM61ZPwaQXjIMNPGPZU9Q-->(v.old_plan_sail_date),<span data-page-node-id="d43VQcjahIB1H1yrNokNDJ" class="str"><!--pnid:wrN4cOIn4wZzplqeoRoqyn-->' 23:59:59'</span><!--pnid:Ch1NDF4Mqqdg2t3OK3J7OI-->),<span data-page-node-id="c1sMIyurBQlSGbH8ClTGDN" class="num"><!--pnid:PoRIc78HMd1ruNnF4Xyaxw-->1</span><!--pnid:VPPD4uKI1fw1GwX8xSdXYn-->,<span data-page-node-id="By3M5RHNb2bG7nEYUKOwWW" class="kw"><!--pnid:ysG7fbFvY1hBngtfcLNa1Z-->NULL</span><!--pnid:SHngPsaGQu0h7vMn4lW5A7-->)) <span data-page-node-id="lqNjQWAk3IiJ5x7kXfJgQU" class="kw"><!--pnid:CI3sOVzxA3diQt4zrD7c4j-->AS</span><!--pnid:PgHTwS4qySZAdsy7PREjtv--> delay_inbound_cnt,
+  ROUND((超量+退仓+空柜+延期)/COUNT(1), <span data-page-node-id="qTWWjim4qjW7sVaFc2i9nR" class="num"><!--pnid:WYrgMJlJEVJrM8eTEZx5MT-->2</span><!--pnid:9R78XtlzYAXZxGoZwUh2Fr-->) <span data-page-node-id="bRly5D6qA7BNSTjHH7Z3NF" class="kw"><!--pnid:NJt53Qfg0Apqos1AfTFIcl-->AS</span><!--pnid:g7NCTn3zP5sMzaV8yseP4F--> abnormal_ratio
+<span data-page-node-id="0y0yjapC18W3BvgZBRMRCk" class="kw"><!--pnid:ZUruoULfkCCoLTzCIa3BcB-->FROM</span><!--pnid:3L8zs6gstDwHE7Hd0RfWJ6--> valid_container v
+<span data-page-node-id="O7bOpXMUTgVD86uiU9gGZF" class="kw"><!--pnid:eKkhyKeVAkdIwyLaDT3UPD-->LEFT JOIN</span><!--pnid:XJTqS8Fy0T8MLI2IPrrzKb--> container_stat c <span data-page-node-id="v01Eo7alNcQt4YNbjNX8rt" class="kw"><!--pnid:wzLjj9NSxhQ7XyPpazLygW-->ON</span><!--pnid:S1UDZYKBrwcbaImLBunz4G--> v.container_no=c.container_no
+<span data-page-node-id="Df3vCrQSkqM2pXEHjnrB1X" class="kw"><!--pnid:2E14PzHZU1mK8Mvygak1Ih-->GROUP BY</span><!--pnid:njkcvgjqNNKAaqz6lBKVWn--> v.cust_id;</div>
+    <div data-page-node-id="aX84nIRgidDW18s7YjyP3a" class="cm-line"><!--pnid:zeE2WAhef5hvcLcjG7zEk3-->→ 空柜来自「柜全集 LEFT JOIN 无匹配」；<span data-page-node-id="Xj1xjFV0gVITvXrKhI1jJD" class="fn"><!--pnid:ICqqARlvtzpEKRVqqgnrah-->COUNT(IF(…,1,NULL))</span><!--pnid:cLifUnpg5T2g5qY6Q3wzUW--> = 条件计数</div></div>
+
+  <div data-page-node-id="r4vnSojtAtPQqj3dvITEKY" class="warn"><b data-page-node-id="hfH9HraeqADCXdUrALt22u"><!--pnid:h2muNq2ZmriIIl5etEqimC-->⚠ 两个坑：</b><!--pnid:vdufzXJB8ilCFaSdUZAdVX-->① 退仓记录必须保留（全额退仓=累计为 0，和 Q1 剔除口径相反）；② 一个柜可同时命中多类异常，占比分子是「异常人次」，业务要「去重柜数」就用 <span data-page-node-id="ojgGdE3zFZZEaiLqFAiHKm" class="fn"><!--pnid:0QaGBhhO1vaPTpyi58wupj-->MAX(IF(…,1,0))</span><!--pnid:VSn5vR0AwYg7v0xrqkFTpc--> 先柜级去重。</div>
+
+  <div data-page-node-id="BHGZRHCZunB0Kv9vk80flx" class="quiz"><b data-page-node-id="QVbOG95EGxSjE8uEIyI1SL" class="t"><!--pnid:QJ1lZ6SkOh3QElSVpFOZjW-->举一反三：</b><p data-page-node-id="BJxsd3LBXtoVPvuGPtr33N"><!--pnid:1K5g0ZMENCbxCLPStoAvVv-->把「超量」判定改成「体积超量」——只需把比较字段换成 <span data-page-node-id="aEPesYpRdntLFI1y9zYAVn" class="fn"><!--pnid:yN0VViQLBCJdaIYvcaQ6u8-->book_volume</span><!--pnid:xNuGpKzerLjkc8a4lmYtLj--> / <span data-page-node-id="bQUdbMwuYdPTzWWpQ3YtJW" class="fn"><!--pnid:5L6GWNb6ALVOVqBx6PSHfH-->SUM(actual_volume)</span><!--pnid:fOCW2Bxkvzo0mW6Ze8KDV6-->，其余骨架不动。</p></div>
+
+  <div data-page-node-id="CRJvlEADlLM52oqdUWk01N" class="pager"><button data-page-node-id="QcfyuDULVQjtnz9PQ2UCJX" class="pbtn" onclick="go(1)"><!--pnid:8mIucWkdMfELJHDKAHHzzn-->← Q1 迁</button><button data-page-node-id="WH9cybYlThJT4HVTuvrz0J" class="pbtn" onclick="go(3)"><!--pnid:m3BQ4tuJrqFgP9dTofxm3X-->下一页：Q3 排 →</button></div>
+</section>
+
+<!--pnid:OaQvIRKxmQae0nZRPsEzgp--><!-- ============ 第3页 Q3 ============ -->
+<section data-page-node-id="SfczfCTAybn7OEnGIKa0JA" class="page" id="p3">
+  <div data-page-node-id="eGzygLtjzRPOjxrLNlh68a" class="pagehead"><span data-page-node-id="k2ZsQH1luhnehymboLaXMx" class="qtag"><!--pnid:6dlRBmMQfuiqgf91N93at1-->Q3</span><h1 data-page-node-id="YsnMhG0N6Qt4HT5v8SHHOB"><!--pnid:B9L7UmzGKiQU81LB3JyM2L-->月度进仓时效分层排名</h1><span data-page-node-id="GNfLVB4v9VJWpHGDIPsidY" class="stars"><!--pnid:XJbZK9rworAcTKLwGBpoiq-->★★★☆☆</span></div>
+  <div data-page-node-id="o4HBpMQvXoW8cRopEjh0YG" class="sub"><!--pnid:F5UkbBMFdYUIyckEhYXhwb-->时间窗口 + 高阶窗口函数 · 耗时按小时 · 港口内周排名</div>
+  <div data-page-node-id="Obner1BSC5VK7AzI0GYb99" class="tags"><span data-page-node-id="KbxeRiMBzVHJS0l4j2LlaI" class="tag"><!--pnid:y71FvQrCpFeSKjWNBbRS5q-->窗口函数</span><span data-page-node-id="mJsNB2jfPvft67y4fPZSSZ" class="tag"><!--pnid:bOcN2hMeXu8nFKK43j0XBs-->DENSE_RANK</span><span data-page-node-id="Gqc4xOKz7jrRMdGtytIGGE" class="tag"><!--pnid:4Og9GaTsLQG0R53DN5NHll-->时间计算</span><span data-page-node-id="U6hGMRVkMOAdDzrq7m1K1u" class="tag"><!--pnid:lMdXBiBFcxiuIt0FbIBloV-->分组排名</span></div>
+  <div data-page-node-id="lk6Nrup9oqkg9omyw9i0zm" class="steps">
+    <span data-page-node-id="JECywtzwJEDuLiVRbSUvpH" class="step"><b data-page-node-id="PQ2YHJ9rrrSfDq9xmSjpp9"><!--pnid:jucJhq86TvdowbcGG7Vfcl-->①口径</b><!--pnid:gRg5KNsG6ks7i4mSTWG9BY--> 完结状态3种 / 耗时=末次入库-创建(小时)</span>
+    <span data-page-node-id="BHdljmGHbUwtT3HSbdJFco" class="step"><b data-page-node-id="wn6EmC7gaD96v63aLZfEA0"><!--pnid:XESyQakbmVdrH8xvYLK6Ae-->②关系</b><!--pnid:leGiPTnLoBJ7PSPkIVoaYl--> 完结柜 JOIN 末次入库</span>
+    <span data-page-node-id="7ttGArTrm7ZfH42NAg4zo8" class="step"><b data-page-node-id="2ohpMoaV0JbVw1VEYoRpnW"><!--pnid:aV5oAnAEhKoU6ULZgnDUc9-->③CTE</b><!--pnid:avKIb33jA7QTsNf1z3qa6W--> 归周→算耗时</span>
+    <span data-page-node-id="7JT6TqDGcfFgoADrAPUwQ8" class="step"><b data-page-node-id="tZ9efOgpyX7lUeb2smIY5D"><!--pnid:YXnIVdXZi7r4uAnrfqNARx-->④组装</b><!--pnid:ofR9h6EHAOJUM55vMYATy2--> DENSE_RANK</span>
+  </div>
+
+  <svg data-page-node-id="yDro606t2xsT8b4QSMuRvW" aria-label="Q3 数据流水线" role="img" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg">
+    <defs data-page-node-id="6gn1BH9SddkAAmMiBfv1MK"><marker data-page-node-id="b1WxzuA4c4BAyiH6pZHEHQ" id="b3" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="8" refY="5" viewBox="0 0 10 10"><path data-page-node-id="AB1w10WKLOGWVhZkrbwHHS" d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-linecap="round" stroke-width="1.5"/></marker></defs>
+    <rect data-page-node-id="KeHLTV0ED5O80mrHUBUGyz" fill="#3C3489" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="250" x="60" y="20"/><text data-page-node-id="1zskoGnXGzIoOneY7DTMWS" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="185" y="42"><!--pnid:OvPb14YfrWYjMdz7fb9LRH-->CTE1 完结柜全集</text><text data-page-node-id="gvQKebH64JZyDdPq3tk3f3" fill="#AFA9EC" font-size="12" text-anchor="middle" x="185" y="62"><!--pnid:2H3nlIBTx0Kb7vqUVmrlIy-->已配柜/已出运/已签收 + 归周</text>
+    <rect data-page-node-id="iGPaNXcRCbgoCB4gVqqYFJ" fill="#0C447C" height="60" rx="10" stroke="#85B7EB" stroke-width="0.5" width="250" x="370" y="20"/><text data-page-node-id="jfrcoPzxIBJcnzQbFbXZZT" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="495" y="42"><!--pnid:8gg6stzvO2oYG34V0zPsyw-->CTE2 末次有效入库</text><text data-page-node-id="Lb6jF8Wl8qIHL1xxuYGgO4" fill="#85B7EB" font-size="12" text-anchor="middle" x="495" y="62"><!--pnid:79MLCMLukivZWfhdJAwl7T-->MAX(inbound_time) 按柜</text>
+    <rect data-page-node-id="v72tLqkaDoY9XsNuINsCjr" fill="#0F6E56" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="250" x="215" y="140"/><text data-page-node-id="WtaYh0a7qyiYgxKIWWFFqI" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="162"><!--pnid:XxJBQ309es40obm1gVTZSM-->CTE3 进仓耗时（小时）</text><text data-page-node-id="4OPSb6mTHGPGy3kEFQ4kua" fill="#9FE1CB" font-size="12" text-anchor="middle" x="340" y="182"><!--pnid:19otKhBcHSYqyYdc8QE9PA-->UNIX_TIMESTAMP 差 ÷ 3600</text>
+    <path data-page-node-id="TCaNagGcsxhgnU2hAUOGfQ" d="M185 80 C185 110 280 115 305 136" fill="none" marker-end="url(#b3)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="P8EByKBZbJAwE9vAaOUhPo" d="M495 80 C495 110 400 115 375 136" fill="none" marker-end="url(#b3)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="7tMLqOgN57KWkiiLc7fj3E" fill="#854F0B" height="60" rx="10" stroke="#FAC775" stroke-width="0.5" width="340" x="170" y="250"/><text data-page-node-id="aHcvGFzB6uH7528EN8kl9d" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="272"><!--pnid:ZdiTEqcka4IIkE8cSlOGJO-->DENSE_RANK 排名</text><text data-page-node-id="1OKwAlNUXiASezMnp6Qend" fill="#FAC775" font-size="12" text-anchor="middle" x="340" y="292"><!--pnid:fh2r6U3vuLW6MZy4eeQn2s-->PARTITION BY 目的港+周 ORDER BY 耗时 ASC</text>
+    <path data-page-node-id="ruDAi4j2Pax5eYLlW3XQPu" d="M340 200 L340 246" fill="none" marker-end="url(#b3)" stroke="#888780" stroke-width="1.5"/>
+  </svg>
+
+  <div data-page-node-id="1SyY1GFSAdM3x25JXD7PGK" class="card"><b data-page-node-id="GE2r9hZtWiQiztlh13wis7" class="t"><!--pnid:aYb06yktHooCOQKqBSR1jo-->核心骨架</b>
+    <div data-page-node-id="VRz93gTjNAxJY1UzYdfvcK" class="code"><span data-page-node-id="LXF0TSNc9KzrKtPhXGlMzQ" class="cm"><!--pnid:IOtoEwO9C9VLhLIaxw57e5-->-- CTE3 耗时（小时，非天）</span><!--pnid:duhfNiA6iAHfikqTtPLkmv-->
+ROUND((UNIX_TIMESTAMP(l.last_time) - UNIX_TIMESTAMP(f.create_time))/<span data-page-node-id="lfISVP9DsFZBYctg8Wy8oC" class="num"><!--pnid:2CHt1MAWGb748a5FObTNZB-->3600</span><!--pnid:prwDogbs2sk15nvpNh5Xsl-->, <span data-page-node-id="QSesjGz7iENYLIGriQRHLB" class="num"><!--pnid:41X7HdUteKnt4130n3nUci-->1</span><!--pnid:umSbVt5cbPttEEbVLfnCg9-->) <span data-page-node-id="OwHHsuclayhgkjY4PNXgsd" class="kw"><!--pnid:e3JcLQwkEcLgOnCrjy7ruF-->AS</span><!--pnid:4aArNOQ89ng5jqVL3mLV2D--> inbound_hours
+
+<span data-page-node-id="qTEtuk1FBJTY3gqtUahWw1" class="cm"><!--pnid:oYSWmNjtxSJwrRO7syftmD-->-- ④ 归周 + 排名</span><!--pnid:emMCDV7HO3CS2d8XIOKsPH-->
+CONCAT(<span data-page-node-id="TxnjD9HryHBPa0cCzn0htG" class="str"><!--pnid:ysIKJj71TqTCvdbnDIjto8-->'2026-W'</span><!--pnid:XAYnMBGwoiNjS1NA7JNnxM-->, LPAD(WEEKOFYEAR(plan_sail_date),<span data-page-node-id="N0RjWaagcNuLxZplackZgd" class="num"><!--pnid:by45CdLdvVxvrFOr0EgFNP-->2</span><!--pnid:MK6K1o6ugW9P04bgYb35Og-->,<span data-page-node-id="BEjVv05C6SUHX8zH7aJmPl" class="str"><!--pnid:X2eWZORrBnLvbhNuBg9Rv7-->'0'</span><!--pnid:SC6puT4bLQxaEJdQdhsbU0-->)) <span data-page-node-id="1AzPmrOPXGFLgG9J77h83U" class="kw"><!--pnid:SP4z1Kab6y0vtkFDCpNZnG-->AS</span><!--pnid:TuVfTW9fhGuFBej9Uzw3i8--> stat_week
+
+<span data-page-node-id="IPPQHcTxiSu6aSg9mo7X9I" class="kw"><!--pnid:hllTN4eNtO41gWXwDJ8UH5-->SELECT</span><!--pnid:XVfgjkx6vS8t1gfHxG3QBY--> stat_week, dest_port, container_no, inbound_hours,
+       DENSE_RANK() <span data-page-node-id="tV6tD3UWFizHjjayR3wawJ" class="kw"><!--pnid:j8ks56VTqk1Q18qrHWquxm-->OVER</span><!--pnid:7EmgNHhLdIHQnh8MpTGcVU-->(<span data-page-node-id="LQpuhwCyFy2YuokdJSzfJC" class="kw"><!--pnid:GdqFtxlgVMBwWDbkIgZTQM-->PARTITION BY</span><!--pnid:JkVXA1LdWY93KqyWgc3wtj--> dest_port, stat_week
+                          <span data-page-node-id="FhFs4eML5Gjs9mIZwEWr9a" class="kw"><!--pnid:ROUm7gGMsAbfGc4Fwv9KpE-->ORDER BY</span><!--pnid:iKLkmCy2yiu1cz7UdCr80K--> inbound_hours <span data-page-node-id="Nk4COsIz0bGzScf5ZwIQkj" class="kw"><!--pnid:7t98fXsxiPDx8O1hytA5ux-->ASC</span><!--pnid:COOjtGV0c6l26Igywlx6aG-->) <span data-page-node-id="5PKpXEXmRURl0rJN3Euxht" class="kw"><!--pnid:uJjZv2QLu7r3FV5C2DaG6D-->AS</span><!--pnid:zrVVf1G1gOJ0JFqypxzO07--> port_week_rank
+<span data-page-node-id="Cjq78VwV0lEzwGHbQ3pGnb" class="kw"><!--pnid:Pa65bAjpYj8Om6IWFMvyJT-->FROM</span><!--pnid:FeuLPf9UfJru9gMDw7225M--> inbound_hours;</div>
+    <div data-page-node-id="CslB54wd8xQZvdlpNEDYxL" class="cm-line"><!--pnid:Zjmkws9I4q9ZUkW6diMTcH-->→ 题目「区分并列排名」→ 用 <span data-page-node-id="lhAIYkxoi0Wmn0S4wWDXQ5" class="fn"><!--pnid:cVh7SEtqiAVUG9LLrrTC6f-->DENSE_RANK</span></div></div>
+
+  <h3 data-page-node-id="qEioTokr905T5RaLvNecaY"><!--pnid:1e4GRFzPnCwhevgiogPPHC-->窗口函数三兄弟（必考）</h3>
+  <svg data-page-node-id="1Wk3TXJT7wgJZ41M47LDN6" aria-label="三个排名函数对比" role="img" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
+    <text data-page-node-id="G7FixYQnD8aowMchSMIF8F" fill="#EDEDF7" font-size="13" font-weight="500" x="40" y="50"><!--pnid:BMe7qzCMNokSaKB9FSQKhP-->数据：三个柜耗时 100h / 100h / 120h</text>
+    <rect data-page-node-id="cAUCDGDbln8EYsMH9zKDBQ" fill="#0C447C" height="40" rx="8" stroke="#85B7EB" stroke-width="0.5" width="180" x="40" y="70"/><text data-page-node-id="eehxRd17QkmhCfP9XMDr4T" fill="#E8E8E2" font-size="12.5" x="55" y="95"><!--pnid:GtEvpjxPz9HW9gc07a8d9Q-->RANK</text><text data-page-node-id="RkmDut8RWtQPPDrsq4MDCh" fill="#85B7EB" font-size="12.5" x="150" y="95"><!--pnid:bQk1JoJ2R5nnOTxejIi7Mt-->1, 1, 3</text>
+    <text data-page-node-id="iiAu1Qi0WIjMUOCB0DohcD" fill="#B4B2A9" font-size="12.5" x="240" y="95"><!--pnid:XyVes6VokP2UGlKdvHLey2-->并列后跳号（占名次）</text>
+    <rect data-page-node-id="cXjOZQcFlobw6AOrwt5Jcr" fill="#0F6E56" height="40" rx="8" stroke="#5DCAA5" stroke-width="0.5" width="180" x="40" y="122"/><text data-page-node-id="U3kbGrKOuAGci4yybrx7sS" fill="#E8E8E2" font-size="12.5" x="55" y="147"><!--pnid:rOERouxNKThKYWoLGY14sK-->DENSE_RANK</text><text data-page-node-id="cBGs4eFWTd8YK28AbA2ndM" fill="#9FE1CB" font-size="12.5" x="150" y="147"><!--pnid:mCSYbIkxe8sLN4r7XMTIxK-->1, 1, 2</text>
+    <text data-page-node-id="YW3zvG7WTfmz53n8HSDiRb" fill="#B4B2A9" font-size="12.5" x="240" y="147"><!--pnid:7TTn5cy18TIWc3oy4zbi1T-->并列不跳号 ← Q3 用这个</text>
+    <rect data-page-node-id="DtE3TdFZzfdw6dqoP43Vgw" fill="#534AB7" height="40" rx="8" stroke="#AFA9EC" stroke-width="0.5" width="180" x="40" y="174"/><text data-page-node-id="GsMS5EhkpQHcseikOy7ykx" fill="#E8E8E2" font-size="12.5" x="55" y="199"><!--pnid:1ybMan91Nt4ehuk1ld4clv-->ROW_NUMBER</text><text data-page-node-id="wgdYNzTKj88oyuh2BebOjD" fill="#AFA9EC" font-size="12.5" x="150" y="199"><!--pnid:JDpZKGBjJUlXFCjSJJ1Qi2-->1, 2, 3</text>
+    <text data-page-node-id="cuqnxRuLg055BIvI0ra1Ql" fill="#B4B2A9" font-size="12.5" x="240" y="199"><!--pnid:knbvNJmKKsqLniOv5M1GQo-->永不并列（取 TopN/去重用）</text>
+  </svg>
+
+  <div data-page-node-id="trAn8JJRwxqTqj9abyYHZE" class="warn"><b data-page-node-id="LQK5idSAclOlmrhsifTVKX"><!--pnid:T4KO2hLqueNphWV7TAs81C-->⚠ 追问点：</b><!--pnid:dAydO123hOcO9KbPftsvLW-->周按哪个日期归？跨周进仓的柜算哪周？题目没定义——先声明口径假设，体现生产意识。</div>
+
+  <div data-page-node-id="Ew9f5nduVFW7sxgmcYQl9j" class="quiz"><b data-page-node-id="fPEZB5gO8SWgU00aBt60D6" class="t"><!--pnid:JOipb892SkgGbBvAAyko60-->举一反三：</b><p data-page-node-id="OfsQX9DXNXoJTpzDi6CnYQ"><!--pnid:eswORrAwQw0fkKL5Ldqz83-->把「耗时升序」改成「耗时降序取前3」——把 <span data-page-node-id="u8GP6IVtHRFlrWT35B8sjZ" class="fn"><!--pnid:t3kLi2ddXdUwVxcLelgl9k-->DENSE_RANK</span><!--pnid:X4wCUFmY3QbQgEKRMbr5mv--> 换成 <span data-page-node-id="A70KJnEG1d6NagGfwa7Z0l" class="fn"><!--pnid:HrbSJDjXnhtv82MG0mWUwU-->ROW_NUMBER</span><!--pnid:QX9g1IgtRJk3g1qp1L0WjW-->，ORDER BY 改 DESC，外层 <span data-page-node-id="PL3Vx3nFQBmyJTODMOhebU" class="fn"><!--pnid:5MXwf77CKRWSQBvbjMz0TZ-->WHERE rn &lt;= 3</span><!--pnid:idogHOIx9QYJzDwkW1wvUR-->。</p></div>
+
+  <div data-page-node-id="bfCc1CCFd5Lg4GBv0DLU4h" class="pager"><button data-page-node-id="wbPSL5CNAgEbsTPCv8xD84" class="pbtn" onclick="go(2)"><!--pnid:nyhAb0y6ybijKCg6NjVvTn-->← Q2 异</button><button data-page-node-id="36KkCdfEA2p3HJvej0e5Z3" class="pbtn" onclick="go(4)"><!--pnid:vK9eeuDFufuDj4KL7bZ3qG-->下一页：Q4 溯 →</button></div>
+</section>
+
+<!--pnid:hLFJeIR0oCkY5Y7SVb21Md--><!-- ============ 第4页 Q4 ============ -->
+<section data-page-node-id="sFpQ1OoHjujFNrEAV1HV8J" class="page" id="p4">
+  <div data-page-node-id="KsjuC0jvxB60THdNk6hKKt" class="pagehead"><span data-page-node-id="yUf4PFRgBP6dcG5b2tXsyG" class="qtag"><!--pnid:25XkV6IU120FBnPcRhPAng-->Q4</span><h1 data-page-node-id="mcJxvNzr4gZJv1jSi0IJUd"><!--pnid:TFc5RAxmrnN40ak5OBkLwx-->快照数据修正统计</h1><span data-page-node-id="g8ojk9x6DPtAwPxK9bjjZq" class="stars"><!--pnid:itn739Cjz19JT73RPhe46e-->★★★★☆</span></div>
+  <div data-page-node-id="aVB6WXvg3KiHw8cJ12J5Nk" class="sub"><!--pnid:RyzKwCxrb7Xqs6fDS5e4oZ-->数据回溯 + 分区快照 · 用 7-31 最终状态修正整月历史</div>
+  <div data-page-node-id="WWmRHcTA8KnY615fjKAUHN" class="tags"><span data-page-node-id="DCLkHb6vfuNrAEzD5HsNaH" class="tag"><!--pnid:rfUq2PM2e6TuU2fdgejwDl-->分区快照</span><span data-page-node-id="oHoPP6OZUGYSMWSiYLOMFw" class="tag"><!--pnid:5AEA1KkxjXu2yRIqgHOzbY-->口径回溯</span><span data-page-node-id="nEb0RKVNpczesIF24Ifsz3" class="tag"><!--pnid:HMP6aaWvkTz3zKt5mowaQp-->自连接</span><span data-page-node-id="dws9QjvrZChNPpqtIxiNWN" class="tag"><!--pnid:MMr2ypelu63kELKHEJqyAh-->完成率</span></div>
+  <div data-page-node-id="c1kDsAus1ZmrTvpYBnB5GG" class="steps">
+    <span data-page-node-id="OBFwHeHnpWl4GGSUFU8qyZ" class="step"><b data-page-node-id="B0LOoSItX55JntPoHPV9KX"><!--pnid:p1Y9OIiClrj6cPXoInMYw5-->①口径</b><!--pnid:WchInFrcibhzRYUXh1rDBR--> 每日存在性 + 最终状态修正</span>
+    <span data-page-node-id="H2y95ZjHU2zsFbxYSiQptQ" class="step"><b data-page-node-id="Gnc8OrzvCepcJnwdnhlovw"><!--pnid:JIq29qb2oTSMO54GSCVOjL-->②关系</b><!--pnid:fED34yhoDY52UObLulEpi5--> 每日快照 JOIN 最新快照</span>
+    <span data-page-node-id="DRcmODZwGoLOHxsD9LVmRV" class="step"><b data-page-node-id="kqK3xYCsazDXijUMjPQZxa"><!--pnid:bWBcemYEPqyJyfCBgrYYlG-->③CTE</b><!--pnid:thequ7ffLAHYrQtiMmSYlB--> 修正→按日聚合</span>
+    <span data-page-node-id="zayZvN9w5bgsMxfi61I5xT" class="step"><b data-page-node-id="jvxa2L2ZbOJUW22E7VdNkr"><!--pnid:547L9BaEcS6tMPUKxpTrSA-->④组装</b><!--pnid:MgsbSUpUYo7ByFH44jONiz--> 完成率防除零</span>
+  </div>
+
+  <svg data-page-node-id="g7LyMQnMWozDGzSphP8BXl" aria-label="Q4 数据流水线" role="img" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg">
+    <defs data-page-node-id="azzes2N7oi2Pp5NeYyRCq8"><marker data-page-node-id="KZeUF8T0D6UWFzgCtQApfq" id="b4" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="8" refY="5" viewBox="0 0 10 10"><path data-page-node-id="IywmcDDDdjoFVf5wTCu4s7" d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-linecap="round" stroke-width="1.5"/></marker></defs>
+    <rect data-page-node-id="1m4WfABPiUaqFRjW0IRrzq" fill="#0C447C" height="60" rx="10" stroke="#85B7EB" stroke-width="0.5" width="250" x="60" y="20"/><text data-page-node-id="uwPryZuY43RIQZRBmXuPlT" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="185" y="42"><!--pnid:frGgVrM2jkGhMxJu2j2dm2-->每日快照 d（7月全部分区）</text><text data-page-node-id="PrOBMjHCSFBuJvqIN1Ujwo" fill="#85B7EB" font-size="12" text-anchor="middle" x="185" y="62"><!--pnid:ij4uKMyZ5wMGXGl7xma4fK-->提供"当时存在什么"</text>
+    <rect data-page-node-id="VUWiovolkq97Hc6HSa4YmJ" fill="#3C3489" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="250" x="370" y="20"/><text data-page-node-id="BxfPuiQ0t50RUDKT7C7qFl" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="495" y="42"><!--pnid:qT82rVHjDzonp7QXB1OCWU-->最新快照 l（dt=2026-07-31）</text><text data-page-node-id="tDybXIUmQ4df4orCqKAK4F" fill="#AFA9EC" font-size="12" text-anchor="middle" x="495" y="62"><!--pnid:weaJZh1CPYvidSNppoGUaA-->提供"最终状态"</text>
+    <rect data-page-node-id="MJKKp5agFuNigAqMs4N5a3" fill="#0F6E56" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="340" x="170" y="140"/><text data-page-node-id="6EcQLsDRjqp5bGuo2QJYfy" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="162"><!--pnid:Cwr23S2Ls180FAC2eruALV-->JOIN 修正：booking_id + container_no</text><text data-page-node-id="rpVG4J5jsi5V6THa93sc0c" fill="#9FE1CB" font-size="12" text-anchor="middle" x="340" y="182"><!--pnid:rRApI15eX39gtB1twVUSrM-->d.del_flag=0 AND l.del_flag=0（核心！）</text>
+    <path data-page-node-id="p1EVdSv1qdAMHBDQimGcZf" d="M185 80 C185 110 290 115 310 136" fill="none" marker-end="url(#b4)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="hcvrJOLvQFcTzClXbv8CZ2" d="M495 80 C495 110 390 115 370 136" fill="none" marker-end="url(#b4)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="ElhDVsTXLlIvAXs5b3gIk4" fill="#534AB7" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="340" x="170" y="250"/><text data-page-node-id="nKXe3EjYH5FW6NlsglX9Jv" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="272"><!--pnid:FdsYxreCzFNZEBntWSiSot-->按日聚合：总数 / 完结数</text><text data-page-node-id="ShFxPLNAJ1c8u8I997UK2e" fill="#AFA9EC" font-size="12" text-anchor="middle" x="340" y="292"><!--pnid:ZC0pvGX0tgEDrQUf2QgOgT-->状态取 d 当日，有效性取 l 修正</text>
+    <path data-page-node-id="OnxiChqTOjacDzEwl4opc2" d="M340 200 L340 246" fill="none" marker-end="url(#b4)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="v6NEPr0EnT5vh0UXteJlj6" fill="#854F0B" height="36" rx="8" stroke="#FAC775" stroke-width="0.5" width="250" x="215" y="345"/><text data-page-node-id="8urnAFjy1ro6yk1ednwfuU" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="363"><!--pnid:onwZLVk7P7FcgYCDQ1H5Gc-->完成率 = 完结/GREATEST(总数,1)</text>
+    <path data-page-node-id="XBfWK2EUMbav7DiTaQTXGi" d="M340 310 L340 341" fill="none" marker-end="url(#b4)" stroke="#888780" stroke-width="1.5"/>
+  </svg>
+
+  <div data-page-node-id="F5UeZaM3xfdKKCGWUbIfpM" class="card"><b data-page-node-id="NhbA0mKGz2gvBnGNkAigYv" class="t"><!--pnid:Bm4fpI5zh7i324mjgu8zZ0-->核心骨架</b>
+    <div data-page-node-id="mXBonD5ytPBZ6fVGFjADpG" class="code"><span data-page-node-id="D9kH4Z2VLOPSmJAcVnTIS2" class="cm"><!--pnid:6bwBZLbnTzNhv49x0ckRnH-->-- 每日快照 × 最新快照：剔除"后来被删"的历史数据</span>
+<span data-page-node-id="CqdQwPDCFOUentGAQac4fF" class="kw"><!--pnid:j66iP0BaQ0VaEqEx9jUad5-->SELECT</span><!--pnid:kGugBeZXGryxj2Nu6Qyedv--> d.dt, d.container_no, d.container_status
+<span data-page-node-id="SNMpXFcLR7IFT5y0VZ6vll" class="kw"><!--pnid:aPSxBFVuurd0BcxuYb5Yi9-->FROM</span><!--pnid:MHEfD20C1SW4BmsyQcvY60--> dwd_sea_booking_full d
+<span data-page-node-id="WoA1t6ACdi1fPxuaLTlbii" class="kw"><!--pnid:ImZ5Thp5s3meWKe50aSfaK-->JOIN</span><!--pnid:CANC0TYrF4uRUSH05Xr5fP--> latest_snapshot l
+  <span data-page-node-id="PnEt5sPXtgk2vFrNYzwPSJ" class="kw"><!--pnid:5NWpFTTySBaC3bgPx5ZlSC-->ON</span><!--pnid:nlpfjV8Qj8NDOYHRHIMGq1--> d.booking_id=l.booking_id <span data-page-node-id="eyrcWmlw9w2W0BF2X6rFqs" class="kw"><!--pnid:XFLEKrY91P8PZRFMxm9bkv-->AND</span><!--pnid:aa3sxlKRhTqEJOAESJVxN6--> d.container_no=l.container_no
+<span data-page-node-id="DN2mDAxhW25E8RRvr6gO9t" class="kw"><!--pnid:bBzRKRV4mogRGi3Tct70G9-->WHERE</span><!--pnid:9SK5MutNGFnwNfDTYSBzE2--> d.dt &gt;= <span data-page-node-id="J1Ai8nV9ccyA081GjHOGuJ" class="str"><!--pnid:xFbhg3tjq4chg88xKJzrZo-->'2026-07-01'</span> <span data-page-node-id="XtJRw5lCT9nez6mdqC2Bqw" class="kw"><!--pnid:zPSCFQ2P1xgrOMPybKwDRW-->AND</span><!--pnid:UG2GTKZLXE1R5KtFgiUWf2--> d.dt &lt; <span data-page-node-id="OeQvPdDM3gZaGPVl2F21eW" class="str"><!--pnid:PIY31tGFRZnSSvzV5O1A5M-->'2026-08-01'</span>
+  <span data-page-node-id="jzgAsHK62QDe75BksIoBvu" class="kw"><!--pnid:TZQCQZlAsZxVYRfg3B62CE-->AND</span><!--pnid:gLUM9OayjHyLgcr9okdX6Z--> d.del_flag=<span data-page-node-id="gRIOCVXXSyC45FawUujnJU" class="num"><!--pnid:xDumyjtMCRmJrUJunDXJtN-->0</span>   <span data-page-node-id="R2PkiGHWj26uRMqIgTQP87" class="cm"><!--pnid:ROlt21jYjPyu0XYonTcasN-->-- 当日快照正常</span>
+  <span data-page-node-id="BBVfj2BfANHG8RJ9HkV0rK" class="kw"><!--pnid:39yVETWN4AgcCOPGo1xoPO-->AND</span><!--pnid:Op83lY2JlhezLX0vAyYvBn--> l.del_flag=<span data-page-node-id="kcG2oBWDtnBfFSBQfi5KGG" class="num"><!--pnid:cwttq73GYyviGL0SA0UZZA-->0</span>   <span data-page-node-id="52KdQSfke8DHnydxMDsr56" class="cm"><!--pnid:HNuoCSPwdgpN88wJyk37Yv-->-- 最终也没被删（口径回溯核心）</span>
+
+<span data-page-node-id="zWes3XP51a68l7ucoK89Fc" class="cm"><!--pnid:2vviZDVQX3eTFhrX4qedxO-->-- 完成率：GREATEST 防除零</span><!--pnid:uoLfhZA0NvGGofdTtlE3KU-->
+ROUND(finish / GREATEST(total,<span data-page-node-id="h7QRaNPIBLlOyIKDfPhUdB" class="num"><!--pnid:4ihzVHvEDL3hVTCxGcwDne-->1</span><!--pnid:sKRubiU3hlVAqzjultTJWk-->) * <span data-page-node-id="xWNBRCz29UHBEGrulQJFD3" class="num"><!--pnid:Pgdu5czMBVJuTSNFqzXCLl-->100</span><!--pnid:Wcsd828Ec11ORirCasI9rk-->, <span data-page-node-id="m7BuL6abnwupxbXbqbUxyW" class="num"><!--pnid:3x53SH62f3tzXxWVlBBGNx-->2</span><!--pnid:bZnz556xXRqMAnOg26W0oG-->) <span data-page-node-id="PYUuIAAQa7ALJXHeh6EkXj" class="kw"><!--pnid:L4U0UNOPFh1uoElT83vIOP-->AS</span><!--pnid:7W5oM3XiawZImN62FdXurg--> daily_complete_rate</div>
+    <div data-page-node-id="EHtarcSuwKlA3XDjfcVduw" class="cm-line"><!--pnid:4a8r8zLzlL5bTqgSnhCO7g-->→ 一句话：历史快照只取「存在性」，状态一律以最新快照为准</div></div>
+
+  <div data-page-node-id="WLKlsZExNRnfulkNrU7PXF" class="warn"><b data-page-node-id="6jvPYkGJH2xtaLZxAqJlkK"><!--pnid:bYsKFrdaEPeO32Fh1TaJ26-->⚠ 追问点：</b><!--pnid:jNri7VighZw2ecioyJSVfP-->如果源端物理删除（快照里没有已删记录），历史还原不出来。方案：全量同步带 del_flag 落仓，或改用拉链表（正好接思考题4）。</div>
+
+  <div data-page-node-id="we4vmuMAIwaqyKcEvCHC7M" class="quiz"><b data-page-node-id="AOOtUMcxnq6YFMEtBXyXZ8" class="t"><!--pnid:8hX8z3rkynMXgvMNoHGdzA-->举一反三：</b><p data-page-node-id="5C7R4coN2fMge7SBk2dCkA"><!--pnid:pJripMl2E4m7f1rvYZrAUf-->把「完成率」改成「退单率」——把分子从完结柜数换成 <span data-page-node-id="4HLc1WOjFp2MH6Ia7QmhFx" class="fn"><!--pnid:lrvDpDSBJj8P67bZUoaLo0-->l.del_flag=1</span><!--pnid:FD069Epltdau9y9SlYTGIX--> 的柜数即可，主表 JOIN 逻辑不变。</p></div>
+
+  <div data-page-node-id="CUBkpCNx0VNrgpdNEP7NbW" class="pager"><button data-page-node-id="G5BCSt9nASpU9dglTB0E3d" class="pbtn" onclick="go(3)"><!--pnid:9PYJxkusnf01IpZTCVIsLj-->← Q3 排</button><button data-page-node-id="pRIQqNTo38vWSJU9NVgBJW" class="pbtn" onclick="go(5)"><!--pnid:ifxLLurBBNUdT74ah1F5pa-->下一页：Q5 倾 →</button></div>
+</section>
+
+<!--pnid:tjNOQ9iOsFq6uwE2jA71ks--><!-- ============ 第5页 Q5 ============ -->
+<section data-page-node-id="nTFHkSmS3RHK3ok5nYZ2AL" class="page" id="p5">
+  <div data-page-node-id="9s6fSczEEOc5MdefVQVIFj" class="pagehead"><span data-page-node-id="EF28PsyHGHnetKkUrptBhl" class="qtag"><!--pnid:82X2q2no0DYYIkV8LB9rD5-->Q5</span><h1 data-page-node-id="6026I3y7FQRIH87qvxwEtc"><!--pnid:Z2oPLX3BHkaACLVA2adX1u-->客户拼柜质量综合评分</h1><span data-page-node-id="m2DfUaNKta6WYjNVyNpJlw" class="stars"><!--pnid:qPzUVP5pbRNUnkNk43gDJ9-->★★★★★</span></div>
+  <div data-page-node-id="JTlppnvBjjF87QWENtNPiZ" class="sub"><!--pnid:JxnJLkYEYld46KHj1yHJNo-->复杂聚合 + 数据倾斜优化 · Q3 全季度 · 综合得分可上线</div>
+  <div data-page-node-id="lQCOtoJDzDM2L6id2yIZLt" class="tags"><span data-page-node-id="DIUONV6ChJHqNI4Kaganwo" class="tag"><!--pnid:8fiO3TFCZHt3xyFHQh3Haq-->数据倾斜</span><span data-page-node-id="pjit0vow9wxgLkiZJWLLGL" class="tag"><!--pnid:ppgLtjH7cfzT2JAk2XLsJ5-->两阶段聚合</span><span data-page-node-id="EhWd03OAoOwsuHIuvlYzk3" class="tag"><!--pnid:fRqemWNBCNhpGEHLla5Fw1-->加盐</span><span data-page-node-id="wpJzxDFv788QsBPJmVfwYx" class="tag"><!--pnid:9pHbuFditoEFTxGF3eZlip-->评分建模</span></div>
+  <div data-page-node-id="IqVDimfaO9h7bDXwyoL0Ei" class="steps">
+    <span data-page-node-id="k9EAnfUsIF7Z6F2wwl75o2" class="step"><b data-page-node-id="gBxio30BYvr06LJwSNuvng"><!--pnid:mWzgLGXZXc6YmPlCTJlBsS-->①口径</b><!--pnid:v5B5IsNZA552tU1cX8L7gJ--> Q3三个月 / 拼柜≥2票 / 合规≤5票</span>
+    <span data-page-node-id="ZHU6syHNF5qUqvaQOqcv3v" class="step"><b data-page-node-id="FmBrqc8Yk4961TvIAmREhu"><!--pnid:PuPhpwwDuyOiidQSzcuHP0-->②关系</b><!--pnid:SCmfi8kFgyTjd4mJ9TMokX--> 柜级→客户级两层聚合</span>
+    <span data-page-node-id="RTe5rD0qmiZywdan6qdGkJ" class="step"><b data-page-node-id="C8UXJvtcE9SnERNL6cgy9n"><!--pnid:RpgeWux8bk5rUW4vckMONX-->③CTE</b><!--pnid:74ZE4k0JF8QVIInsa6Pj3r--> 柜事实→客户指标</span>
+    <span data-page-node-id="6xzhkI9pnoJjkUOAEDZRlG" class="step"><b data-page-node-id="R5CsRN09mTAYTnnquBAGXJ"><!--pnid:gEnvyoPvT1vv810Ux3dUbC-->④组装</b><!--pnid:kVeSxtnU4GT9zz08Ar6ALi--> 评分公式 + 倾斜三板斧</span>
+  </div>
+
+  <svg data-page-node-id="SY73EB8hExeeX7ojHIALeB" aria-label="Q5 数据流水线" role="img" viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg">
+    <defs data-page-node-id="mxZrRP28sP5VhWSr7lrmTo"><marker data-page-node-id="cSS2mtvk1oZBO2c10hdR2u" id="b5" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="8" refY="5" viewBox="0 0 10 10"><path data-page-node-id="BiXrJSfQbX804gYGwnlqob" d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-linecap="round" stroke-width="1.5"/></marker></defs>
+    <rect data-page-node-id="CtkFh2wWUi92tQW1cNMQLB" fill="#3C3489" height="60" rx="10" stroke="#AFA9EC" stroke-width="0.5" width="250" x="60" y="20"/><text data-page-node-id="XV9cQuAvLf6fBKHdxxvG2Q" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="185" y="42"><!--pnid:0LMHNzrbQLSulJiagd620P-->Q3季度有效柜 + 有效入库</text><text data-page-node-id="X6qjq6Jf2GavmCiT008ZFe" fill="#AFA9EC" font-size="12" text-anchor="middle" x="185" y="62"><!--pnid:WHDahef04cUr7arNTiEbeN-->plan_sail_date 在 7/1-10/1</text>
+    <rect data-page-node-id="1hYqI1FYcKKLZLpNrMGyQy" fill="#0C447C" height="60" rx="10" stroke="#85B7EB" stroke-width="0.5" width="250" x="370" y="20"/><text data-page-node-id="zNFf0h2HqG5jF1fnmobjFa" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="495" y="42"><!--pnid:8umXmPwZ0WSPtxr1ksXl9S-->CTE1 柜级事实（先收敛!）</text><text data-page-node-id="wXfmRMAqXnlG3OTwqBH0lm" fill="#85B7EB" font-size="12" text-anchor="middle" x="495" y="62"><!--pnid:TRBni5m0f8TMiW3mUL2Qn4-->票数/总重/末次入库 按柜</text>
+    <rect data-page-node-id="78AiQRgSUszp1buWn05ia2" fill="#0F6E56" height="60" rx="10" stroke="#5DCAA5" stroke-width="0.5" width="250" x="215" y="140"/><text data-page-node-id="ogG3OuGIc2Ad0Ts6ybbBnk" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="162"><!--pnid:NhjqaT7PAjA3br8YVIKLxP-->CTE2 客户级指标</text><text data-page-node-id="AG9oteG3Q93mX6k9RH8Yur" fill="#9FE1CB" font-size="12" text-anchor="middle" x="340" y="182"><!--pnid:cMaXXwn5QdMM6s4wC73WY0-->拼柜率/空柜率/超量率/合规数</text>
+    <path data-page-node-id="4mtTeSFWvPHV5SooPLO6jj" d="M185 80 C185 110 280 115 305 136" fill="none" marker-end="url(#b5)" stroke="#888780" stroke-width="1.5"/>
+    <path data-page-node-id="M32IxUpNHVowvDd98897hS" d="M495 80 C495 110 400 115 375 136" fill="none" marker-end="url(#b5)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="Rd5YkqaMe1C61gE8PKHwEi" fill="#854F0B" height="50" rx="10" stroke="#FAC775" stroke-width="0.5" width="250" x="215" y="260"/><text data-page-node-id="oU0Ya6HCFVp8GcY12rmE2t" fill="#EDEDF7" font-size="13" font-weight="500" text-anchor="middle" x="340" y="280"><!--pnid:KW78NC36g1p4ks2cIAMpLV-->综合评分</text><text data-page-node-id="5W6LI5P1BjoLSHBmisiIqg" fill="#FAC775" font-size="11.5" text-anchor="middle" x="340" y="297"><!--pnid:OsTzK17nylOApbLQIv6XQj-->(1-空柜)*40 + (1-超量)*30 + 合规*30</text>
+    <path data-page-node-id="4WIK9jKL2ySXPq3EeUxZdU" d="M340 200 L340 256" fill="none" marker-end="url(#b5)" stroke="#888780" stroke-width="1.5"/>
+    <rect data-page-node-id="Jv95cZf5LTjfMlA7dEvjx7" fill="#26262B" height="60" rx="10" stroke="#792F2F" stroke-width="0.5" width="600" x="40" y="340"/><text data-page-node-id="sreDCbKBGH3yDJF7w2Tcwl" fill="#F0A5A5" font-size="13" font-weight="500" text-anchor="middle" x="340" y="362"><!--pnid:MqYhDKF8xOfhlLpVoZUF6e-->倾斜三板斧（热门客户/港口）</text><text data-page-node-id="6k4WATo2UJit6KUjDZGfOa" fill="#E8E8E2" font-size="12" text-anchor="middle" x="340" y="382"><!--pnid:0gnlddpZrRb7XnvmfYBIjB-->① 两阶段聚合先收敛 → ② 加盐 CONCAT(key,'_',RAND) → ③ MAPJOIN 广播小表</text>
+    <path data-page-node-id="JPGsQcq28XyOdviOH1KvKr" d="M340 310 L340 336" fill="none" marker-end="url(#b5)" stroke="#888780" stroke-width="1.5"/>
+  </svg>
+
+  <div data-page-node-id="fw1HOHtO4nYcc1trkwZirb" class="card"><b data-page-node-id="Y0suZiuDDuETYWT2G5DD4H" class="t"><!--pnid:ha3fr1P9exo1BYbDc3WbFK-->评分 + 加盐代码</b>
+    <div data-page-node-id="32EfF4ACOD53UelVTbBssF" class="code"><span data-page-node-id="8UxoXUBaOncUOpzkQk7qWD" class="cm"><!--pnid:5ZmP7zzNui0ShkPAnNalTZ-->-- 综合得分（在客户级指标上）</span><!--pnid:98yz9eTse3yAKaTOekIlI6-->
+ROUND((<span data-page-node-id="N1fiD7gMLHVrSaAhP5y8ga" class="num"><!--pnid:ZZ2LtiO1kyEdYXUK0l2CeS-->1</span><!--pnid:SQXThCOUG461a15yP8pWh8-->-empty_cnt/total_cnt)*<span data-page-node-id="Ce1ih2hB6y0tYpYtQrFuSS" class="num"><!--pnid:6wo029bbhwM6AWsDAVcGf5-->40</span><!--pnid:vCh54cQRociBbIBE8Ftj8v-->
+    + (<span data-page-node-id="MYdyuUrEi2uWankM8RklKD" class="num"><!--pnid:LJx6u35GyCg95AHPrgFSvi-->1</span><!--pnid:8lMFn4v8gfFCH22VHJ4pYT-->-over_cnt/GREATEST(has_inbound_cnt,<span data-page-node-id="azMVGe0dwzv6GoLEJZkK2A" class="num"><!--pnid:a5aPlcjYRNkKuf8HNTW7Ow-->1</span><!--pnid:Q6y8GcqCk0j0QAlA9WHjct-->))*<span data-page-node-id="3MJrEkW0nuSh9eU7iDom3A" class="num"><!--pnid:bqe0qaFzWv2AW2WHr9rzJg-->30</span><!--pnid:rK8QTJTgM3VBQlEtTlmTio-->
+    + compliance_cnt/total_cnt*<span data-page-node-id="ytWthNGGoMyuBag7VprVlt" class="num"><!--pnid:E5XjKYoAVfOp27goTcx7gf-->30</span><!--pnid:w0f9ICSfDr96WUpmOQecaD-->, <span data-page-node-id="XSCPcPSjNlwNzVF2CEVF0U" class="num"><!--pnid:qo3CJFNH3Jy2Hy6wmFnp8s-->2</span><!--pnid:5uNB8on9j1FSfP7yAzAeYk-->) <span data-page-node-id="grsRBclMdq7EGFRUH1A02P" class="kw"><!--pnid:4ZfGkwtseRGAqbj4cfp2eD-->AS</span><!--pnid:MUYvpuA9TfcrPDrSpMHkvB--> score
+
+<span data-page-node-id="G3bYKb8KoJqy07ocBhwm6E" class="cm"><!--pnid:X9WpxJIlyotcXTSq1YWxmA-->-- 加盐：超热门柜 join 打散，两遍聚合</span>
+<span data-page-node-id="UZgFfwN1Lk4cCElfm4OfI4" class="cm"><!--pnid:OzjQDQW1O0MuIJ7BCeq8vx-->-- 第一遍：key 加盐打散</span><!--pnid:QnxfAu2TdFSJKwFtd0qSQC-->
+CONCAT(container_no, <span data-page-node-id="Hv7VKLDVGFlusfvc41FIgA" class="str"><!--pnid:5469nSSKpZY4YPVu99DhHN-->'_'</span><!--pnid:jn9w1idX7ZHaFNOmwBEkBN-->, <span data-page-node-id="f1AQ7gJm0wL04XLCeIjjXn" class="kw"><!--pnid:OsyyJaitIxEDf6KpQ7sfmi-->CAST</span><!--pnid:cmHwsHzRUy2cgcy55m0TuZ-->(FLOOR(RAND()*<span data-page-node-id="PeWLWicHFnakhtAqDM7pFh" class="num"><!--pnid:4Gho2oVyhVINpkInnDE2Qe-->10</span><!--pnid:SwtKkGtbhjfIDwlmw3KQt0-->) <span data-page-node-id="HrMGTsVCQF2qoRfXkcje5L" class="kw"><!--pnid:2gPLW4k68w1sJjATWYFoP0-->AS INT</span><!--pnid:cIPYsovyTarzNkX01sjVHz-->)) <span data-page-node-id="3ut8TXEWvErYy7wtVqvj3C" class="kw"><!--pnid:f9bJIFIDplMzUqXhYOHK4P-->AS</span><!--pnid:hq2mF2MoLwayjgJJSnW0UR--> salted_key
+<span data-page-node-id="xeUF2NcsLYby7VoxKMmKof" class="kw"><!--pnid:yn27v8qwB64gB9LfEAPEeg-->GROUP BY</span><!--pnid:5i2EKMiojZVbj0NHoQwx0L--> salted_key, ...
+<span data-page-node-id="d1rWhmseOYXHjXV0sVEacX" class="cm"><!--pnid:48BOva0arxioXr54URGu1u-->-- 第二遍：去盐后再聚</span>
+<span data-page-node-id="haxrv9CFdj0ZByCdpUhLMM" class="kw"><!--pnid:wAfw1It5Iy2TWCp0Rk2RX4-->GROUP BY</span><!--pnid:yGIZYlZTuqzbcFUHVBztua--> SPLIT(salted_key,<span data-page-node-id="i4hKBq3H9CTjb6rH8cT1ia" class="str"><!--pnid:CgY0j0bfSB0breEQiFHMu7-->'_'</span><!--pnid:deIHzUKulOqB7EPCykg0v4-->)[<span data-page-node-id="HERbkJEx6IfSGzIobuZDgg" class="num"><!--pnid:O0Q1lf1Nzkf0OZcZ10JTmC-->0</span><!--pnid:uxZ4J6yKxzAjVsjvS69HP9-->]</div>
+    <div data-page-node-id="FYGfAFML7T5AQbL5DZFODj" class="cm-line"><!--pnid:zBrvH6tOGFv7aCxDZsabnV-->→ 顺序：先收敛（柜级聚合天然抗倾斜）→ 再加盐 → 小表广播 MAPJOIN</div></div>
+
+  <div data-page-node-id="8kFPJI3WjR3IgxmYoJ8YvX" class="warn"><b data-page-node-id="MeFCvrhWYGyxsTMBAzVaeC"><!--pnid:0AhwMx8QiQ4oVegXllT0gQ-->⚠ 追问点：</b><!--pnid:gs4biZ9A19zK26yV4M9nWd-->为什么「先柜级再客户级」就是倾斜优化？——热点客户的大表明细先在柜级收敛成小结果，大 JOIN 变小 JOIN。</div>
+
+  <div data-page-node-id="4RiW7oF6laEx7wUTvPfvwX" class="quiz"><b data-page-node-id="rMwnwMOkjp2MFYANEewRIJ" class="t"><!--pnid:hm0cDKHE5WgnL7EbM5zFxH-->举一反三：</b><p data-page-node-id="79QOsx8gmF0HOpC6ACHDxf"><!--pnid:gIfOkaH96g64gzRpYGKwBp-->把「拼柜定义」从票数≥2 改成 ≥3——只需改 <span data-page-node-id="8tyEpHel4Q9lYZl7IjJI5T" class="fn"><!--pnid:rmnza3UmroRBGmKbXOeRPE-->SUM(IF(ticket_cnt&gt;=2,1,0))</span><!--pnid:AiAZRoX8uXXLwniJ4xMswC--> 里的阈值，评分权重不变。</p></div>
+
+  <div data-page-node-id="fpCpOSNNN079VgQIPFMs0H" class="pager"><button data-page-node-id="gi944GCTibWHOhL1VKBHoH" class="pbtn" onclick="go(4)"><!--pnid:UWHW27Y1QyAxpsS6he5EQ3-->← Q4 溯</button><button data-page-node-id="Yk0A4i2pFV2aFnP5B0YYCt" class="pbtn" onclick="go(6)"><!--pnid:Ozhaw9vxfywN5vojeySyIt-->下一页：口诀 →</button></div>
+</section>
+
+<!--pnid:QtBXZYYZyvjSQGHNDRS7Tv--><!-- ============ 第6页 口诀 ============ -->
+<section data-page-node-id="CCFYT3UsWSg3UtCg0V1KF1" class="page" id="p6">
+  <div data-page-node-id="be8YZD08SDriRxD06QJHb5" class="pagehead"><span data-page-node-id="TTX5HjxbgboMRfztRWWgZe" class="qtag"><!--pnid:yT0ywbM0IHWwLPuAQHFh8M-->口诀</span><h1 data-page-node-id="zlGRx2N0wFCMKdYFy8tODm"><!--pnid:tA4FMq0d7bjvGFfPyVbTGW-->考前 30 秒总复习</h1></div>
+  <div data-page-node-id="UVjRfRRrSeMfkhMGi5ABkW" class="sub"><!--pnid:DcFx2AhnbJjlYYOyiNTQ1e-->四道思考题要点 + 全套口诀</div>
+
+  <table data-page-node-id="76BgXiMQa3iC45rK8v5dej">
+    <tr data-page-node-id="AI3M7Ee4PiDFUJFvRJam0n"><th data-page-node-id="FuAORouomB26b7kpMsoWDi"><!--pnid:dGYjhUFuWhakkhXRpTeR59-->场景</th><th data-page-node-id="YBPCYpn8GvI37dgSLRJKaF"><!--pnid:27YFA7mx1x9uAaioeWPRcX-->口诀</th></tr>
+    <tr data-page-node-id="Pg97FrBOqn9hwkilV1ebGf"><td data-page-node-id="O2ydEZLDhjvFrdUBB9MFin"><!--pnid:j02fgmaRgCYt2KIsZmXWrj-->五题考点</td><td data-page-node-id="0F1d8I5dps2AsEFDxqL9i6"><!--pnid:sOZy2BCqdEHzCILMwSk6sF-->迁 · 异 · 排 · 溯 · 倾</td></tr>
+    <tr data-page-node-id="b1pvN0C98Xzs2mRZPZmxIo"><td data-page-node-id="W7BbVnLt6yTIwIo6ueektB"><!--pnid:Fy98777zI1kfirilwVhSLj-->每题第一步</td><td data-page-node-id="m74vwnTloKR7LRx9i5AsMA"><!--pnid:gPw6CEv63WzGkXhQB7id0E-->过滤四件套：del_flag + data_status + 测试 + 退仓口径</td></tr>
+    <tr data-page-node-id="jXDYliGkEJZuxOyRD8xpEs"><td data-page-node-id="iTwet42jauhH3qgHC9iE84"><!--pnid:hFdlUo5V1opawocrwnBo5h-->空柜 / 补0</td><td data-page-node-id="KtOcB2gWbxxsvOJE9IKwMx"><!--pnid:grK3WsSCoARMS1HaXSQmzX-->主表选柜清单，LEFT JOIN + COALESCE</td></tr>
+    <tr data-page-node-id="Lq65h0gD9qQ8BZcGzM3N6A"><td data-page-node-id="KAgyAawcSYoZOEeTVhymWD"><!--pnid:iZLMNKL45cReU1BdZOURUF-->并列排名</td><td data-page-node-id="rI7RiKDBXuYJf3FVKa3fei"><!--pnid:kaevIU28XlKnN3HvDXIR8l-->要跳号 RANK，不跳 DENSE，唯一行号 ROW_NUMBER</td></tr>
+    <tr data-page-node-id="SJlj8xCFqlTfeUWKXr7iIw"><td data-page-node-id="zQ5YsKNGd3BZ1Ae8SaFH3E"><!--pnid:JKB2mlEwmRBc0XRchWKgWL-->历史回溯</td><td data-page-node-id="89YGGkJYtcC2HYTiWMrHsu"><!--pnid:z7WHHteBRLOHfnsnsZXPdj-->历史取存在性 + 状态取最新快照</td></tr>
+    <tr data-page-node-id="GLJAGRtqBabJ46EuhombL3"><td data-page-node-id="vRdlBWzZEVizO7HS6rGFH5"><!--pnid:fS8itK8zeGABvA6SCnCjYT-->数据倾斜</td><td data-page-node-id="KhpIpvv1Vv64g79DaKymyY"><!--pnid:uv0Xq7DF0EkDl8b39Jx6th-->先收敛（两阶段）、再加盐、小表广播</td></tr>
+  </table>
+
+  <h3 data-page-node-id="quLDkMEB4E1vtzrRCL1ZP5"><!--pnid:UHyqBhlJZ7og2e23oeCdKb-->四道思考题 · 口述要点</h3>
+  <div data-page-node-id="ZX0COb4IJACSjZu6XxqdEQ" class="card"><b data-page-node-id="EZB0lheXmou3f1qwQZ33CA" class="t"><!--pnid:RDPo0I1oakmbpvdAtim0Za-->1. 换柜场景增量还是全量？</b>
+    <div data-page-node-id="2GkjU8Q4z9Z39uWD9HNG0J" class="cm-line"><!--pnid:oq3tsnFDmFnRaarEjcJpgS-->DWD 事实层用「增量流水 + 全量快照」双轨；换柜是缓慢变化维，用 change_time 起止时间重放任意时刻状态，回溯 = change_time ≤ T &lt; 下次变更，不回刷历史。</div></div>
+  <div data-page-node-id="GCPhOQZFNEqCJQpAXjzJGE" class="card"><b data-page-node-id="oy2gMkAs1z9d3sXQnfLyza" class="t"><!--pnid:F0HRCMswk0a1I2bp5LEoV4-->2. 大表倾斜除加盐外？</b>
+    <div data-page-node-id="73LeDGNpVCwMKydatBizzv" class="cm-line"><!--pnid:GjN8orZuuVmNNPdtCAgZLl-->① 业务层裁剪：join 前先过滤分区/无效状态；② 分层预聚合：大表先按 key 收敛到 DWS 再 join；③ 小表广播 MapJoin；④ 按热点 key 拆桶隔离。</div></div>
+  <div data-page-node-id="E0wG429DGGY85fjPm59gMo" class="card"><b data-page-node-id="pN65vHui1q9AwJqxAWWG6e" class="t"><!--pnid:zVauFLemsiLQQEZajXhOib-->3. 重跑不一致 3 原因？</b>
+    <div data-page-node-id="fajFdXQHOJzcRGY90Hw7LM" class="cm-line"><!--pnid:NgVAFZ2AeobR5jCliMyI3I-->① 源端回刷/迟到数据；② 快照覆盖导致口径漂移；③ 依赖时序——上游未就绪读到半截数据。修复：幂等写入 + 就绪校验 + 固定快照口径。</div></div>
+  <div data-page-node-id="lwrhQ9MkufGkJ95E3Pop1Q" class="card"><b data-page-node-id="RMrTH8WDNsKAxgaTc63ebm" class="t"><!--pnid:TjhNBz5e5RZm3X0VzunNPu-->4. 客户宽表拉链表？</b>
+    <div data-page-node-id="K1GSz3BGj9QGtRS1Dq5hm5" class="cm-line"><!--pnid:Qi8iKtlf4iU30XCJTWdGON-->(cust_id, 属性…, start_date, end_date)；每日增量比对，变化则闭链(end=昨天)+开新链(start=今天)；查任意历史日 WHERE start_date ≤ T AND end_date &gt; T。</div></div>
+
+  <div data-page-node-id="SqTCwbEGVCqxqRVJ14tze8" class="good"><b data-page-node-id="bmMnEVweSs9wIJi4GpCJg4"><!--pnid:RIGQRQ7I5TcotXGr0AarJ4-->完成！</b><!--pnid:Xi9k19ugvhtarEh7ORpG6j--> 建议配合《海运数仓SQL_完整答案与造数.md》跑通造数脚本，用「抄 → 默 → 变」三遍法刷题。可用键盘 <span data-page-node-id="DNUVyMUigE2SPkInXkwHZI" class="kbd"><!--pnid:4D6A0l7ZcbCNkzHtqgZfvV-->←</span> <span data-page-node-id="H6usW2PN26oTx7unFT1AhB" class="kbd"><!--pnid:TPAxuABaXfL9yPbEv0G8aQ-->→</span><!--pnid:2jxp1fCEU3TWLjTTgGlD3K--> 翻页。</div>
+
+  <div data-page-node-id="NAy0IB7I3iGtwWs4qEivCS" class="pager"><button data-page-node-id="RnWHY2wnrs5WbQVqnd4x96" class="pbtn" onclick="go(5)"><!--pnid:darwMsZfkW2d1cxVg79gfJ-->← Q5 倾</button><button data-page-node-id="4aEh9BivwUsauRkEerujFf" class="pbtn" onclick="go(0)"><!--pnid:b2kRGFlJ14vUtg8m6V2fxA-->回开篇 ↑</button></div>
+</section>
+
+<div data-page-node-id="1OpAssTSFMh7bK51fypECc" class="footer-nav">
+  <button data-page-node-id="JbA8htT0DbunnX49lnq5tJ" class="fnb" id="fprev" onclick="prev()"><!--pnid:W5mr1yQpRhw3EovXQ7CX9U-->← 上一题</button>
+  <button data-page-node-id="Sw4mmwTafVrkKNVxlJKIVO" class="fnb" id="fnext" onclick="next()"><!--pnid:w52uEZl0bA6skWZNn7rij1-->下一题 →</button>
+</div>
+
+<script data-page-node-id="pYIUkEejFRcVYyRxtHIxXF" data-pnid-children="uvPTeKJkY32vYxu3gdaC58">
+  var cur=0, total=7, names=['开篇','Q1 迁','Q2 异','Q3 排','Q4 溯','Q5 倾','口诀'];
+  function go(i){
+    cur=i;
+    for(var k=0;k<total;k++){
+      document.getElementById('p'+k).classList.toggle('on', k===i);
+      document.querySelectorAll('.tab')[k].classList.toggle('on', k===i);
+    }
+    document.getElementById('prog').style.width = ((i+1)/total*100)+'%';
+    document.getElementById('fprev').classList.toggle('dim', i===0);
+    document.getElementById('fnext').classList.toggle('dim', i===total-1);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function prev(){ if(cur>0) go(cur-1); }
+  function next(){ if(cur<total-1) go(cur+1); }
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowLeft') prev();
+    if(e.key==='ArrowRight') next();
+  });
+</script>
+</body>
+</html>
