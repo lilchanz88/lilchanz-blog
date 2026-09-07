@@ -130,7 +130,8 @@ const CARDS = [
 
 let filtered = CARDS.map((c,i)=>i), idx = 0, flipped = false;
 const STORE_KEY = 'flashcard-marks-2026dd';
-const marks = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');  // 持久化：刷新/重开浏览器不丢
+let marks = {};  // 持久化：刷新/重开浏览器不丢
+try { marks = JSON.parse(localStorage.getItem(STORE_KEY) || '{}') || {}; } catch(e) { console.warn('标记数据损坏，已重置', e); }
 const save = ()=>localStorage.setItem(STORE_KEY, JSON.stringify(marks));
 let curBranch = "全部", weakOnly = false;
 
