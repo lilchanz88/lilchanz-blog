@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="m9rAeDX9SpWImyS0AtkRwI">
+<head data-page-node-id="ZMJ7NdgFrRXqHeG0JXNhcK">
+<meta charset="UTF-8" data-page-node-id="yWkwW2HT9RkvotmvQLJJBs">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="H6MMUPOqFHK5p4XBz4qWzd">
 <title>SQL 训练工具</title>
 <style>
   :root{
@@ -103,92 +103,92 @@
   .empty .big{font-size:42px;margin-bottom:12px}
 </style>
 </head>
-<body>
-<header>
-  <h1>📊 SQL 训练工具</h1>
-  <span class="cnt" id="cnt"></span>
-  <span class="spacer"></span>
-  <button class="btn" id="weakBtn">🔥 只看薄弱</button>
-  <button class="btn" id="addBtn">➕ 录入题目</button>
-  <button class="btn" id="importBtn">📥 导入</button>
-  <button class="btn ghost" id="exportBtn">📤 导出</button>
+<body data-page-node-id="0IHULAJZIdsMNCFPWLDrIC">
+<header data-page-node-id="cblFZoiZL4HKVx5KDhMuuX">
+  <h1 data-page-node-id="BGbmC5AE9ql0MAkEQvOjLb">📊 SQL 训练工具</h1>
+  <span class="cnt" id="cnt" data-page-node-id="rOyhK5C4DzG6L4rKYsKU0a"></span>
+  <span class="spacer" data-page-node-id="USLOICgBDPCLkRUhdQoEel"></span>
+  <button class="btn" id="weakBtn" data-page-node-id="6DwNlvrIIua4pWG4MnDZS1">🔥 只看薄弱</button>
+  <button class="btn" id="addBtn" data-page-node-id="nrsJRA37lrS0ViiDi699XH">➕ 录入题目</button>
+  <button class="btn" id="importBtn" data-page-node-id="wAhMSsXw7HYFyG5jCWi0Dy">📥 导入</button>
+  <button class="btn ghost" id="exportBtn" data-page-node-id="4nWIcRZGczdiFjtM8SCIGX">📤 导出</button>
 </header>
 
-<main>
-  <aside>
-    <div class="filter"><input id="search" placeholder="搜索题目 / 表名 / 关键词…"></div>
-    <div class="tags" id="tagFilter"></div>
-    <div class="qlist" id="qlist"></div>
+<main data-page-node-id="ZGBvg9EprKxtEd5l9TGgka">
+  <aside data-page-node-id="Bl8HLXMVKvpB0qRrjZxY49">
+    <div class="filter" data-page-node-id="G5cPTVCmKgEDqDIjYaZ6uH"><input id="search" placeholder="搜索题目 / 表名 / 关键词…" data-page-node-id="CGL9TpwbCx1aEcBNUkduzJ"></div>
+    <div class="tags" id="tagFilter" data-page-node-id="Y8YvE9h2BmDFAyIkZBleM0"></div>
+    <div class="qlist" id="qlist" data-page-node-id="T3vxCad1wu4GrEnS9Je2u7"></div>
   </aside>
 
-  <section class="workspace" id="workspace">
-    <div class="empty" id="empty">
-      <div class="big">👋</div>
-      <p>左侧选择题库里的题目开始练习<br>或点右上角「录入题目 / 导入」添加你自己的 SQL 题</p>
+  <section class="workspace" id="workspace" data-page-node-id="5l06Jc21o3W8kGY5FDVMnd">
+    <div class="empty" id="empty" data-page-node-id="deTuEpqtjXGjiqADYC2sBJ">
+      <div class="big" data-page-node-id="GEJX5Xks1cnAbVvaCcPNOE">👋</div>
+      <p data-page-node-id="3zxwS6aIhi7pUcs4smeIkx">左侧选择题库里的题目开始练习<br data-page-node-id="Ra6UJ3jdwnChcWP0lVgHlD">或点右上角「录入题目 / 导入」添加你自己的 SQL 题</p>
     </div>
-    <div class="qpanel" id="qpanel" style="display:none">
-      <div id="qmeta"></div>
-      <div class="qtitle" id="qtitle"></div>
-      <div class="desc" id="qdesc"></div>
-      <div class="schema" id="qschema"></div>
+    <div class="qpanel" id="qpanel" style="display:none" data-page-node-id="CyzeuplrXMDWqcDRVdsJHK">
+      <div id="qmeta" data-page-node-id="LryUbNNf9gD8JdVRv3zaTH"></div>
+      <div class="qtitle" id="qtitle" data-page-node-id="Tik6VZxTqFZJdRQcdp4nQS"></div>
+      <div class="desc" id="qdesc" data-page-node-id="5a4Zinh2e2BJ11Kg9LSg98"></div>
+      <div class="schema" id="qschema" data-page-node-id="RfUznDtoIaWCQt8ZgacFbT"></div>
     </div>
-    <div class="answer-area" id="answerArea" style="display:none">
-      <div class="lbl">✏️ 你的答案（写在这里，练手用）</div>
+    <div class="answer-area" id="answerArea" style="display:none" data-page-node-id="tSKpuycAqPySyKiUdaJZfK">
+      <div class="lbl" data-page-node-id="pCZ7HjB7zd3tOobcsTAwtp">✏️ 你的答案（写在这里，练手用）</div>
       <textarea id="ans" placeholder="SELECT ..."></textarea>
-      <div class="lbl">✅ 参考答案 <button class="btn small" id="toggleRef">展开</button></div>
-      <div class="ref" id="refWrap"><pre id="ref"></pre></div>
-      <div class="actions">
-        <span class="lbl" style="margin:0">掌握度：</span>
-        <div class="rate" id="rateBtns">
-          <button class="btn small" data-v="会">会</button>
-          <button class="btn small" data-v="模糊">模糊</button>
-          <button class="btn small" data-v="不会">不会</button>
+      <div class="lbl" data-page-node-id="dm9LshiDKQ2gcpXl2ZeOHH">✅ 参考答案 <button class="btn small" id="toggleRef" data-page-node-id="0kkg5uIiHYYQKXfaA03uz1">展开</button></div>
+      <div class="ref" id="refWrap" data-page-node-id="MtmIKTZr18tarf55mbmTcn"><pre id="ref" data-page-node-id="HXZmABDOaxf5vEJEKrfJwJ"></pre></div>
+      <div class="actions" data-page-node-id="ZsmVVHQz83XjOPpxYYS8tC">
+        <span class="lbl" style="margin:0" data-page-node-id="uSjiOHUn5C7FG3wFnOY1Gs">掌握度：</span>
+        <div class="rate" id="rateBtns" data-page-node-id="biBMVFvZ5mq63R5xaZFor6">
+          <button class="btn small" data-v="会" data-page-node-id="KBKD5UwNR1F0Q1tp5paym2">会</button>
+          <button class="btn small" data-v="模糊" data-page-node-id="FVpa5f0xVmYRWaoLQdNvp0">模糊</button>
+          <button class="btn small" data-v="不会" data-page-node-id="y04JxWU1h3L472lvBNkULh">不会</button>
         </div>
-        <span class="spacer"></span>
-        <button class="btn" id="prevBtn">← 上一题</button>
-        <button class="btn" id="nextBtn">下一题 →</button>
+        <span class="spacer" data-page-node-id="7NSNKSABtVoC99izgXH394"></span>
+        <button class="btn" id="prevBtn" data-page-node-id="6SL6nDitKbFAvRMSQDcIFs">← 上一题</button>
+        <button class="btn" id="nextBtn" data-page-node-id="WWPPgmVJpeasLPCODPb30D">下一题 →</button>
       </div>
     </div>
   </section>
 </main>
 
 <!-- 录入/编辑弹窗 -->
-<div class="mask" id="editMask">
-  <div class="modal">
-    <div class="mh"><h3 id="editTitle">录入题目</h3><button class="btn ghost" id="closeEdit">✕</button></div>
-    <div class="mb">
-      <label>标题 *</label><input id="f_title" placeholder="例：查询每个部门的平均薪资">
-      <label>难度</label>
-      <select id="f_level"><option>简单</option><option selected>中等</option><option>困难</option></select>
-      <label>标签（逗号分隔）</label><input id="f_tags" placeholder="例：聚合,GROUP BY,连接">
-      <label>题目描述 *</label><textarea id="f_desc" placeholder="例：查询每个部门的平均薪资，按平均薪资降序排列"></textarea>
-      <label>表结构（可选，SQL DDL）</label><textarea id="f_schema" placeholder="CREATE TABLE dept (...);&#10;CREATE TABLE emp (...);" style="min-height:90px"></textarea>
-      <label>参考答案（SQL）</label><textarea id="f_ref" placeholder="SELECT d.name, AVG(e.salary) ..."></textarea>
+<div class="mask" id="editMask" data-page-node-id="zhnTlrj4fqCz4kFrnagoy8">
+  <div class="modal" data-page-node-id="xFm4fvMkIxcS70nRHlyZti">
+    <div class="mh" data-page-node-id="CqLFJqUpEXGDAw9glOSA7T"><h3 id="editTitle" data-page-node-id="44kPyF4p4pGN2BoZukF6wc">录入题目</h3><button class="btn ghost" id="closeEdit" data-page-node-id="V7ya7iltxAVmdymFsnZwk6">✕</button></div>
+    <div class="mb" data-page-node-id="ei1vXFNUMTjthCB3LqCzfP">
+      <label data-page-node-id="V2S8AKdxgxsBrxHaIJqwFL">标题 *</label><input id="f_title" placeholder="例：查询每个部门的平均薪资" data-page-node-id="7tAwOKH8HlBLcYKvak8Lk3">
+      <label data-page-node-id="E3PY2I9N5hJLf2IJj0TBoP">难度</label>
+      <select id="f_level" data-page-node-id="URKdE5SqqPGMUFEK8MHFCb"><option data-page-node-id="pj9fpnjJTZHWFVRca5El6P">简单</option><option selected data-page-node-id="Q6cbPm4ybkE5Da4cHtFClN">中等</option><option data-page-node-id="h6T2jErszDrd0mpwP7XbwK">困难</option></select>
+      <label data-page-node-id="GubIABv85AiYGbaysfJdBp">标签（逗号分隔）</label><input id="f_tags" placeholder="例：聚合,GROUP BY,连接" data-page-node-id="Cj5DLSGBzV9VpLXNUvh6FY">
+      <label data-page-node-id="kgC32BiUj9UsRo5x48va4G">题目描述 *</label><textarea id="f_desc" placeholder="例：查询每个部门的平均薪资，按平均薪资降序排列"></textarea>
+      <label data-page-node-id="6JwX3HUggBJSKyXdoO7wUW">表结构（可选，SQL DDL）</label><textarea id="f_schema" placeholder="CREATE TABLE dept (...);&#10;CREATE TABLE emp (...);" style="min-height:90px"></textarea>
+      <label data-page-node-id="h4ftgOpBOnJ7N6ObR075tR">参考答案（SQL）</label><textarea id="f_ref" placeholder="SELECT d.name, AVG(e.salary) ..."></textarea>
     </div>
-    <div class="mf">
-      <button class="btn" id="cancelEdit">取消</button>
-      <button class="btn primary" id="saveEdit">保存</button>
+    <div class="mf" data-page-node-id="6yDC0IJHNAzaj80q5gYzF6">
+      <button class="btn" id="cancelEdit" data-page-node-id="MD74BSWdnZFHN4W1KxkLHA">取消</button>
+      <button class="btn primary" id="saveEdit" data-page-node-id="PHnanYK8ZMvIs6gy4P4j1B">保存</button>
     </div>
   </div>
 </div>
 
 <!-- 导入弹窗 -->
-<div class="mask" id="importMask">
-  <div class="modal">
-    <div class="mh"><h3>导入题目</h3><button class="btn ghost" id="closeImport">✕</button></div>
-    <div class="mb">
-      <div class="tabs">
-        <button class="active" data-tab="json">JSON 文件</button>
-        <button data-tab="md">Markdown 文件</button>
+<div class="mask" id="importMask" data-page-node-id="lHJUENfCA7gpNi6Fy6eIx7">
+  <div class="modal" data-page-node-id="Lf4NAuGoJ3sIeJ3RldEOKw">
+    <div class="mh" data-page-node-id="LTOfL4jSGcD5O9kAL65y7f"><h3 data-page-node-id="NQrXwQRrw9gZirYyP5cdQu">导入题目</h3><button class="btn ghost" id="closeImport" data-page-node-id="vnk8rj7kHbJHix5cxHG6nm">✕</button></div>
+    <div class="mb" data-page-node-id="7rPCMzMmnpfrZeRFr8SPSC">
+      <div class="tabs" data-page-node-id="OiQ7iNZuMCovh0hOTgbLeE">
+        <button class="active" data-tab="json" data-page-node-id="4RJ9SiV4npcZLbQCQuMmVW">JSON 文件</button>
+        <button data-tab="md" data-page-node-id="QDwucMTu7FkdVVqe9cqOkq">Markdown 文件</button>
       </div>
-      <div id="tab-json">
-        <div class="dropzone" id="dropJson">点击选择或拖拽 .json 文件到此处</div>
+      <div id="tab-json" data-page-node-id="QuF7YV6ctKpnMp47DLFhp4">
+        <div class="dropzone" id="dropJson" data-page-node-id="oqUDFcgDjENxG2nVeuc28t">点击选择或拖拽 .json 文件到此处</div>
       </div>
-      <div id="tab-md" style="display:none">
-        <div class="dropzone" id="dropMd">点击选择或拖拽 .md 文件到此处</div>
-        <div class="help">
-          <p><b>Markdown 格式约定</b>（每道题以 <code>##</code> 开头）：</p>
-          <pre style="margin-top:6px">## 题目标题
+      <div id="tab-md" style="display:none" data-page-node-id="g6eyoo1gCsuCDkc4BygRNE">
+        <div class="dropzone" id="dropMd" data-page-node-id="tFGCh1owSg0kAMxXJseDyz">点击选择或拖拽 .md 文件到此处</div>
+        <div class="help" data-page-node-id="EZZTw6ETPMXpZtPikusAIl">
+          <p data-page-node-id="O1xVz9ZV0Ovs5erVOzxMne"><b data-page-node-id="ZNBHN9kLNsewFrkUVNaExS">Markdown 格式约定</b>（每道题以 <code data-page-node-id="IfOOAca6ooeTr9UakgD6Ea">##</code> 开头）：</p>
+          <pre style="margin-top:6px" data-page-node-id="sUiJ1G1aQdIaGKzY2FgzoY">## 题目标题
 - 难度：简单
 - 标签：聚合,分组
 - 描述：查询每个部门的平均薪资
@@ -202,9 +202,9 @@ CREATE TABLE ...
 ```</pre>
         </div>
       </div>
-      <input type="file" id="fileInput" accept=".json,.md" style="display:none">
+      <input type="file" id="fileInput" accept=".json,.md" style="display:none" data-page-node-id="ESIB7ryD0fdD5obAsDIOWb">
     </div>
-    <div class="mf"><button class="btn primary" id="closeImport2">完成</button></div>
+    <div class="mf" data-page-node-id="P1wVBlpQgY0VMAMHKF5dLG"><button class="btn primary" id="closeImport2" data-page-node-id="83mSiW2OqYVnrQd3Aood11">完成</button></div>
   </div>
 </div>
 
@@ -215,30 +215,48 @@ const MARKS = 'sql-trainer-marks-v1';
 // ---- 内置示例题 ----
 const SAMPLE = [
   {
-    title: "查询每个部门的平均薪资",
+    title: "Q1 换柜数据精准统计",
     level: "简单",
-    tags: ["聚合","GROUP BY","连接"],
-    desc: "有两张表 dept（部门）和 emp（员工）。查询每个部门的平均薪资，按平均薪资降序排列，显示部门名和平均薪资。",
-    schema: "CREATE TABLE dept (\n  dept_id INT PRIMARY KEY,\n  name VARCHAR(50)\n);\n\nCREATE TABLE emp (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  dept_id INT,\n  salary DECIMAL(10,2)\n);",
-    ref: "SELECT d.name, AVG(e.salary) AS avg_salary\nFROM emp e\nJOIN dept d ON e.dept_id = d.dept_id\nGROUP BY d.name\nORDER BY avg_salary DESC;"
+    tags: ["数据清洗", "ROW_NUMBER", "LEFT JOIN", "补0"],
+    desc: "货物换柜后，旧柜数据残留在入库明细里，导致按柜统计失真。\n请统计每个柜的最终总重量、总体积、票数。\n口径：7月入库 / 数据有效 / 剔除退仓 / 换柜按最新柜号归属 / 无入库的柜补0。",
+    schema: "CREATE TABLE dwd_sea_container_full (\n  container_no VARCHAR(50),  -- 柜号\n  cust_id VARCHAR(50),\n  dest_port VARCHAR(50),\n  book_weight DECIMAL(12,2),\n  book_volume DECIMAL(12,2),\n  dt VARCHAR(10),           -- 快照日期\n  del_flag INT              -- 0正常/1删除\n);\n\nCREATE TABLE dwd_sea_goods_inbound_full (\n  cargo_no VARCHAR(50),      -- 票号\n  container_no VARCHAR(50),\n  inbound_time DATETIME,\n  actual_weight DECIMAL(12,2),\n  actual_volume DECIMAL(12,2),\n  inbound_type VARCHAR(20),  -- 正常/退仓\n  data_status VARCHAR(20),   -- 有效/无效\n  del_flag INT\n);\n\nCREATE TABLE dwd_sea_container_change (\n  cargo_no VARCHAR(50),\n  old_container_no VARCHAR(50),\n  new_container_no VARCHAR(50),\n  change_time DATETIME\n);",
+    ref: "WITH container_map AS (\n  SELECT cargo_no, new_container_no AS latest_no,\n         ROW_NUMBER() OVER (PARTITION BY cargo_no ORDER BY change_time DESC) AS rn\n  FROM dwd_sea_container_change\n),\nvalid_inbound AS (\n  SELECT *\n  FROM dwd_sea_goods_inbound_full\n  WHERE data_status = '有效' AND del_flag = 0\n    AND inbound_type <> '退仓'\n    AND inbound_time >= '2026-07-01' AND inbound_time < '2026-08-01'\n),\nmigrated AS (\n  SELECT COALESCE(m.latest_no, i.container_no) AS final_container,\n         i.cargo_no, i.actual_weight, i.actual_volume\n  FROM valid_inbound i\n  LEFT JOIN container_map m ON i.cargo_no = m.cargo_no AND m.rn = 1\n)\nSELECT b.container_no,\n       COALESCE(SUM(g.actual_weight), 0) AS final_total_weight,\n       COALESCE(SUM(g.actual_volume), 0) AS final_total_volume,\n       COUNT(DISTINCT g.cargo_no)        AS cargo_ticket_cnt\nFROM dwd_sea_container_full b\nLEFT JOIN migrated g ON b.container_no = g.final_container\nWHERE b.dt = '2026-07-31' AND b.del_flag = 0\nGROUP BY b.container_no;"
   },
   {
-    title: "找出薪资高于部门平均值的员工",
+    title: "Q2 海运进仓异常数据统计",
     level: "中等",
-    tags: ["子查询","窗口函数"],
-    desc: "基于 emp 表，找出薪资高于其所在部门平均薪资的员工，显示员工名、部门、薪资。",
-    schema: "CREATE TABLE emp (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  dept_id INT,\n  salary DECIMAL(10,2)\n);",
-    ref: "SELECT name, dept_id, salary\nFROM (\n  SELECT name, dept_id, salary,\n         AVG(salary) OVER (PARTITION BY dept_id) AS dept_avg\n  FROM emp\n) t\nWHERE salary > dept_avg;"
+    tags: ["条件聚合", "COUNT IF", "异常监控", "多口径"],
+    desc: "统计每个客户的异常柜数：超量柜、全额退仓柜、空柜、延期入库柜，并计算异常占比。\n口径：7月计划开船 / 数据有效 / 退仓记录【保留】。\n注意：全额退仓 = 该柜累计重量为0；空柜 = 柜清单里有但无任何入库。",
+    schema: "CREATE TABLE dwd_sea_container_full (\n  container_no VARCHAR(50),\n  cust_id VARCHAR(50),\n  book_weight DECIMAL(12,2),\n  book_volume DECIMAL(12,2),\n  old_plan_sail_date DATE,  -- 计划开船日\n  dt VARCHAR(10),\n  del_flag INT\n);\n\nCREATE TABLE dwd_sea_goods_inbound_full (\n  cargo_no VARCHAR(50),\n  container_no VARCHAR(50),\n  inbound_time DATETIME,\n  actual_weight DECIMAL(12,2),\n  inbound_type VARCHAR(20),\n  data_status VARCHAR(20),\n  del_flag INT\n);",
+    ref: "WITH valid_container AS (\n  SELECT container_no, cust_id, book_weight, book_volume, old_plan_sail_date\n  FROM dwd_sea_container_full\n  WHERE del_flag = 0 AND dt = '2026-07-31'\n),\nvalid_inbound AS (\n  SELECT * FROM dwd_sea_goods_inbound_full\n  WHERE data_status = '有效' AND del_flag = 0\n    AND inbound_time >= '2026-07-01' AND inbound_time < '2026-08-01'\n),\ncontainer_stat AS (\n  SELECT container_no,\n         SUM(actual_weight) AS total_w,\n         COUNT(1)           AS inbound_cnt,\n         MIN(inbound_time)  AS first_time\n  FROM valid_inbound GROUP BY container_no\n)\nSELECT v.cust_id,\n       COUNT(1) AS total_container_cnt,\n       COUNT(IF(c.total_w > v.book_weight, 1, NULL)) AS over_weight_cnt,\n       COUNT(IF(c.total_w = 0, 1, NULL))             AS full_refund_cnt,\n       COUNT(IF(c.inbound_cnt IS NULL, 1, NULL))     AS empty_cnt,\n       COUNT(IF(c.first_time > CONCAT(v.old_plan_sail_date,' 23:59:59'), 1, NULL)) AS delay_inbound_cnt\nFROM valid_container v\nLEFT JOIN container_stat c ON v.container_no = c.container_no\nGROUP BY v.cust_id;"
   },
   {
-    title: "删除重复行并保留最小 ID",
+    title: "Q3 月度进仓时效分层排名",
     level: "中等",
-    tags: ["去重","DELETE"],
-    desc: "emp 表里 email 有重复。删除重复记录，每个 email 只保留 emp_id 最小的一行。",
-    schema: "CREATE TABLE emp (\n  emp_id INT PRIMARY KEY,\n  email VARCHAR(100),\n  name VARCHAR(50)\n);",
-    ref: "DELETE e1 FROM emp e1\nJOIN emp e2\n  ON e1.email = e2.email\nWHERE e1.emp_id > e2.emp_id;"
+    tags: ["窗口函数", "DENSE_RANK", "时间计算", "分组排名"],
+    desc: "对已完结的柜，按目的港+周分组，统计进仓耗时（小时）并排名。\n口径：完结状态=已配柜/已出运/已签收；耗时 = 末次入库时间 - 创建时间（小时）；同一港口同一周内耗时并列不跳号。",
+    schema: "CREATE TABLE dwd_sea_booking_full (\n  booking_id VARCHAR(50),\n  container_no VARCHAR(50),\n  dest_port VARCHAR(50),\n  container_status VARCHAR(20), -- 已配柜/已出运/已签收\n  plan_sail_date DATE,\n  create_time DATETIME,\n  del_flag INT\n);\n\nCREATE TABLE dwd_sea_goods_inbound_full (\n  container_no VARCHAR(50),\n  inbound_time DATETIME,\n  data_status VARCHAR(20),\n  del_flag INT\n);",
+    ref: "WITH finished_container AS (\n  SELECT container_no, dest_port, create_time, plan_sail_date\n  FROM dwd_sea_booking_full\n  WHERE container_status IN ('已配柜','已出运','已签收')\n    AND del_flag = 0\n    AND plan_sail_date >= '2026-07-01' AND plan_sail_date < '2026-08-01'\n),\nlast_inbound AS (\n  SELECT container_no, MAX(inbound_time) AS last_time\n  FROM dwd_sea_goods_inbound_full\n  WHERE data_status = '有效' AND del_flag = 0\n  GROUP BY container_no\n),\ninbound_hours AS (\n  SELECT f.container_no, f.dest_port,\n         CONCAT('2026-W', LPAD(WEEKOFYEAR(f.plan_sail_date), 2, '0')) AS stat_week,\n         ROUND((UNIX_TIMESTAMP(l.last_time) - UNIX_TIMESTAMP(f.create_time)) / 3600, 1) AS inbound_hours\n  FROM finished_container f\n  LEFT JOIN last_inbound l ON f.container_no = l.container_no\n)\nSELECT stat_week, dest_port, container_no, inbound_hours,\n       DENSE_RANK() OVER (PARTITION BY dest_port, stat_week ORDER BY inbound_hours ASC) AS port_week_rank\nFROM inbound_hours;"
+  },
+  {
+    title: "Q4 快照数据修正统计",
+    level: "困难",
+    tags: ["分区快照", "口径回溯", "自连接", "完成率"],
+    desc: "用 7-31 的最终快照状态，修正整个 7 月每日的历史统计。\n口径：每日快照取「当时是否存在」，最终状态以 7-31 快照为准；历史快照中「后来被删除」的柜要剔除；计算每日完成率（防除零）。",
+    schema: "CREATE TABLE dwd_sea_booking_full (\n  booking_id VARCHAR(50),\n  container_no VARCHAR(50),\n  container_status VARCHAR(20),\n  dt VARCHAR(10),      -- 快照日期\n  del_flag INT\n);",
+    ref: "WITH latest_snapshot AS (\n  SELECT booking_id, container_no, del_flag\n  FROM dwd_sea_booking_full WHERE dt = '2026-07-31'\n)\nSELECT d.dt,\n       COUNT(1) AS total_cnt,\n       SUM(IF(d.container_status IN ('已出运','已签收'), 1, 0)) AS finish_cnt,\n       ROUND(SUM(IF(d.container_status IN ('已出运','已签收'),1,0)) / GREATEST(COUNT(1),1) * 100, 2) AS daily_complete_rate\nFROM dwd_sea_booking_full d\nJOIN latest_snapshot l\n  ON d.booking_id = l.booking_id AND d.container_no = l.container_no\nWHERE d.dt >= '2026-07-01' AND d.dt < '2026-08-01'\n  AND d.del_flag = 0\n  AND l.del_flag = 0\nGROUP BY d.dt\nORDER BY d.dt;"
+  },
+  {
+    title: "Q5 客户拼柜质量综合评分",
+    level: "困难",
+    tags: ["数据倾斜", "两阶段聚合", "评分建模", "加盐"],
+    desc: "对 Q3 季度（7-9月）计算每个客户的拼柜质量综合评分。\n口径：拼柜=一柜≥2票；合规=一柜≤5票；评分公式 = (1-空柜率)*40 + (1-超量率)*30 + 合规率*30。\n提示：先柜级收敛再客户级聚合，天然抗数据倾斜。",
+    schema: "CREATE TABLE dwd_sea_container_full (\n  container_no VARCHAR(50),\n  cust_id VARCHAR(50),\n  book_weight DECIMAL(12,2),\n  dt VARCHAR(10),\n  del_flag INT\n);\n\nCREATE TABLE dwd_sea_goods_inbound_full (\n  cargo_no VARCHAR(50),\n  container_no VARCHAR(50),\n  actual_weight DECIMAL(12,2),\n  data_status VARCHAR(20),\n  del_flag INT\n);",
+    ref: "WITH container_fact AS (\n  SELECT container_no,\n         COUNT(DISTINCT cargo_no) AS ticket_cnt,\n         SUM(actual_weight)       AS total_w\n  FROM dwd_sea_goods_inbound_full\n  WHERE data_status = '有效' AND del_flag = 0\n  GROUP BY container_no\n),\ncust_metric AS (\n  SELECT c.cust_id,\n         COUNT(1) AS total_cnt,\n         SUM(IF(f.ticket_cnt IS NULL, 1, 0))                    AS empty_cnt,\n         SUM(IF(f.ticket_cnt >= 2, 1, 0))                       AS lcl_cnt,\n         SUM(IF(f.total_w > c.book_weight, 1, 0))               AS over_cnt,\n         SUM(IF(f.ticket_cnt IS NOT NULL AND f.ticket_cnt <= 5, 1, 0)) AS compliance_cnt\n  FROM dwd_sea_container_full c\n  LEFT JOIN container_fact f ON c.container_no = f.container_no\n  WHERE c.del_flag = 0 AND c.dt = '2026-09-30'\n  GROUP BY c.cust_id\n)\nSELECT cust_id,\n       ROUND((1 - empty_cnt/total_cnt) * 40\n           + (1 - over_cnt/GREATEST(total_cnt - empty_cnt, 1)) * 30\n           + compliance_cnt/total_cnt * 30, 2) AS score\nFROM cust_metric;"
   }
 ];
+
+
 
 // ---- 状态 ----
 let questions = load(STORE) || SAMPLE;
