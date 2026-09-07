@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL 训练工具</title>
+<style>
+  :root{
+    --bg:#0f1115; --bg2:#161922; --panel:#1c2030; --panel2:#232838;
+    --line:#2e3448; --text:#e6e8f0; --sub:#9aa3b8; --muted:#6b7288;
+    --accent:#4f8cff; --accent2:#7aa2ff; --ok:#3fb96f; --warn:#e6a23c; --bad:#e65c5c;
+    --mono:'SF Mono', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    font-size:14px;line-height:1.6;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  a{color:var(--accent2);text-decoration:none}
+
+  /* 顶栏 */
+  header{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--bg2);
+    border-bottom:1px solid var(--line);flex:0 0 auto}
+  header h1{font-size:16px;font-weight:600;letter-spacing:.5px}
+  header .cnt{color:var(--sub);font-size:12px}
+  header .spacer{flex:1}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:7px 14px;
+    border-radius:8px;font-size:13px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .btn:hover{border-color:var(--accent);color:var(--accent2)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent2)}
+  .btn.ghost{background:transparent}
+
+  /* 主体两栏 */
+  main{flex:1;display:flex;min-height:0}
+  aside{width:280px;flex:0 0 280px;background:var(--bg2);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;min-height:0}
+  .filter{padding:10px 14px;border-bottom:1px solid var(--line)}
+  .filter input{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);
+    padding:7px 10px;border-radius:7px;font-size:13px;outline:none}
+  .filter input:focus{border-color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px 10px}
+  .tag-pill{font-size:11px;padding:3px 9px;border-radius:12px;background:var(--panel);border:1px solid var(--line);
+    color:var(--sub);cursor:pointer}
+  .tag-pill.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .qlist{flex:1;overflow-y:auto;padding:6px}
+  .qitem{padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px;border:1px solid transparent}
+  .qitem:hover{background:var(--panel)}
+  .qitem.active{background:var(--panel2);border-color:var(--accent)}
+  .qitem .t{font-size:13px;font-weight:500;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+  .qitem .meta{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}
+  .lvl{font-size:10px;padding:1px 6px;border-radius:6px;font-weight:600}
+  .lvl.简单{background:#173c27;color:var(--ok)} .lvl.中等{background:#3a2e13;color:var(--warn)} .lvl.困难{background:#3c1c1c;color:var(--bad)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+  .dot.done{background:var(--ok)} .dot.half{background:var(--warn)}
+
+  /* 答题区 */
+  .workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow-y:auto}
+  .qpanel{padding:20px 26px;border-bottom:1px solid var(--line);background:var(--bg2)}
+  .qpanel .qtitle{font-size:17px;font-weight:600;margin:6px 0 8px}
+  .qpanel .desc{color:var(--sub);font-size:13px;margin-bottom:12px;white-space:pre-wrap}
+  .schema{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-family:var(--mono);
+    font-size:12px;color:var(--sub);overflow-x:auto;white-space:pre;margin-bottom:6px}
+  .schema .h{color:var(--accent2);font-weight:600;display:block;margin-bottom:6px;font-family:inherit}
+
+  .answer-area{padding:18px 26px;flex:1}
+  .lbl{font-size:12px;color:var(--muted);margin:10px 0 6px;display:flex;align-items:center;gap:8px}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:8px;
+    padding:12px;font-family:var(--mono);font-size:13px;line-height:1.6;resize:vertical;outline:none;min-height:110px}
+  textarea:focus{border-color:var(--accent)}
+  .ref{display:none}
+  .ref.show{display:block}
+  .ref pre{background:#0b0e14;border:1px solid var(--line);border-radius:8px;padding:12px;font-family:var(--mono);
+    font-size:13px;color:var(--ok);overflow-x:auto;white-space:pre;margin-top:6px}
+
+  .actions{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .rate{display:flex;gap:8px}
+  .rate .btn.small{padding:5px 12px;font-size:12px}
+  .rate .btn.on-会{background:var(--ok);border-color:var(--ok);color:#fff}
+  .rate .btn.on-模糊{background:var(--warn);border-color:var(--warn);color:#fff}
+  .rate .btn.on-不会{background:var(--bad);border-color:var(--bad);color:#fff}
+
+  /* 弹窗 */
+  .mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .mask.show{display:flex}
+  .modal{background:var(--bg2);border:1px solid var(--line);border-radius:12px;width:100%;max-width:640px;max-height:90vh;
+    display:flex;flex-direction:column;overflow:hidden}
+  .modal .mh{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .modal .mh h3{font-size:15px}
+  .modal .mb{padding:16px 20px;overflow-y:auto}
+  .modal .mb label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px}
+  .modal .mb input,.modal .mb select,.modal .mb textarea{width:100%;background:var(--panel);border:1px solid var(--line);
+    color:var(--text);border-radius:7px;padding:8px 10px;font-size:13px;outline:none}
+  .modal .mb textarea{font-family:var(--mono);min-height:70px;resize:vertical}
+  .modal .mb input:focus,.modal .mb textarea:focus{border-color:var(--accent)}
+  .modal .mf{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .tabs button{background:transparent;border:none;color:var(--sub);padding:8px 14px;cursor:pointer;font-size:13px;border-bottom:2px solid transparent}
+  .tabs button.active{color:var(--accent2);border-bottom-color:var(--accent)}
+  .help{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+  .help code{background:var(--panel);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:11px}
+  .dropzone{border:2px dashed var(--line);border-radius:10px;padding:24px;text-align:center;color:var(--sub);cursor:pointer;transition:.15s}
+  .dropzone:hover,.dropzone.drag{border-color:var(--accent);color:var(--accent2)}
+  .empty{text-align:center;color:var(--muted);padding:60px 20px}
+  .empty .big{font-size:42px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 SQL 训练工具</h1>
+  <span class="cnt" id="cnt"></span>
+  <span class="spacer"></span>
+  <button class="btn" id="weakBtn">🔥 只看薄弱</button>
+  <button class="btn" id="addBtn">➕ 录入题目</button>
+  <button class="btn" id="importBtn">📥 导入</button>
+  <button class="btn ghost" id="exportBtn">📤 导出</button>
+</header>
+
+<main>
+  <aside>
+    <div class="filter"><input id="search" placeholder="搜索题目 / 表名 / 关键词…"></div>
+    <div class="tags" id="tagFilter"></div>
+    <div class="qlist" id="qlist"></div>
+  </aside>
+
+  <section class="workspace" id="workspace">
+    <div class="empty" id="empty">
+      <div class="big">👋</div>
+      <p>左侧选择题库里的题目开始练习<br>或点右上角「录入题目 / 导入」添加你自己的 SQL 题</p>
+    </div>
+    <div class="qpanel" id="qpanel" style="display:none">
+      <div id="qmeta"></div>
+      <div class="qtitle" id="qtitle"></div>
+      <div class="desc" id="qdesc"></div>
+      <div class="schema" id="qschema"></div>
+    </div>
+    <div class="answer-area" id="answerArea" style="display:none">
+      <div class="lbl">✏️ 你的答案（写在这里，练手用）</div>
+      <textarea id="ans" placeholder="SELECT ..."></textarea>
+      <div class="lbl">✅ 参考答案 <button class="btn small" id="toggleRef">展开</button></div>
+      <div class="ref" id="refWrap"><pre id="ref"></pre></div>
+      <div class="actions">
+        <span class="lbl" style="margin:0">掌握度：</span>
+        <div class="rate" id="rateBtns">
+          <button class="btn small" data-v="会">会</button>
+          <button class="btn small" data-v="模糊">模糊</button>
+          <button class="btn small" data-v="不会">不会</button>
+        </div>
+        <span class="spacer"></span>
+        <button class="btn" id="prevBtn">← 上一题</button>
+        <button class="btn" id="nextBtn">下一题 →</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 录入/编辑弹窗 -->
+<div class="mask" id="editMask">
+  <div class="modal">
+    <div class="mh"><h3 id="editTitle">录入题目</h3><button class="btn ghost" id="closeEdit">✕</button></div>
+    <div class="mb">
+      <label>标题 *</label><input id="f_title" placeholder="例：查询每个部门的平均薪资">
+      <label>难度</label>
+      <select id="f_level"><option>简单</option><option selected>中等</option><option>困难</option></select>
+      <label>标签（逗号分隔）</label><input id="f_tags" placeholder="例：聚合,GROUP BY,连接">
+      <label>题目描述 *</label><textarea id="f_desc" placeholder="例：查询每个部门的平均薪资，按平均薪资降序排列"></textarea>
+      <label>表结构（可选，SQL DDL）</label><textarea id="f_schema" placeholder="CREATE TABLE dept (...);&#10;CREATE TABLE emp (...);" style="min-height:90px"></textarea>
+      <label>参考答案（SQL）</label><textarea id="f_ref" placeholder="SELECT d.name, AVG(e.salary) ..."></textarea>
+    </div>
+    <div class="mf">
+      <button class="btn" id="cancelEdit">取消</button>
+      <button class="btn primary" id="saveEdit">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 导入弹窗 -->
+<div class="mask" id="importMask">
+  <div class="modal">
+    <div class="mh"><h3>导入题目</h3><button class="btn ghost" id="closeImport">✕</button></div>
+    <div class="mb">
+      <div class="tabs">
+        <button class="active" data-tab="json">JSON 文件</button>
+        <button data-tab="md">Markdown 文件</button>
+      </div>
+      <div id="tab-json">
+        <div class="dropzone" id="dropJson">点击选择或拖拽 .json 文件到此处</div>
+      </div>
+      <div id="tab-md" style="display:none">
+        <div class="dropzone" id="dropMd">点击选择或拖拽 .md 文件到此处</div>
+        <div class="help">
+          <p><b>Markdown 格式约定</b>（每道题以 <code>##</code> 开头）：</p>
+          <pre style="margin-top:6px">## 题目标题
+- 难度：简单
+- 标签：聚合,分组
+- 描述：查询每个部门的平均薪资
+- 答案：
+```sql
+SELECT ...
+```
+- 表结构：
+```sql
+CREATE TABLE ...
+```</pre>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept=".json,.md" style="display:none">
+    </div>
+    <div class="mf"><button class="btn primary" id="closeImport2">完成</button></div>
+  </div>
+</div>
+
+<script>
+const STORE = 'sql-trainer-questions-v1';
+const MARKS = 'sql-trainer-marks-v1';
+
+// ---- 内置示例题 ----
+const SAMPLE = [
+  {
+    title: "查询每个部门的平均薪资",
+    level: "简单",
+    tags: ["聚合","GROUP BY","连接"],
+    desc: "有两张表 dept（部门）和 emp（员工）。查询每个部门的平均薪资，按平均薪资降序排列，显示部门名和平均薪资。",
+    schema: "CREATE TABLE dept (\n  dept_id INT PRIMARY KEY,\n  name VARCHAR(50)\n);\n\nCREATE TABLE emp (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  dept_id INT,\n  salary DECIMAL(10,2)\n);",
+    ref: "SELECT d.name, AVG(e.salary) AS avg_salary\nFROM emp e\nJOIN dept d ON e.dept_id = d.dept_id\nGROUP BY d.name\nORDER BY avg_salary DESC;"
+  },
+  {
+    title: "找出薪资高于部门平均值的员工",
+    level: "中等",
+    tags: ["子查询","窗口函数"],
+    desc: "基于 emp 表，找出薪资高于其所在部门平均薪资的员工，显示员工名、部门、薪资。",
+    schema: "CREATE TABLE emp (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  dept_id INT,\n  salary DECIMAL(10,2)\n);",
+    ref: "SELECT name, dept_id, salary\nFROM (\n  SELECT name, dept_id, salary,\n         AVG(salary) OVER (PARTITION BY dept_id) AS dept_avg\n  FROM emp\n) t\nWHERE salary > dept_avg;"
+  },
+  {
+    title: "删除重复行并保留最小 ID",
+    level: "中等",
+    tags: ["去重","DELETE"],
+    desc: "emp 表里 email 有重复。删除重复记录，每个 email 只保留 emp_id 最小的一行。",
+    schema: "CREATE TABLE emp (\n  emp_id INT PRIMARY KEY,\n  email VARCHAR(100),\n  name VARCHAR(50)\n);",
+    ref: "DELETE e1 FROM emp e1\nJOIN emp e2\n  ON e1.email = e2.email\nWHERE e1.emp_id > e2.emp_id;"
+  }
+];
+
+// ---- 状态 ----
+let questions = load(STORE) || SAMPLE;
+let marks = load(MARKS) || {};
+let curTag = '全部', curIdx = 0, weakOnly = false, editingId = null;
+let filtered = [];
+
+function load(k){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; }catch(e){ return null; } }
+function save(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+function persistQ(){ save(STORE, questions); }
+function persistM(){ save(MARKS, marks); }
+
+// ---- 筛选 ----
+function applyFilter(){
+  const kw = document.getElementById('search').value.trim().toLowerCase();
+  filtered = questions.map((q,i)=>({q,i})).filter(({q})=>{
+    if(curTag!=='全部' && !(q.tags||[]).includes(curTag)) return false;
+    if(weakOnly && !(marks[q.title] && marks[q.title]!=='会')) return false;
+    if(kw){
+      const hay = (q.title+' '+(q.tags||[]).join(' ')+(q.desc||'')+' '+(q.schema||'')).toLowerCase();
+      if(!hay.includes(kw)) return false;
+    }
+    return true;
+  });
+  if(curIdx >= filtered.length) curIdx = filtered.length-1;
+  if(curIdx < 0) curIdx = 0;
+  renderList(); renderQuestion();
+}
+
+function renderTags(){
+  const set = new Set();
+  questions.forEach(q=>(q.tags||[]).forEach(t=>set.add(t)));
+  const el = document.getElementById('tagFilter');
+  el.innerHTML = '<span class="tag-pill'+(curTag==='全部'?' active':'')+'" data-t="全部">全部</span>';
+  [...set].sort().forEach(t=>{
+    const p = document.createElement('span');
+    p.className = 'tag-pill'+(curTag===t?' active':'');
+    p.textContent = t; p.dataset.t = t;
+    el.appendChild(p);
+  });
+  el.querySelectorAll('.tag-pill').forEach(p=>p.onclick=()=>{ curTag=p.dataset.t; renderTags(); applyFilter(); });
+}
+
+function renderList(){
+  const el = document.getElementById('qlist');
+  document.getElementById('cnt').textContent = `共 ${questions.length} 题 · 筛选 ${filtered.length} 题`;
+  if(filtered.length===0){ el.innerHTML='<div class="empty"><p>没有匹配的题目</p></div>'; return; }
+  el.innerHTML = '';
+  filtered.forEach(({q,i},idx)=>{
+    const m = marks[q.title];
+    const dot = m==='会'?'done':(m?'half':'');
+    const div = document.createElement('div');
+    div.className = 'qitem'+(idx===curIdx?' active':'');
+    div.innerHTML = `<div class="t"><span class="dot ${dot}"></span>${esc(q.title)}</div>
+      <div class="meta"><span class="lvl ${esc(q.level||'中等')}">${esc(q.level||'中等')}</span>
+      ${(q.tags||[]).map(t=>`<span>#${esc(t)}</span>`).join('')}</div>`;
+    div.onclick = ()=>{ curIdx = idx; renderList(); renderQuestion(); };
+    el.appendChild(div);
+  });
+}
+
+// ---- 答题区 ----
+function renderQuestion(){
+  const empty = document.getElementById('empty');
+  const panel = document.getElementById('qpanel');
+  const area = document.getElementById('answerArea');
+  if(filtered.length===0){ empty.style.display='block'; panel.style.display='none'; area.style.display='none'; return; }
+  empty.style.display='none'; panel.style.display='block'; area.style.display='block';
+  const {q,i} = filtered[curIdx];
+  const lvl = q.level||'中等';
+  document.getElementById('qmeta').innerHTML =
+    `<span class="lvl ${esc(lvl)}">${esc(lvl)}</span>`+
+    ` <span style="color:var(--muted);font-size:12px">第 ${curIdx+1} / ${filtered.length} 题</span>`+
+    ((q.tags||[]).map(t=>`<span style="color:var(--accent2);font-size:12px"> #${esc(t)}</span>`).join(''));
+  document.getElementById('qtitle').textContent = q.title;
+  document.getElementById('qdesc').textContent = q.desc || '';
+  const schema = document.getElementById('qschema');
+  if(q.schema){ schema.style.display='block'; schema.innerHTML='<span class="h">表结构</span>'+esc(q.schema); }
+  else schema.style.display='none';
+  document.getElementById('ans').value = '';
+  document.getElementById('ref').textContent = q.ref || '(无参考答案)';
+  document.getElementById('refWrap').classList.remove('show');
+  document.getElementById('toggleRef').textContent = '展开';
+  document.getElementById('prevBtn').disabled = curIdx===0;
+  document.getElementById('nextBtn').disabled = curIdx===filtered.length-1;
+  renderRate();
+}
+
+function renderRate(){
+  const q = filtered[curIdx]?.q; if(!q) return;
+  const m = marks[q.title];
+  document.querySelectorAll('#rateBtns .btn').forEach(b=>{
+    b.classList.toggle('on-'+b.dataset.v, m===b.dataset.v);
+  });
+}
+
+// ---- 事件 ----
+document.getElementById('search').addEventListener('input', applyFilter);
+document.getElementById('weakBtn').onclick = function(){ weakOnly=!weakOnly; this.style.background = weakOnly?'var(--warn)':''; this.style.color = weakOnly?'#fff':''; applyFilter(); };
+document.getElementById('toggleRef').onclick = function(){
+  const w = document.getElementById('refWrap');
+  const show = w.classList.toggle('show');
+  this.textContent = show?'收起':'展开';
+};
+document.getElementById('prevBtn').onclick = ()=>{ curIdx--; renderList(); renderQuestion(); };
+document.getElementById('nextBtn').onclick = ()=>{ curIdx++; renderList(); renderQuestion(); };
+document.getElementById('rateBtns').addEventListener('click', e=>{
+  const b = e.target.closest('.btn'); if(!b) return;
+  const q = filtered[curIdx]?.q; if(!q) return;
+  if(marks[q.title]===b.dataset.v){ delete marks[q.title]; } else { marks[q.title]=b.dataset.v; }
+  persistM(); renderRate(); renderList();
+});
+
+// ---- 录入/编辑 ----
+document.getElementById('addBtn').onclick = ()=>openEdit(null);
+function openEdit(id){
+  editingId = id;
+  document.getElementById('editTitle').textContent = id==null?'录入题目':'编辑题目';
+  const q = id==null ? {} : questions[id];
+  document.getElementById('f_title').value = q.title||'';
+  document.getElementById('f_level').value = q.level||'中等';
+  document.getElementById('f_tags').value = (q.tags||[]).join(',');
+  document.getElementById('f_desc').value = q.desc||'';
+  document.getElementById('f_schema').value = q.schema||'';
+  document.getElementById('f_ref').value = q.ref||'';
+  document.getElementById('editMask').classList.add('show');
+}
+document.getElementById('closeEdit').onclick = ()=>document.getElementById('editMask').classList.remove('show');
+document.getElementById('cancelEdit').onclick = ()=>document.getElementById('editMask').classList.remove('show');
+document.getElementById('saveEdit').onclick = ()=>{
+  const title = document.getElementById('f_title').value.trim();
+  const desc = document.getElementById('f_desc').value.trim();
+  if(!title){ alert('请填写标题'); return; }
+  const q = {
+    title,
+    level: document.getElementById('f_level').value,
+    tags: document.getElementById('f_tags').value.split(/[,，]/).map(s=>s.trim()).filter(Boolean),
+    desc,
+    schema: document.getElementById('f_schema').value.trim(),
+    ref: document.getElementById('f_ref').value.trim(),
+  };
+  if(editingId==null){ questions.push(q); } else { questions[editingId]=q; }
+  persistQ(); document.getElementById('editMask').classList.remove('show');
+  renderTags(); applyFilter();
+};
+
+// ---- 导入 ----
+document.getElementById('importBtn').onclick = ()=>document.getElementById('importMask').classList.add('show');
+document.getElementById('closeImport').onclick = ()=>document.getElementById('importMask').classList.remove('show');
+document.getElementById('closeImport2').onclick = ()=>document.getElementById('importMask').classList.remove('show');
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const tab = b.dataset.tab;
+  document.getElementById('tab-json').style.display = tab==='json'?'block':'none';
+  document.getElementById('tab-md').style.display = tab==='md'?'block':'none';
+  document.getElementById('fileInput').accept = tab==='json'?'.json':'.md';
+});
+document.getElementById('dropJson').onclick = ()=>{ document.getElementById('fileInput').accept='.json'; document.getElementById('fileInput').click(); };
+document.getElementById('dropMd').onclick = ()=>{ document.getElementById('fileInput').accept='.md'; document.getElementById('fileInput').click(); };
+document.getElementById('fileInput').addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      if(f.name.endsWith('.json')){
+        const data = JSON.parse(r.result);
+        const arr = Array.isArray(data) ? data : (data.questions||[]);
+        const before = questions.length;
+        arr.forEach(item=>{
+          if(item && item.title) questions.push(normalize(item));
+        });
+        alert(`导入 ${questions.length-before} 道题`);
+      } else if(f.name.endsWith('.md')){
+        const n = parseMd(r.result);
+        const before = questions.length;
+        n.forEach(q=>questions.push(q));
+        alert(`导入 ${questions.length-before} 道题`);
+      }
+      persistQ(); renderTags(); applyFilter();
+      document.getElementById('importMask').classList.remove('show');
+      e.target.value='';
+    }catch(err){ alert('导入失败：'+err.message); }
+  };
+  r.readAsText(f);
+});
+
+function normalize(item){
+  return {
+    title: item.title||'未命名',
+    level: item.level||item.difficulty||'中等',
+    tags: item.tags||[],
+    desc: item.desc||item.description||'',
+    schema: item.schema||item.tables||'',
+    ref: item.ref||item.answer||item.reference||''
+  };
+}
+
+function parseMd(text){
+  const out = [];
+  const blocks = text.split(/^##\s+/m).slice(1);
+  blocks.forEach(b=>{
+    const lines = b.split('\n');
+    const title = (lines[0]||'').trim();
+    let level='中等', tags=[], desc='', ref='', schema='';
+    let mode=null, buf=[];
+    const body = lines.slice(1).join('\n');
+    const flush = ()=>{
+      const v = buf.join('\n').trim();
+      if(mode==='desc') desc+=v;
+      else if(mode==='ref') ref=v;
+      else if(mode==='schema') schema=v;
+      buf=[];
+    };
+    body.split('\n').forEach(line=>{
+      let m = line.match(/^[-*]\s*难度[:：]\s*(.+)/); if(m){ level=m[1].trim(); return; }
+      m = line.match(/^[-*]\s*标签[:：]\s*(.+)/); if(m){ tags=m[1].split(/[,，]/).map(s=>s.trim()).filter(Boolean); return; }
+      m = line.match(/^[-*]\s*描述[:：]\s*(.*)/); if(m){ flush(); mode='desc'; if(m[1].trim()) buf.push(m[1].trim()); return; }
+      m = line.match(/^[-*]\s*答案[:：]/); if(m){ flush(); mode='ref'; return; }
+      m = line.match(/^[-*]\s*表结构[:：]/); if(m){ flush(); mode='schema'; return; }
+      if(line.trim()==='```'){ flush(); mode=null; return; }
+      if(line.trim()==='```sql' || line.trim()==='```SQL'){ return; }
+      buf.push(line);
+    });
+    flush();
+    if(title) out.push({title, level, tags, desc, ref, schema});
+  });
+  return out;
+}
+
+// ---- 导出 ----
+document.getElementById('exportBtn').onclick = ()=>{
+  const data = JSON.stringify(questions, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sql-questions.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+function esc(s){ return String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// 双击题目可编辑
+document.getElementById('qlist').addEventListener('dblclick', e=>{
+  const div = e.target.closest('.qitem'); if(!div) return;
+  const idx = [...div.parentElement.children].indexOf(div);
+  if(filtered[idx]) openEdit(filtered[idx].i);
+});
+
+renderTags();
+applyFilter();
+</script>
+</body>
+</html>
