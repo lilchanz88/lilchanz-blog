@@ -363,9 +363,13 @@ const shuffle = a => { for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.ra
 function startSession(list, from){
   if(!list.length){ alert('没有可刷的卡'); return; }
   queue = list.slice(); qi = 0; returnTo = from;
+  // 无论从哪个标签页进入，先把 Study 面板和 tab 点亮（否则从导图进来整个面板是隐藏的）
+  ['Study','Map','Mock'].forEach(x=>{
+    document.getElementById('tab'+x).classList.toggle('on', x==='Study');
+    document.getElementById('p'+x).classList.toggle('on', x==='Study');
+  });
   document.getElementById('home').style.display = 'none';
   document.getElementById('doneBox').style.display = 'none';
-  document.getElementById('pMap').classList.remove('on');
   document.getElementById('study').style.display = 'block';
   renderStudy();
 }
