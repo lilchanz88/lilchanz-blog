@@ -3,159 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SQL 闯关练习 · 海运数仓</title>
+<title>SQL 闯关 · 海运数仓 37 题</title>
 <style>
-  :root{
-    --bg:#0d1117; --bg2:#161b22; --panel:#1c2128; --panel2:#22272e;
-    --line:#30363d; --line2:#444c56;
-    --text:#e6edf3; --sub:#8b949e; --muted:#6e7681;
-    --accent:#f0883e; --accent2:#ffa657; --accent3:#d29922;
-    --ok:#3fb950; --ok2:#2ea043; --warn:#d29922; --bad:#f85149;
-    --purple:#bc8cff; --teal:#39c5cf;
-    --mono:'SF Mono','JetBrains Mono','Fira Code',Menlo,Consolas,monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
-    font-size:14px;line-height:1.6;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-  a{color:var(--accent2);text-decoration:none}
-
-  header{padding:18px 24px 14px;background:linear-gradient(180deg,var(--bg2),var(--bg));border-bottom:1px solid var(--line);flex:0 0 auto}
-  .hdr-top{display:flex;align-items:center;gap:14px;margin-bottom:6px}
-  .logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent3));
-    display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto}
-  .title{font-size:20px;font-weight:700;letter-spacing:.3px}
-  .subtitle{color:var(--sub);font-size:12px;margin-top:1px}
-  .mode-switch{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px;margin-top:8px;width:fit-content}
-  .mode-switch button{background:transparent;border:none;color:var(--sub);padding:6px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500}
-  .mode-switch button.active{background:var(--panel2);color:var(--text);box-shadow:0 0 0 1px var(--line2)}
-
-  .scroll{flex:1;overflow-y:auto;padding:18px 24px}
-
-  .tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-bottom:16px}
-  .table-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;transition:.15s}
-  .table-card:hover{border-color:var(--line2)}
-  .table-name{font-size:14px;font-weight:600;color:var(--accent2);margin-bottom:2px;display:flex;align-items:center;gap:6px}
-  .table-name .badge{font-size:10px;background:var(--panel2);color:var(--sub);padding:1px 6px;border-radius:8px;font-weight:400}
-  .table-desc{font-size:11px;color:var(--muted);margin-bottom:10px}
-  .field-table{width:100%;border-collapse:collapse;font-size:12px}
-  .field-table th{color:var(--sub);font-weight:500;padding:5px 8px;text-align:left;border-bottom:1px solid var(--line);font-size:11px}
-  .field-table td{padding:5px 8px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11.5px;color:var(--text)}
-  .field-table td.type{color:var(--teal);white-space:nowrap}
-  .field-table td.comment{color:var(--muted);font-family:inherit;font-size:11px}
-  .field-table tr:last-child td{border-bottom:none}
-  .sample{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--sub)}
-  .sample .label{color:var(--muted);margin-bottom:4px;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
-  .sample pre{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-family:var(--mono);
-    color:var(--text);font-size:11px;overflow-x:auto;white-space:pre;margin:0;line-height:1.5}
-
-  .stage-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0 14px;border-top:1px solid var(--line);margin-top:6px}
-  .stage-pill{font-size:12px;padding:6px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);
-    color:var(--sub);cursor:pointer;transition:.15s;font-weight:500;display:flex;align-items:center;gap:6px}
-  .stage-pill:hover{border-color:var(--line2);color:var(--text)}
-  .stage-pill.active{background:var(--panel2);color:var(--text);border-color:var(--accent)}
-  .stage-pill .cnt{font-size:10px;color:var(--muted);background:var(--bg2);padding:1px 6px;border-radius:8px;font-weight:400}
-  .stage-pill.active .cnt{background:var(--accent);color:#1a1a1a}
-  .progress-wrap{flex:1;display:flex;align-items:center;gap:10px;min-width:200px;margin-left:8px}
-  .progress-label{font-size:12px;color:var(--sub);white-space:nowrap}
-  .progress-bar{flex:1;height:6px;background:var(--panel);border-radius:3px;overflow:hidden;position:relative}
-  .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--ok2),var(--accent));border-radius:3px;transition:width .3s}
-  .progress-num{font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
-
-  .work{display:grid;grid-template-columns:340px 1fr;gap:14px;min-height:0}
-  .qlist-pane{background:var(--panel);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;min-height:520px;max-height:600px}
-  .qlist-head{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
-  .qlist-head .meta{font-size:11px;color:var(--muted);font-weight:400}
-  .qlist-body{flex:1;overflow-y:auto;padding:6px}
-  .qitem{padding:9px 12px;border-radius:7px;cursor:pointer;margin-bottom:2px;border:1px solid transparent;transition:.12s}
-  .qitem:hover{background:var(--panel2)}
-  .qitem.active{background:var(--panel2);border-color:var(--accent)}
-  .qitem.done{opacity:.75}
-  .qitem .top{display:flex;align-items:center;gap:6px;margin-bottom:2px}
-  .qitem .qid{font-size:11px;color:var(--muted);font-family:var(--mono);font-weight:500}
-  .qitem .qtitle{font-size:13px;font-weight:500;flex:1;line-height:1.4}
-  .qitem .badge{font-size:10px;padding:1px 6px;border-radius:6px;font-weight:600;white-space:nowrap}
-  .qitem .badge.简单{background:#1a3a23;color:var(--ok)}
-  .qitem .badge.中等{background:#3a2a13;color:var(--warn)}
-  .qitem .badge.困难{background:#3a1c1c;color:var(--bad)}
-  .qitem .meta{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-top:3px}
-  .qitem .linked{color:var(--accent3)}
-
-  .qdetail-pane{background:var(--panel);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;min-height:520px;max-height:600px}
-  .qdetail-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-  .qdetail-head .left{flex:1;min-width:0}
-  .qdetail-head .qid{font-size:11px;color:var(--muted);font-family:var(--mono)}
-  .qdetail-head .qt{font-size:15px;font-weight:600;margin:4px 0 6px}
-  .qdetail-head .links{font-size:11px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-  .qdetail-head .links .tag{background:var(--bg2);border:1px solid var(--line);padding:1px 7px;border-radius:8px;color:var(--sub)}
-  .qdetail-head .actions{display:flex;gap:6px;flex:0 0 auto}
-  .qdetail-body{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-  .qdesc{padding:12px 18px;font-size:13px;color:var(--sub);line-height:1.7;border-bottom:1px solid var(--line);white-space:pre-wrap;max-height:120px;overflow-y:auto}
-  .qschema{padding:10px 18px;border-bottom:1px solid var(--line);background:var(--bg2);max-height:160px;overflow-y:auto}
-  .qschema .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-  .qschema pre{margin:0;font-family:var(--mono);font-size:11.5px;color:var(--sub);white-space:pre;line-height:1.5}
-  .qeditor-wrap{flex:1;display:flex;flex-direction:column;min-height:0;padding:10px 18px}
-  .qeditor-wrap .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
-  .qeditor-wrap textarea{flex:1;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:7px;color:var(--text);
-    padding:10px 12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;resize:none;outline:none;min-height:120px}
-  .qeditor-wrap textarea:focus{border-color:var(--accent)}
-  .qactions{padding:10px 18px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)}
-  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:6px 14px;border-radius:7px;font-size:12.5px;cursor:pointer;transition:.15s;white-space:nowrap}
-  .btn:hover{border-color:var(--accent);color:var(--accent2)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:#1a1a1a;font-weight:600}
-  .btn.primary:hover{background:var(--accent2)}
-  .btn.ghost{background:transparent}
-  .qref{display:none;margin-top:8px;background:#0a1f12;border:1px solid var(--ok2);border-radius:7px;padding:10px 12px}
-  .qref.show{display:block}
-  .qref pre{margin:0;font-family:var(--mono);font-size:11.5px;color:var(--ok);white-space:pre-wrap;line-height:1.6;word-break:break-all}
-
-  .empty{text-align:center;color:var(--muted);padding:60px 20px}
-  .empty .big{font-size:42px;margin-bottom:12px}
-
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel2);
-    border:1px solid var(--line);color:var(--text);padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:100;pointer-events:none}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast.ok{border-color:var(--ok2)}
-  .toast.bad{border-color:var(--bad)}
+:root{
+  --bg:#f7f5f0; --card:#ffffff; --line:#e5e3dc; --ink:#2c2c2a; --sub:#888780;
+  --blue:#185fa5; --green:#3b6d11; --green-l:#e8f2da; --yellow:#ef9f27; --yellow-l:#fdf3e0;
+  --red:#e24b4a; --red-l:#fdeaea; --mono:'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,'PingFang SC','Microsoft YaHei',sans-serif;padding-bottom:60px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 18px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:19px}
+.hsub{color:var(--sub);font-size:12px}
+.hbtns{margin-left:auto;display:flex;gap:8px}
+.hbtn{padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:12.5px;color:var(--ink)}
+.hbtn:hover{background:#f4f2ec;border-color:#d5d2c8}
+.statbox{background:var(--card);border-radius:14px;padding:12px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:16px}
+.statrow{display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--sub)}
+.statrow b{font-size:15px;color:var(--ink)}
+.dist{display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--line);margin-top:9px}
+.dist i{height:100%}
+.legend{display:flex;gap:14px;margin-top:7px;font-size:11.5px;color:var(--sub);flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.main{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+/* 左栏 */
+.leftcol{display:flex;flex-direction:column;gap:12px;position:sticky;top:14px}
+@media(max-width:900px){.leftcol{position:static}}
+.stagecard{background:var(--card);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.05);overflow:hidden}
+.stagecard .sc-head{padding:12px 14px 4px;font-weight:700;font-size:13.5px}
+.searchbox{padding:10px 12px;border-bottom:1px solid var(--line)}
+.searchbox input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#faf9f5;outline:none}
+.searchbox input:focus{border-color:var(--blue)}
+.slist{max-height:46vh;overflow:auto;padding:6px}
+.qitem{padding:8px 10px;border-radius:9px;cursor:pointer;display:block}
+.qitem:hover{background:#f4f2ec}
+.qitem.active{background:#eef3f9}
+.qitem .t{display:flex;align-items:center;gap:7px;font-size:13px}
+.qitem .qid{font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:700;flex:none}
+.qitem .name{flex:1}
+.qitem .st{flex:none;font-size:11px}
+.qitem .meta{margin-top:2px;padding-left:38px;font-size:11px;color:var(--sub);display:flex;gap:6px;flex-wrap:wrap}
+.qitem .meta .lk{color:#8a6d1d}
+/* 阶段列表 */
+.stagelist{display:flex;flex-direction:column;gap:8px;padding:12px}
+.stageitem{border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;background:#fff}
+.stageitem:hover{background:#faf9f5}
+.stageitem.active{border-color:var(--blue);background:#f0f5fb}
+.stageitem.locked{opacity:.62}
+.stageitem .row1{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px}
+.stageitem .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.stageitem .pct{margin-left:auto;font-size:11.5px;color:var(--sub);font-weight:400}
+.stageitem .bar{height:5px;background:var(--line);border-radius:3px;margin-top:7px;overflow:hidden}
+.stageitem .bar i{display:block;height:100%;border-radius:3px}
+.stageitem .desc{font-size:11px;color:var(--sub);margin-top:4px}
+/* 右栏：做题面板 */
+.qpanel{background:var(--card);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.05);padding:18px 20px;min-height:420px}
+.qhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.qidbig{font-family:var(--mono);font-weight:800;color:var(--blue);font-size:15px}
+.qtitle{font-size:16px;font-weight:700}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font-size:11px;padding:2px 9px;border-radius:20px;background:#f0eee7;color:var(--sub)}
+.chip.lvl-简单{background:var(--green-l);color:var(--green)}
+.chip.lvl-中等{background:var(--yellow-l);color:#9a6207}
+.chip.lvl-困难{background:var(--red-l);color:var(--red)}
+.chip.link{background:#e8f0fa;color:var(--blue);cursor:pointer}
+.chip.link:hover{background:#d8e6f7}
+.chip.final{background:var(--red-l);color:var(--red);font-weight:700}
+.qdesc{margin:12px 0;font-size:13.5px}
+.caliber{background:var(--yellow-l);border-left:3px solid var(--yellow);border-radius:0 9px 9px 0;padding:8px 12px;font-size:12.5px;color:#6b4a08;margin:10px 0}
+.editorwrap{margin-top:12px}
+.edlabel{font-size:12px;color:var(--sub);margin-bottom:5px;display:flex;align-items:center;gap:10px}
+.edlabel .kks{font-size:11px;color:#b4b2a9}
+textarea#answer{width:100%;min-height:170px;resize:vertical;font-family:var(--mono);font-size:12.8px;line-height:1.65;padding:12px;border:1.5px solid var(--line);border-radius:11px;background:#fbfaf7;color:var(--ink);outline:none}
+textarea#answer:focus{border-color:var(--blue);background:#fff}
+.checkarea{margin-top:10px}
+.checkitem{font-size:12.5px;padding:3px 0}
+.checkitem.ok{color:var(--green)}
+.checkitem.miss{color:#9a6207}
+.checkall{margin-top:6px;font-size:13px;font-weight:700;color:var(--green)}
+.hintbox{margin-top:10px;background:#eef3f9;border-left:3px solid var(--blue);border-radius:0 9px 9px 0;padding:9px 12px;font-size:12.8px;color:#274b73}
+.stepsbox{margin-top:10px;border:1px dashed #c9c5ba;border-radius:11px;padding:10px 14px;font-size:12.8px}
+.stepsbox .st{padding:3px 0;color:#3c3a35}
+.stepsbox .hd{font-weight:700;font-size:12px;color:var(--sub);margin-bottom:4px}
+.refbox{margin-top:10px;background:#faf9f5;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.refbox .rb-hd{padding:8px 14px;font-size:12px;color:var(--sub);border-bottom:1px solid var(--line);font-weight:600}
+.refbox .compare{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:700px){.refbox .compare{grid-template-columns:1fr}}
+.refbox .cmp{padding:12px 14px}
+.refbox .cmp+.cmp{border-left:1px solid var(--line)}
+@media(max-width:700px){.refbox .cmp+.cmp{border-left:none;border-top:1px solid var(--line)}}
+.refbox .cmp .clabel{font-size:11px;color:var(--sub);margin-bottom:6px;font-weight:600}
+.refbox pre{font-family:var(--mono);font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.refbox .mine{color:#5a5850}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.abtn{padding:8px 15px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:12.5px;color:var(--ink)}
+.abtn:hover{background:#f4f2ec}
+.abtn.good{background:var(--green-l);border-color:#c5dba2;color:var(--green);font-weight:600}
+.abtn.mid{background:var(--yellow-l);border-color:#ecd3a2;color:#9a6207;font-weight:600}
+.abtn.bad{background:var(--red-l);border-color:#f2c4c4;color:var(--red);font-weight:600}
+.abtn.on{outline:2px solid var(--blue);outline-offset:1px}
+.abtn:disabled{opacity:.4;cursor:default}
+.spacer{flex:1}
+.ratehint{font-size:11.5px;color:var(--sub)}
+/* 表结构侧滑 */
+.mask{position:fixed;inset:0;background:rgba(30,28,22,.35);opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:-480px;width:min(460px,94vw);height:100%;background:var(--bg);z-index:51;transition:right .28s;overflow:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12);padding:16px}
+.drawer.on{right:0}
+.drawer h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center}
+.drawer .close{margin-left:auto;cursor:pointer;border:none;background:none;font-size:20px;color:var(--sub)}
+.ttabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ttab{padding:5px 11px;border-radius:18px;border:1px solid var(--line);background:#fff;font-size:12px;cursor:pointer;font-family:var(--mono)}
+.ttab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tcard{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.tname{font-family:var(--mono);font-weight:700;font-size:13.5px;color:var(--blue)}
+.tdesc{font-size:12px;color:var(--sub);margin:2px 0 8px}
+.ftable{width:100%;border-collapse:collapse;font-size:12px}
+.ftable th{text-align:left;color:var(--sub);font-weight:600;padding:4px 6px;border-bottom:1.5px solid var(--line)}
+.ftable td{padding:4px 6px;border-bottom:1px solid #f0eee7;vertical-align:top}
+.ftable td.f{font-family:var(--mono);font-size:11.5px}
+.ftable td.ty{color:#8a6d1d;font-family:var(--mono);font-size:11px;white-space:nowrap}
+.tsample{margin-top:10px;background:#fbfaf7;border-radius:9px;padding:9px 11px}
+.tsample .lb{font-size:11px;color:var(--sub);margin-bottom:4px}
+.tsample pre{font-family:var(--mono);font-size:11px;line-height:1.6;white-space:pre-wrap}
+/* toast */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#2c2c2a;color:#fff;padding:9px 20px;border-radius:22px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--green)}
+.empty{padding:60px 20px;text-align:center;color:var(--sub)}
+.empty .big{font-size:38px;margin-bottom:8px}
 </style>
 </head>
 <body>
-<header>
-  <div class="hdr-top">
-    <div class="logo">🐳</div>
-    <div>
-      <div class="title">SQL 闯关练习</div>
-      <div class="subtitle">海运数仓 · 5阶段闯关 · 基础做完就能解终极题</div>
+<div class="wrap">
+  <header>
+    <h1>⚔️ SQL 闯关 <span class="hsub">海运数仓 · 37 题 · 5 关</span> <span id="rTitle" style="font-size:14px"></span></h1>
+    <div class="hbtns">
+      <button class="hbtn" onclick="randomQ()">🎲 随机一题</button>
+      <button class="hbtn" onclick="openWrongMode()">🔁 错题重刷 <span id="wrongCnt"></span></button>
+      <button class="hbtn" onclick="openDrawer()">📚 表结构速查</button>
     </div>
-  </div>
-  <div class="mode-switch" id="modeSwitch">
-    <button class="active" data-mode="stage">🎯 闯关模式</button>
-    <button data-mode="free">📚 自由练习</button>
-  </div>
-</header>
+  </header>
 
-<div class="scroll" id="mainScroll">
-  <div class="tables" id="tablesArea"></div>
-  <div class="stage-bar" id="stageBar"></div>
-  <div class="work">
-    <div class="qlist-pane">
-      <div class="qlist-head"><span>题目列表</span><span class="meta" id="qlistMeta"></span></div>
-      <div class="qlist-body" id="qlistBody"></div>
+  <div class="statbox">
+    <div class="statrow">
+      <span>总进度 <b id="sDone">0</b>/37</span>
+      <span>😎 掌握 <b id="sGood" style="color:var(--green)">0</b></span>
+      <span>🤔 模糊 <b id="sMid" style="color:#9a6207">0</b></span>
+      <span>😵 不会 <b id="sBad" style="color:var(--red)">0</b></span>
+      <span id="sMode" style="margin-left:auto"></span>
     </div>
-    <div class="qdetail-pane" id="qdetailPane">
-      <div class="empty" id="qempty">
-        <div class="big">👈</div>
-        <p>左侧选择一道题开始闯关</p>
+    <div class="dist" id="distBar"></div>
+    <div class="legend">
+      <span><i style="background:var(--green)"></i>掌握</span>
+      <span><i style="background:var(--yellow)"></i>模糊</span>
+      <span><i style="background:var(--red)"></i>不会</span>
+      <span><i style="background:var(--line)"></i>未做</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="leftcol">
+      <div class="stagecard">
+        <div class="sc-head">🗺 闯关地图</div>
+        <div class="stagelist" id="stageList"></div>
+      </div>
+      <div class="stagecard">
+        <div class="searchbox"><input id="searchInput" placeholder="🔍 搜题目 / 标签 / 考点…"></div>
+        <div class="slist" id="qlist"></div>
       </div>
     </div>
+    <div class="qpanel" id="qpanel"></div>
   </div>
+</div>
+
+<div class="mask" id="mask" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <h3>📚 表结构速查<button class="close" onclick="closeDrawer()">×</button></h3>
+  <div class="ttabs" id="ttabs"></div>
+  <div id="tbody"></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const STORE = 'sql-trainer-questions-v1';
-const PROGRESS = 'sql-trainer-progress-v1';
-
 const STAGES = [
   { id:0, name:'基础闯关', color:'#3fb950', desc:'SQL 基本功' },
   { id:1, name:'初级闯关', color:'#39c5cf', desc:'JOIN + GROUP BY' },
@@ -163,7 +196,6 @@ const STAGES = [
   { id:3, name:'高级闯关', color:'#bc8cff', desc:'多CTE + 倾斜处理' },
   { id:4, name:'终极闯关', color:'#f85149', desc:'海运 5 大综合题' }
 ];
-
 const SAMPLE_TABLES = [
   { name:'dwd_sea_container_full', alias:'柜清单快照', comment:'每个柜按 dt 的全量快照',
     fields:[
@@ -221,7 +253,6 @@ const SAMPLE_TABLES = [
     sample:"('C001','甲客户')\n('C002','乙客户')\n('C003','丙客户')"
   }
 ];
-
 const SAMPLE = [
   // ===== Stage 0 基础闯关 =====
   { id:'B1', title:'查询所有客户的姓名和客户ID', level:'简单', stage:0, linked:[], tags:['SELECT'],
@@ -527,184 +558,393 @@ FROM cust_metric;`
   }
 ];
 
-// ============= 状态 =============
-let questions = load(STORE) || SAMPLE;
+/* ===== 提示 / 自检关键词 / 终极题步骤 ===== */
+const HINTS = {
+  B1:'最基础的投影查询：SELECT 列名 FROM 表名。',
+  B2:'ORDER BY 列 DESC 即倒序排列。',
+  B3:'WHERE 后加比较条件 actual_weight > 10。',
+  B4:'日期可直接字符串比较，用 >= 起始日期。',
+  B5:'GROUP BY container_no 后 COUNT(*) 统计票数。',
+  B6:'入库明细里没有客户维度——想想哪张表有 cust_id，要不要 JOIN？',
+  B7:'SUM(actual_weight) 配 GROUP BY container_no。',
+  B8:'订舱表 JOIN 客户维度，按客户 GROUP BY 后 SUM 重量。',
+  J1:'柜清单 LEFT JOIN 客户维表，注意没有客户时名字是 NULL。',
+  J2:'换柜记录按票或柜号 GROUP BY 计数。',
+  J3:'WITH cte AS (先过滤) 然后 SELECT 聚合——"先过滤后聚合"分两步写。',
+  J4:'聚合前先 WHERE 剔除退仓记录，再 GROUP BY。',
+  J5:'LEFT JOIN 之后 WHERE 右表.key IS NULL，就是"没有匹配上"的柜。',
+  J6:'按目的港字段 GROUP BY 计数即可。',
+  J7:'一个 GROUP BY 里可以同时输出 MIN / MAX / SUM / COUNT 多个聚合。',
+  J8:'LEFT JOIN 保证左表全保留，无匹配的行为 NULL。',
+  Z1:'ROW_NUMBER() OVER(PARTITION BY 票 ORDER BY 时间 DESC) 给组内编号。',
+  Z2:'在 Z1 外面包一层，WHERE rn = 1 取每组的最新一条。',
+  Z3:'COALESCE(可能为空的列, 0) —— 空就补 0。',
+  Z4:'COUNT(IF(条件, 1, NULL)) 条件聚合，一个 GROUP BY 出多列统计。',
+  Z5:'DENSE_RANK() OVER(PARTITION BY 港口 ORDER BY 重量 DESC)，并列不跳号。',
+  Z6:'UNIX_TIMESTAMP(结束) - UNIX_TIMESTAMP(开始)，除以 3600 得小时。',
+  Z7:'自连接：同一张表 JOIN 自己，ON 条件关联"每条历史记录 ↔ 它的最新快照"。',
+  Z8:'GREATEST(分母, 1) 保证分母至少为 1，防除零。',
+  G1:'两层 CTE：第一层按柜聚合，第二层再按客户聚合柜级结果。',
+  G2:'先按柜统计票数，外层再 COUNT(IF(票数 >= 2)) 数出拼柜个数。',
+  G3:'WITH a AS (...), b AS (...), c AS (...) 逗号串联多个 CTE。',
+  G4:'口径决定 WHERE 位置：Q1 剔退仓（无效数据），Q2 保留（退仓是异常信号本身）。',
+  G5:'CONCAT(年, \'-W\', LPAD(WEEKOFYEAR(日期), 2, \'0\')) 拼出 2026-W31 形式。',
+  G6:'评分 = (1-空柜率)*40 + (1-超量率)*30 + 合规率*30，分母记得 GREATEST 防除零。',
+  G7:'CONCAT(key, \'_\', CAST(RAND()*1000 AS INT)) 给热点 key 加盐打散。',
+  G8:'历史明细 JOIN 最新快照（7-31），状态以快照为准，完成率分母 GREATEST 防除零。',
+  Q1:'五步：最新换柜(rn=1) → 替换柜号 → 剔退仓 → 按柜聚合 → 无入库补 0。',
+  Q2:'与 Q1 相反：退仓【保留】；四类异常各用一列 COUNT(IF)，空柜 = 无匹配。',
+  Q3:'完结状态过滤 → 时间差/3600 → 港口+周标签分组 → DENSE_RANK 并列不跳号。',
+  Q4:'历史取存在性、状态取 7-31 最新快照、剔除"后来被删"的柜、GREATEST 防除零。',
+  Q5:'两阶段聚合 + 拼柜≥2 + 评分公式加权 + 加盐防倾斜，一条链写下来。'
+};
+const CHECKS = {
+  B1:[{l:'SELECT 投影',kw:'select'},{l:'FROM dim_cust',kw:'from dim_cust'}],
+  B2:[{l:'ORDER BY',kw:'order by'},{l:'DESC 倒序',kw:'desc'}],
+  B3:[{l:'WHERE 条件',kw:'where'},{l:'actual_weight 字段',kw:'actual_weight'},{l:'> 比较',kw:'>'}],
+  B4:[{l:'WHERE 日期过滤',kw:'where'},{l:'>= 边界',re:/>=/}],
+  B5:[{l:'COUNT 计数',kw:'count'},{l:'GROUP BY 柜号',kw:'group by'}],
+  B6:[{l:'GROUP BY',kw:'group by'},{l:'COUNT',kw:'count'},{l:'客户维度(JOIN 或 cust_id)',re:/join|cust_id/}],
+  B7:[{l:'SUM 求和',kw:'sum'},{l:'GROUP BY 柜号',kw:'group by'}],
+  B8:[{l:'JOIN 连接',kw:'join'},{l:'SUM 求和',kw:'sum'},{l:'GROUP BY',kw:'group by'}],
+  J1:[{l:'LEFT JOIN',kw:'left join'},{l:'客户维表 dim_cust',kw:'dim_cust'}],
+  J2:[{l:'GROUP BY',kw:'group by'},{l:'COUNT',kw:'count'}],
+  J3:[{l:'WITH CTE',kw:'with'},{l:'AS 命名',re:/as\s*\(/}],
+  J4:[{l:'WHERE 剔退仓',kw:'where'},{l:'GROUP BY',kw:'group by'}],
+  J5:[{l:'LEFT JOIN',kw:'left join'},{l:'IS NULL 判空',kw:'is null'}],
+  J6:[{l:'GROUP BY 目的港',kw:'group by'},{l:'COUNT',kw:'count'}],
+  J7:[{l:'GROUP BY',kw:'group by'},{l:'MIN',kw:'min'},{l:'MAX',kw:'max'}],
+  J8:[{l:'LEFT JOIN',kw:'left join'}],
+  Z1:[{l:'ROW_NUMBER',kw:'row_number'},{l:'PARTITION BY',kw:'partition by'},{l:'ORDER BY',kw:'order by'}],
+  Z2:[{l:'ROW_NUMBER',kw:'row_number'},{l:'rn = 1 过滤',re:/rn\s*=\s*1/}],
+  Z3:[{l:'COALESCE 补 0',kw:'coalesce'}],
+  Z4:[{l:'COUNT(IF) 条件聚合',re:/count\s*\(\s*if/i},{l:'GROUP BY',kw:'group by'}],
+  Z5:[{l:'DENSE_RANK',kw:'dense_rank'},{l:'PARTITION BY',kw:'partition by'}],
+  Z6:[{l:'UNIX_TIMESTAMP',kw:'unix_timestamp'},{l:'÷3600 转小时',kw:'3600'}],
+  Z7:[{l:'自连接 JOIN',kw:'join'},{l:'最新快照定位',re:/rn\s*=\s*1|最新/}],
+  Z8:[{l:'GREATEST 防除零',kw:'greatest'}],
+  G1:[{l:'WITH CTE',kw:'with'},{l:'两层 GROUP BY',re:/group\s+by[\s\S]*group\s+by/i}],
+  G2:[{l:'票数 >= 2 阈值',re:/>=\s*2/},{l:'COUNT 聚合',kw:'count'}],
+  G3:[{l:'WITH 多 CTE',kw:'with'},{l:'逗号串联',re:/as\s*\([^)]*\)\s*,/}],
+  G4:[{l:'WHERE 口径过滤',kw:'where'}],
+  G5:[{l:'CONCAT 拼接',kw:'concat'},{l:'WEEKOFYEAR',kw:'weekofyear'},{l:'LPAD 补零',kw:'lpad'}],
+  G6:[{l:'GREATEST 防除零',kw:'greatest'},{l:'权重 *40',re:/\*\s*40/},{l:'权重 *30',re:/\*\s*30/}],
+  G7:[{l:'CONCAT 加盐',kw:'concat'},{l:'RAND 随机',kw:'rand'}],
+  G8:[{l:'JOIN 快照',kw:'join'},{l:'GREATEST 防除零',kw:'greatest'}],
+  Q1:[{l:'ROW_NUMBER 取最新换柜',kw:'row_number'},{l:'COALESCE 补 0',kw:'coalesce'},{l:'GROUP BY 聚合',kw:'group by'}],
+  Q2:[{l:'COUNT(IF) 异常统计',re:/count\s*\(\s*if/i},{l:'JOIN 关联',kw:'join'}],
+  Q3:[{l:'DENSE_RANK 排名',kw:'dense_rank'},{l:'UNIX_TIMESTAMP 时间差',kw:'unix_timestamp'},{l:'WEEKOFYEAR 周',kw:'weekofyear'}],
+  Q4:[{l:'ROW_NUMBER 最新快照',kw:'row_number'},{l:'GREATEST 防除零',kw:'greatest'},{l:'JOIN 关联',kw:'join'}],
+  Q5:[{l:'WITH 多层 CTE',kw:'with'},{l:'GREATEST 防除零',kw:'greatest'},{l:'权重加权',re:/\*\s*40|\*\s*30/}]
+};
+const STEPS = {
+  Q1:['换柜表按 (booking_id, container_no) 用 ROW_NUMBER 取最新一条（rn=1），得到每票货的"最终柜号"',
+      '入库明细 JOIN 换柜结果：有换柜记录 → 用新柜号替换原柜号',
+      '剔退仓：WHERE 过滤退仓记录（Q1 口径：退仓无效）',
+      '按柜号聚合：SUM(重量)、SUM(体积)、COUNT 票数',
+      '柜清单 LEFT JOIN 聚合结果，无入库的柜 COALESCE 补 0'],
+  Q2:['口径注意：与 Q1 相反，退仓记录【保留】（全额退仓本身就是异常）',
+      '每柜入库重量 vs 额定容量 → 超量标志，COUNT(IF(超量,1,NULL)) 按客户计数',
+      '全额退仓单独一类：COUNT(IF) 统计',
+      '空柜：入库明细无匹配（LEFT JOIN ... IS NULL）',
+      '延期入库：时间差超阈值 → COUNT(IF)，按客户 GROUP BY 输出四列异常数'],
+  Q3:['过滤完结状态：已配柜 / 已出运 / 已签收',
+      '耗时(小时) = UNIX_TIMESTAMP(完结) - UNIX_TIMESTAMP(入库)，除以 3600',
+      '周标签 = CONCAT(年, \'-W\', LPAD(WEEKOFYEAR(入库时间), 2, \'0\'))',
+      '按目的港 + 周标签 GROUP BY，AVG 耗时',
+      'DENSE_RANK() OVER(PARTITION BY 目的港 ORDER BY 周标签)——并列不跳号'],
+  Q4:['先取每柜 7-31 最新快照（ROW_NUMBER rn=1）作为"最终状态"',
+      '7 月每日历史明细只判断"当日该柜是否存在"（存在性），状态不取历史值',
+      '历史明细 JOIN 最新快照，状态一律用快照的最终状态',
+      '剔除"历史存在但最终快照没有"的柜（后来被删）',
+      '完成率 = 已完结 / GREATEST(总柜数, 1)，防除零'],
+  Q5:['CTE1 两阶段聚合第一步：按 (客户, 柜) 聚合出每柜票数、重量',
+      '拼柜判定：票数 >= 2；合规：票数 <= 5',
+      'CTE2 再按客户聚合：COUNT(IF(票数>=2)) 拼柜数、总柜数',
+      '空柜率 / 超量率分母 GREATEST(...,1) 防除零',
+      '评分 = (1-空柜率)*40 + (1-超量率)*30 + 合规率*30；热点 key 可加盐防倾斜']
+};
+
+/* ===== 状态 ===== */
+const STORE='sql-trainer-questions-v1', PROGRESS='sql-trainer-progress-v1', UNLOCK='sql-trainer-unlock-v1';
+function esc(s){ return String(s).replace(/</g,'&lt;'); }
+function load(k){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } }
+function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+const questions = load(STORE) || SAMPLE;
 let progress = load(PROGRESS) || {};
-let curStage = 0;
-let curIdx = 0;
-let curMode = 'stage';
+let unlocks = load(UNLOCK) || {};
+let curStage = 0, curIdx = 0, wrongMode = false, keyword = '';
 
-function load(k){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; }catch(e){ return null; } }
-function save(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
-function persistQ(){ save(STORE, questions); }
-function persistP(){ save(PROGRESS, progress); }
-
-// ============= 渲染 =============
-function renderTables(){
-  const el = document.getElementById('tablesArea');
-  el.innerHTML = SAMPLE_TABLES.map(t=>`
-    <div class="table-card">
-      <div class="table-name">${t.name} <span class="badge">${t.alias}</span></div>
-      <div class="table-desc">${t.comment}</div>
-      <table class="field-table">
-        <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
-        <tbody>${t.fields.map(f=>`<tr><td>${f.n}</td><td class="type">${f.t}</td><td class="comment">${f.c}</td></tr>`).join('')}</tbody>
-      </table>
-      <div class="sample"><div class="label">示例数据</div><pre>${t.sample}</pre></div>
-    </div>
-  `).join('');
+/* ===== 工具 ===== */
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'),1800); }
+function stageQ(s){ return questions.filter(q=>q.stage===s); }
+function stageStat(s){ const l=stageQ(s); return {total:l.length, done:l.filter(q=>['会','模糊'].includes(progress[q.id])).length, good:l.filter(q=>progress[q.id]==='会').length}; }
+function stageUnlocked(s){
+  if(s===0 || unlocks[s]) return true;
+  return stageStat(s-1).done / stageStat(s-1).total >= 0.75;
+}
+function curList(){
+  // 搜索时全局查（跨阶段），否则按当前模式/阶段
+  let list = keyword ? questions.slice()
+    : wrongMode ? questions.filter(q=>['不会','模糊'].includes(progress[q.id]))
+    : stageQ(curStage);
+  if(keyword){
+    const k = keyword.toLowerCase();
+    list = list.filter(q=>(q.id+q.title+q.desc+(q.tags||[]).join()).toLowerCase().includes(k));
+  }
+  return list;
 }
 
-function renderStageBar(){
-  const total = questions.length;
-  const done = questions.filter(q => progress[q.id] === '会').length;
-  const el = document.getElementById('stageBar');
-  el.innerHTML = STAGES.map(s=>{
-    const list = questions.filter(q=>q.stage===s.id);
-    const stageDone = list.filter(q=>progress[q.id]==='会').length;
-    const active = curMode==='stage' && curStage===s.id;
-    return `<div class="stage-pill ${active?'active':''}" data-stage="${s.id}" style="${active?`border-color:${s.color}`:''}">
-      <span style="width:8px;height:8px;border-radius:50%;background:${s.color}"></span>
-      ${s.name}<span class="cnt">${stageDone}/${list.length}</span>
-    </div>`;
-  }).join('') + `
-    <div class="progress-wrap">
-      <div class="progress-label">总进度</div>
-      <div class="progress-bar"><div class="fill" style="width:${(done/total*100).toFixed(1)}%"></div></div>
-      <div class="progress-num">${done}/${total}</div>
-    </div>
-  `;
-  el.querySelectorAll('.stage-pill').forEach(p=>p.onclick=()=>{
-    curStage = parseInt(p.dataset.stage);
-    curIdx = 0;
-    renderAll();
-  });
+/* ===== 顶部统计 ===== */
+function title(){
+  const n=questions.filter(q=>['会','模糊'].includes(progress[q.id])).length;
+  if(n>=37) return '👑 数仓战神'; if(n>=32) return '⚡ 调优侠'; if(n>=20) return '🧱 搬砖工'; if(n>=8) return '🔨 练手生'; return '🔍 SQL萌新';
+}
+function stars(s){
+  const st=stageStat(s), r=st.total?st.good/st.total:0;
+  return r>=0.8?'⭐⭐⭐':r>=0.5?'⭐⭐':st.good>0?'⭐':'';
+}
+function renderStats(){
+  document.getElementById('rTitle').textContent=title();
+  const good=questions.filter(q=>progress[q.id]==='会').length,
+        mid=questions.filter(q=>progress[q.id]==='模糊').length,
+        bad=questions.filter(q=>progress[q.id]==='不会').length,
+        none=questions.length-good-mid-bad;
+  document.getElementById('sDone').textContent=good+mid;
+  document.getElementById('sGood').textContent=good;
+  document.getElementById('sMid').textContent=mid;
+  document.getElementById('sBad').textContent=bad;
+  const seg=[[good,'var(--green)'],[mid,'var(--yellow)'],[bad,'var(--red)'],[none,'var(--line)']];
+  document.getElementById('distBar').innerHTML=seg.map(([n,c])=>`<i style="width:${n/questions.length*100}%;background:${c}"></i>`).join('');
+  const w=questions.filter(q=>['不会','模糊'].includes(progress[q.id])).length;
+  document.getElementById('wrongCnt').textContent=w?`(${w})`:'';
+  document.getElementById('sMode').innerHTML = wrongMode ? '<span class="chip final">🔁 错题模式 · <a href="#" onclick="exitWrongMode();return false" style="color:var(--blue)">退出</a></span>' : '';
 }
 
-function filteredQuestions(){
-  if(curMode==='free') return questions.map((q,i)=>({q,i}));
-  return questions.filter(q=>q.stage===curStage).map((q,i)=>({q,i}));
-}
-
-function renderList(){
-  const el = document.getElementById('qlistBody');
-  const list = filteredQuestions();
-  document.getElementById('qlistMeta').textContent = `${list.length} 题`;
-
-  if(list.length===0){ el.innerHTML='<div class="empty"><p>该阶段暂无题</p></div>'; return; }
-  el.innerHTML = list.map(({q},idx)=>{
-    const p = progress[q.id];
-    const dot = p==='会'?'<span style="color:var(--ok)">✓</span>':(p?`<span style="color:var(--warn)">${p}</span>`:'');
-    const isFinal = q.isFinal?' 🏆':'';
-    return `<div class="qitem ${idx===curIdx?'active':''} ${p?'done':''}">
-      <div class="top"><span class="qid">${q.id}</span><span class="qtitle">${q.title}${isFinal}</span>${dot}</div>
-      <div class="meta">
-        <span class="badge ${q.level}">${q.level}</span>
-        ${(q.tags||[]).slice(0,2).map(t=>`<span>#${t}</span>`).join('')}
-        ${q.linked && q.linked.length?`<span class="linked">→ ${q.linked.join(',')}</span>`:''}
-      </div>
+/* ===== 闯关地图 ===== */
+function renderStages(){
+  document.getElementById('stageList').innerHTML = STAGES.map(s=>{
+    const st=stageStat(s.id), pct=Math.round(st.done/st.total*100);
+    const unl=stageUnlocked(s.id), active=!wrongMode && curStage===s.id;
+    return `<div class="stageitem ${active?'active':''} ${unl?'':'locked'}" onclick="clickStage(${s.id})">
+      <div class="row1"><span class="dot" style="background:${s.color}"></span>${s.name} ${unl?'':'🔒'}
+        <span class="pct">${st.done}/${st.total} ${stars(s.id)}</span></div>
+      <div class="bar"><i style="width:${pct}%;background:${s.color}"></i></div>
+      <div class="desc">${s.desc}${unl?'':' · 刷完上一关 75% 解锁'}</div>
     </div>`;
   }).join('');
-
-  el.querySelectorAll('.qitem').forEach((d,idx)=>{
-    d.onclick = ()=>{ curIdx = idx; renderList(); renderDetail(); };
-  });
 }
-
-function renderDetail(){
-  const pane = document.getElementById('qdetailPane');
-  const list = filteredQuestions();
-  if(list.length===0 || !list[curIdx]){
-    pane.innerHTML = '<div class="empty"><div class="big">👈</div><p>左侧选择阶段</p></div>';
-    return;
+function clickStage(s){
+  if(!stageUnlocked(s)){
+    const prev=STAGES[s-1], st=stageStat(s-1);
+    if(confirm(`「${prev.name}」还没刷完（${st.done}/${st.total}，需 75%）。确定要跳关吗？`)){
+      unlocks[s]=true; save(UNLOCK,unlocks);
+    } else return;
   }
-  const {q} = list[curIdx];
-  const p = progress[q.id];
-  const isFinal = q.isFinal;
-
-  pane.innerHTML = `
-    <div class="qdetail-head">
-      <div class="left">
-        <div class="qid">${q.id} · ${STAGES[q.stage].name}</div>
-        <div class="qt">${q.title}</div>
-        <div class="links">
-          <span class="badge ${q.level}">${q.level}</span>
-          ${(q.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join('')}
-          ${q.linked && q.linked.length?`<span class="tag" style="background:#1a1530;border-color:#3a2a55">关联 ${q.linked.join(', ')}</span>`:''}
-          ${isFinal?'<span class="tag" style="background:#3a1c1c;border-color:#f85149">🏆 终极题</span>':''}
-          ${p==='会'?'<span class="tag" style="background:#1a3a23;border-color:var(--ok2)">✓ 已掌握</span>':p?`<span class="tag" style="background:#3a2a13">${p}</span>`:''}
-        </div>
-      </div>
-    </div>
-    <div class="qdetail-body">
-      <div class="qdesc">${q.desc}</div>
-      <div class="qschema"><div class="label">表结构</div><pre>${q.schema || '（无）'}</pre></div>
-      <div class="qeditor-wrap">
-        <div class="lbl">✏️ 你的答案 <span style="color:var(--muted)">SELECT ...</span></div>
-        <textarea id="answer" placeholder="在这里写你的 SQL...">${load('answer-'+q.id) || ''}</textarea>
-      </div>
-    </div>
-    <div class="qactions">
-      <button class="btn" data-rate="会">✓ 掌握</button>
-      <button class="btn" data-rate="模糊">? 模糊</button>
-      <button class="btn" data-rate="不会">✗ 不会</button>
-      <button class="btn ghost" id="resetRate">重置</button>
-      <span style="flex:1"></span>
-      <button class="btn" id="toggleRef">📋 展开参考答案</button>
-      <button class="btn" id="prevBtn">←</button>
-      <button class="btn" id="nextBtn">→</button>
-    </div>
-    <div style="padding:0 18px 14px"><div class="qref" id="qref"><pre>${q.ref||''}</pre></div></div>
-  `;
-
-  document.getElementById('answer').addEventListener('input', e=>{
-    save('answer-'+q.id, e.target.value);
-  });
-  pane.querySelectorAll('[data-rate]').forEach(b=>b.onclick=()=>{
-    const v = b.dataset.rate;
-    if(progress[q.id]===v){ delete progress[q.id]; } else { progress[q.id]=v; }
-    persistP();
-    renderStageBar(); renderList(); renderDetail();
-    toast(v==='会'?'已标记为掌握':'已标记为 '+v, v==='会'?'ok':'');
-  });
-  document.getElementById('resetRate').onclick = ()=>{
-    delete progress[q.id];
-    persistP();
-    renderStageBar(); renderList(); renderDetail();
-  };
-  document.getElementById('toggleRef').onclick = ()=>{
-    const r = document.getElementById('qref');
-    const show = r.classList.toggle('show');
-    document.getElementById('toggleRef').textContent = show?'🙈 收起参考答案':'📋 展开参考答案';
-  };
-  document.getElementById('prevBtn').onclick = ()=>{ if(curIdx>0){curIdx--; renderList(); renderDetail();} };
-  document.getElementById('nextBtn').onclick = ()=>{ if(curIdx<list.length-1){curIdx++; renderList(); renderDetail();} };
+  wrongMode=false; curStage=s; curIdx=0; renderAll();
 }
-
-function renderAll(){
-  renderStageBar();
-  renderList();
-  renderDetail();
+function openWrongMode(){
+  const w=questions.filter(q=>['不会','模糊'].includes(progress[q.id]));
+  if(!w.length){ toast('没有错题，全部掌握 🎉'); return; }
+  wrongMode=true; curIdx=0; renderAll(); toast(`错题模式：${w.length} 题`);
 }
+function exitWrongMode(){ wrongMode=false; curIdx=0; renderAll(); }
 
-document.querySelectorAll('#modeSwitch button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  curMode = b.dataset.mode;
-  curIdx = 0;
+/* ===== 题目列表 ===== */
+function renderList(){
+  const list=curList(), el=document.getElementById('qlist');
+  if(!list.length){ el.innerHTML='<div class="empty"><div class="big">🔍</div>没有匹配的题</div>'; return; }
+  if(curIdx>=list.length) curIdx=0;
+  el.innerHTML=list.map((q,idx)=>{
+    const p=progress[q.id];
+    const st=p==='会'?'<span class="st" style="color:var(--green)">✓</span>':p==='模糊'?'<span class="st" style="color:#9a6207">?</span>':p==='不会'?'<span class="st" style="color:var(--red)">✗</span>':'';
+    return `<div class="qitem ${idx===curIdx?'active':''}" onclick="pickQ(${idx})">
+      <div class="t"><span class="qid">${q.id}</span><span class="name">${q.title}</span>${st}</div>
+      <div class="meta"><span>${q.level}</span>${(q.tags||[]).slice(0,3).map(t=>`#${t}`).join(' ')}
+      ${q.linked&&q.linked.length?`<span class="lk">→${q.linked.join(',')}</span>`:''}</div>
+    </div>`;
+  }).join('');
+}
+function pickQ(i){ curIdx=i; renderList(); renderQ(); }
+
+/* ===== 做题面板 ===== */
+function fmtDesc(d){
+  return d.split('\n').map(line=>{
+    const s=line.trim(); if(!s) return '';
+    if(s.startsWith('📌')) return '';
+    if(s.startsWith('口径：')||s.startsWith('口径:')) return `<div class="caliber">📏 ${s}</div>`;
+    return s;
+  }).filter(Boolean).join('<br>');
+}
+function renderQ(){
+  const pane=document.getElementById('qpanel'), list=curList();
+  if(!list.length){ pane.innerHTML='<div class="empty"><div class="big">👈</div><p>选一道题开始</p></div>'; return; }
+  const q=list[curIdx], p=progress[q.id], s=STAGES[q.stage];
+  const ans=load('answer-'+q.id)||'';
+  const steps=STEPS[q.id];
+
+  pane.innerHTML=`
+    <div class="qhead"><span class="qidbig">${q.id}</span><span class="qtitle">${q.title}</span></div>
+    <div class="chips">
+      <span class="chip lvl-${q.level}">${q.level}</span>
+      <span class="chip">${s.name}</span>
+      ${(q.tags||[]).map(t=>`<span class="chip">#${t}</span>`).join('')}
+      ${(q.linked||[]).map(id=>`<span class="chip link" onclick="jumpTo('${id}')">→ ${id}</span>`).join('')}
+      ${steps?`<span class="chip final">🏆 终极题 · ${q.id}</span>`:''}
+      ${p?`<span class="chip">${p==='会'?'✓ 掌握':p}</span>`:''}
+    </div>
+    <div class="qdesc">${fmtDesc(q.desc)}</div>
+    ${steps?`<div class="stepsbox"><div class="hd">🪜 解题步骤（先自己想，卡住了再看一条）</div>
+      ${steps.map((st,i)=>`<div class="st"><a href="#" onclick="toggleStep(this);return false" style="color:var(--blue);text-decoration:none">步骤 ${i+1} ▸</a>　<span style="display:none">${st}</span></div>`).join('')}</div>`:''}
+    <div class="editorwrap">
+      <div class="edlabel">✏️ 你的 SQL<span class="kks">Tab 缩进 · ⌘/Ctrl+Enter 下一题</span>
+        <span class="spacer" style="flex:1"></span>
+        <button class="abtn" style="padding:4px 12px;font-size:11.5px" onclick="runCheck('${q.id}')">✅ 考点自检</button>
+        <button class="abtn" style="padding:4px 12px;font-size:11.5px" onclick="toggleHint('${q.id}')">💡 提示</button>
+      </div>
+      <textarea id="answer" placeholder="在这里写你的 SQL…">${ans.replace(/</g,'&lt;')}</textarea>
+      <div class="checkarea" id="checkArea"></div>
+      <div id="hintArea"></div>
+      <div id="refArea"></div>
+    </div>
+    <div class="actions">
+      <button class="abtn good ${p==='会'?'on':''}" onclick="rate('${q.id}','会')">😎 掌握</button>
+      <button class="abtn mid ${p==='模糊'?'on':''}" onclick="rate('${q.id}','模糊')">🤔 模糊</button>
+      <button class="abtn bad ${p==='不会'?'on':''}" onclick="rate('${q.id}','不会')">😵 不会</button>
+      <button class="abtn" onclick="unrate('${q.id}')">重置</button>
+      <span class="spacer"></span>
+      <button class="abtn" id="prevBtn" onclick="nav(-1)" ${curIdx===0?'disabled':''}>←</button>
+      <span class="ratehint">${curIdx+1} / ${list.length}</span>
+      <button class="abtn" id="nextBtn" onclick="nav(1)" ${curIdx===list.length-1?'disabled':''}>→</button>
+    </div>`;
+
+  document.getElementById('hintArea').innerHTML=renderHintHtml(q.id);
+  document.getElementById('checkArea').innerHTML=renderCheckHtml(q.id);
+  document.getElementById('refArea').innerHTML=renderRefHtml(q.id);
+  const ta=document.getElementById('answer');
+  ta.addEventListener('input',()=>save('answer-'+q.id,ta.value));
+  ta.addEventListener('keydown',e=>{
+    if(e.key==='Tab'){ e.preventDefault();
+      const s0=ta.selectionStart;
+      ta.value=ta.value.slice(0,s0)+'  '+ta.value.slice(ta.selectionEnd);
+      ta.selectionStart=ta.selectionEnd=s0+2;
+      save('answer-'+q.id,ta.value);
+    }
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ e.preventDefault(); nav(1); }
+  });
+}
+function toggleStep(a){
+  const sp=a.nextElementSibling;
+  const show=sp.style.display==='none';
+  sp.style.display=show?'inline':'none';
+  a.textContent=a.textContent.replace(/▸|▾/,show?'▾':'▸');
+}
+function randomQ(){
+  const q=questions[Math.floor(Math.random()*questions.length)];
+  jumpTo(q.id);
+  toast('🎲 抽中 '+q.id+' · '+STAGES[q.stage].name);
+}
+function jumpTo(id){
+  const q=questions.find(x=>x.id===id);
+  if(!q) return;
+  wrongMode=false; keyword=''; document.getElementById('searchInput').value='';
+  curStage=q.stage;
+  const list=stageQ(q.stage);
+  curIdx=list.findIndex(x=>x.id===id);
   renderAll();
-});
-
-let toastTimer;
-function toast(msg, type){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + (type||'');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+const UI_OPEN={hint:new Set(),ref:new Set()};
+let CHECK_CACHE={};
+function toggleHint(id){
+  if(UI_OPEN.hint.has(id)) UI_OPEN.hint.delete(id); else UI_OPEN.hint.add(id);
+  const el=document.getElementById('hintArea'); if(el) el.innerHTML=renderHintHtml(id);
+}
+function renderHintHtml(id){
+  return UI_OPEN.hint.has(id)?`<div class="hintbox">💡 ${HINTS[id]||'再想想口径和考点标签。'}</div>`:'';
+}
+function renderCheckHtml(id){
+  const items=CHECK_CACHE[id]; if(!items) return '';
+  const pass=items.filter(i=>i.ok).length;
+  return items.map(i=>`<div class="checkitem ${i.ok?'ok':'miss'}">${i.ok?'✓':'✗'} ${i.l}</div>`).join('')
+    +(pass===items.length?'<div class="checkall">🎉 考点全覆盖！可以对照参考答案了</div>'
+      :`<div class="checkitem miss" style="margin-top:4px">${pass}/${items.length} 覆盖，缺的考点想想再补</div>`);
+}
+function runCheck(id){
+  const ans=(document.getElementById('answer').value||'').toLowerCase();
+  const area=document.getElementById('checkArea');
+  if(!ans.trim()){ CHECK_CACHE[id]=null; area.innerHTML='<div class="checkitem miss">还没写答案，先动笔再自检。</div>'; return; }
+  CHECK_CACHE[id]=(CHECKS[id]||[]).map(it=>({l:it.l, ok: it.re?it.re.test(ans):ans.includes(it.kw)}));
+  area.innerHTML=renderCheckHtml(id);
+}
+function renderRefHtml(id){
+  if(!UI_OPEN.ref.has(id)) return '';
+  const q=questions.find(x=>x.id===id);
+  const mine=load('answer-'+id)||'（还没写）';
+  return `<div class="refbox">
+      <div class="rb-hd">📋 参考答案 · 对照完记得评分</div>
+      <div class="compare">
+        <div class="cmp"><div class="clabel">你的答案</div><pre class="mine">${esc(mine)}</pre></div>
+        <div class="cmp"><div class="clabel">参考答案</div><pre>${esc(q.ref)}</pre></div>
+      </div></div>`;
+}
+function askRef(id){
+  if(UI_OPEN.ref.has(id)){ UI_OPEN.ref.delete(id); const el=document.getElementById('refArea'); if(el) el.innerHTML=''; return; }
+  const hasAns=(document.getElementById('answer').value||'').trim().length>0;
+  if(!CHECK_CACHE[id] && hasAns){
+    if(!confirm('建议先点「✅ 考点自检」对照考点，再看答案效果更好。\n直接看参考答案？')) return;
+  }
+  UI_OPEN.ref.add(id);
+  const el=document.getElementById('refArea');
+  el.innerHTML=renderRefHtml(id);
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+let streak = load('sql-trainer-streak-v1') || {n:0};
+function rate(id,v){
+  progress[id]= progress[id]===v ? undefined : v;
+  if(!progress[id]) delete progress[id];
+  save(PROGRESS,progress);
+  if(v==='会' && progress[id]==='会'){ streak.n++; save('sql-trainer-streak-v1',streak); }
+  else { streak.n=0; save('sql-trainer-streak-v1',streak); }
+  renderStats(); renderStages(); renderList(); renderQ();
+  if(progress[id]==='会') toast(streak.n>=3?`🔥 连击 ${streak.n}！手感火热`:'已标记掌握 💪');
+  else toast('已标记 '+v);
+}
+function unrate(id){ delete progress[id]; save(PROGRESS,progress); renderStats(); renderStages(); renderList(); renderQ(); }
+function nav(d){
+  const list=curList();
+  const ni=curIdx+d;
+  if(ni<0||ni>=list.length) return;
+  curIdx=ni; renderList(); renderQ();
+  document.getElementById('qpanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-renderTables();
+/* ===== 表结构抽屉 ===== */
+let curTab=0;
+function renderDrawer(){
+  document.getElementById('ttabs').innerHTML=SAMPLE_TABLES.map((t,i)=>
+    `<button class="ttab ${i===curTab?'active':''}" onclick="curTab=${i};renderDrawer()">${t.name}</button>`).join('');
+  const t=SAMPLE_TABLES[curTab];
+  document.getElementById('tbody').innerHTML=`<div class="tcard">
+    <div class="tname">${t.name}</div><div class="tdesc">${t.comment}</div>
+    <table class="ftable"><thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+    <tbody>${t.fields.map(f=>`<tr><td class="f">${f.n}</td><td class="ty">${f.t}</td><td>${f.c}</td></tr>`).join('')}</tbody></table>
+    <div class="tsample"><div class="lb">示例数据</div><pre>${t.sample}</pre></div></div>`;
+}
+function openDrawer(){ renderDrawer(); document.getElementById('drawer').classList.add('on'); document.getElementById('mask').classList.add('on'); }
+function closeDrawer(){ document.getElementById('drawer').classList.remove('on'); document.getElementById('mask').classList.remove('on'); }
+
+/* ===== 全局渲染 / 事件 ===== */
+function renderAll(){ renderStats(); renderStages(); renderList(); renderQ(); }
+document.getElementById('searchInput').addEventListener('input',e=>{
+  keyword=e.target.value.trim(); curIdx=0; renderList(); renderQ();
+});
+document.addEventListener('keydown',e=>{
+  const tag=document.activeElement&&document.activeElement.tagName;
+  if(tag==='TEXTAREA'||tag==='INPUT') return;
+  if(e.key==='ArrowLeft') nav(-1);
+  else if(e.key==='ArrowRight') nav(1);
+});
+/* 把「📋 看参考答案」按钮挂到提示行旁（避免题面过长）——在 edlabel 里追加 */
 renderAll();
 </script>
 </body>
