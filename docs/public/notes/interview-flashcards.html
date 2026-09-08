@@ -47,6 +47,9 @@
   #resetBtn{background:none;border:1px solid var(--line);color:var(--sub);font-size:12px;
     padding:4px 10px;border-radius:8px;cursor:pointer;margin-left:10px}
   #resetBtn:hover{color:var(--red);border-color:var(--red)}
+.blk{display:inline-block;min-width:72px;padding:0 8px;margin:0 2px;border:1.5px dashed #888780;border-radius:6px;text-align:center;cursor:pointer;color:transparent;user-select:none;transition:.15s}
+.blk.done{border-style:solid;color:inherit;cursor:default}
+.cloze-bar{margin-top:12px;display:flex;gap:8px}
 </style>
 </head>
 <body data-page-node-id="wMOLgmRyykL7PDYq6MDNTq">
@@ -163,6 +166,39 @@ weakBtn.dataset.weak = '1';
 weakBtn.onclick = ()=>{ weakOnly = !weakOnly; weakBtn.classList.toggle('active', weakOnly); applyFilter(); };
 filtersEl.appendChild(weakBtn);
 
+// 填空模式：答案关键术语自动挖空，点击揭示
+let clozeMode = false;
+try { clozeMode = localStorage.getItem('flashcard-cloze-2026dd') === '1'; } catch(e) {}
+const clozeBtn = document.createElement('button');
+clozeBtn.textContent = '✏️ 填空模式';
+clozeBtn.dataset.cloze = '1';
+clozeBtn.classList.toggle('active', clozeMode);
+clozeBtn.onclick = ()=>{ clozeMode = !clozeMode;
+  try { localStorage.setItem('flashcard-cloze-2026dd', clozeMode ? '1' : '0'); } catch(e) {}
+  clozeBtn.classList.toggle('active', clozeMode); render(); };
+filtersEl.appendChild(clozeBtn);
+
+// 每卡确定性挖空：同卡同词，便于记忆巩固
+function clozeSet(text, seed){
+  const ms = [...text.matchAll(/[A-Za-z][A-Za-z0-9_.\-]{2,}/g)].map(m=>m[0]);
+  const seen = new Set(), uniq = [];
+  ms.forEach(w=>{ const k = w.toLowerCase(); if(!seen.has(k)){ seen.add(k); uniq.push(w); } });
+  if(!uniq.length) return new Set();
+  const N = Math.min(6, uniq.length), out = new Set();
+  for(let j=0;j<N;j++) out.add(uniq[Math.round(j*(uniq.length-1)/Math.max(N-1,1))].toLowerCase());
+  return out;
+}
+function clozeHtml(text, seed){
+  const blanks = clozeSet(text, seed);
+  if(!blanks.size) return text;
+  return text.replace(/[A-Za-z][A-Za-z0-9_.\-]{2,}/g, w =>
+    blanks.has(w.toLowerCase())
+      ? `<span class="blk" data-w="${w}" onclick="revealBlk(this)">点击揭示</span>`
+      : w);
+}
+function revealBlk(el){ el.textContent = el.dataset.w; el.classList.add('done'); el.onclick = null; }
+function revealAll(){ document.querySelectorAll('#card .blk').forEach(el=>{ el.textContent = el.dataset.w; el.classList.add('done'); el.onclick = null; }); }
+
 function render(){
   const i = filtered[idx], c = CARDS[i];
   const badge = marks[i] ? {会:['g','😎 会了'],模糊:['y','🤔 模糊'],不会:['r','😵 不会']}[marks[i]] : null;
@@ -170,8 +206,10 @@ function render(){
   el.innerHTML = `<span class="tag">${c.b}</span><span class="num">${idx+1} / ${filtered.length}</span>` +
     (badge ? `<span class="mark-badge ${badge[0]}">${badge[1]}</span>` : '') +
     (flipped
-      ? `<div class="a"><b>Q：${c.q}</b><br><br>${c.a}</div>`
-      : `<div class="q">【Q】${c.q}</div><div class="hint">点击翻面看答案</div>`);
+      ? (clozeMode
+          ? `<div class="a"><b>Q：${c.q}</b><br><br>${clozeHtml(c.a, i)}<div class="cloze-bar"><button onclick="revealAll()">👁 全部揭示</button><button onclick="render()">🔁 重挖</button></div></div>`
+          : `<div class="a"><b>Q：${c.q}</b><br><br>${c.a}</div>`)
+      : `<div class="q">【Q】${c.q}</div><div class="hint">点击翻面看答案${clozeMode ? '（填空模式：翻面后点击空格揭示关键词）' : ''}</div>`);
   document.getElementById('scoreBar').style.display = flipped ? 'flex' : 'none';
   document.getElementById('prevBtn').disabled = idx===0;
   document.getElementById('nextBtn').disabled = idx===filtered.length-1;
