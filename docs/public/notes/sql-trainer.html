@@ -135,6 +135,15 @@ textarea#answer:focus{border-color:var(--blue);background:var(--btn)}
 .tsample{margin-top:10px;background:var(--soft2);border-radius:9px;padding:9px 11px}
 .tsample .lb{font-size:11px;color:var(--sub);margin-bottom:4px}
 .tsample pre{font-family:var(--mono);font-size:11px;line-height:1.6;white-space:pre-wrap}
+/* 答题框上方内嵌表结构 */
+.schemabox{border:1px solid var(--line);border-radius:11px;background:var(--soft);margin-bottom:10px;overflow:hidden}
+.schemabox .shead{display:flex;align-items:center;gap:8px;padding:7px 11px 5px;flex-wrap:wrap}
+.stoggle{border:none;background:none;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--ink);padding:0}
+.stabs{display:flex;gap:5px;flex-wrap:wrap}
+.stab{padding:3px 10px;border-radius:14px;border:1px solid var(--line);background:var(--btn);font-size:11px;cursor:pointer;font-family:var(--mono);color:var(--ink)}
+.stab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.smore{margin-left:auto;border:none;background:none;cursor:pointer;font-size:11.5px;color:var(--blue);padding:0}
+.schemabox .fwrap{max-height:230px;overflow:auto;padding:2px 11px 10px}
 /* toast */
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--toast-bg);color:var(--toast-ink);padding:9px 20px;border-radius:22px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:99}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -842,6 +851,7 @@ function renderQ(){
     ${steps?`<div class="stepsbox"><div class="hd">🪜 解题步骤（先自己想，卡住了再看一条）</div>
       ${steps.map((st,i)=>`<div class="st"><a href="#" onclick="toggleStep(this);return false" style="color:var(--blue);text-decoration:none">步骤 ${i+1} ▸</a>　<span style="display:none">${st}</span></div>`).join('')}</div>`:''}
     <div class="editorwrap">
+      <div class="schemabox" id="schemaBox">${renderSchemaHtml(q.id)}</div>
       <div class="edlabel">✏️ 你的 SQL<span class="kks">Tab 缩进 · ⌘/Ctrl+Enter 下一题</span>
         <span class="spacer" style="flex:1"></span>
         <button class="abtn" style="padding:4px 12px;font-size:11.5px" onclick="runCheck('${q.id}')">✅ 校验答案</button>
@@ -913,6 +923,35 @@ function requiredTables(id){
   const q=questions.find(x=>x.id===id);
   const m=(q.ref||'').match(/\b(?:from|join)\s+(dwd_sea_[a-z_]+|dim_cust)/gi)||[];
   return [...new Set(m.map(s=>s.replace(/\s+/g,' ').trim().split(' ')[1]))];
+}
+/* ===== 答题框上方内嵌表结构 ===== */
+let SCHEMA_OPEN=true;
+const schemaTab={};
+function qTables(id){
+  const names=SAMPLE_TABLES.map(t=>t.name);
+  const hit=requiredTables(id).filter(t=>names.includes(t));
+  return hit.length?hit:names;
+}
+function renderSchemaHtml(id){
+  const tabs=qTables(id);
+  const ti=Math.min(schemaTab[id]||0,tabs.length-1);
+  const t=SAMPLE_TABLES.find(x=>x.name===tabs[ti]);
+  return `
+    <div class="shead">
+      <button class="stoggle" onclick="toggleSchema('${id}')">${SCHEMA_OPEN?'▾':'▸'} 📚 表结构</button>
+      <div class="stabs">${tabs.map((n,i)=>`<button class="stab ${i===ti?'active':''}" onclick="schemaPick('${id}',${i})">${n}</button>`).join('')}</div>
+      <button class="smore" onclick="openDrawer()">示例数据 ›</button>
+    </div>
+    ${SCHEMA_OPEN?`<div class="fwrap"><table class="ftable"><thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>${t.fields.map(f=>`<tr><td class="f">${f.n}</td><td class="ty">${f.t}</td><td>${f.c}</td></tr>`).join('')}</tbody></table></div>`:''}`;
+}
+function toggleSchema(id){
+  SCHEMA_OPEN=!SCHEMA_OPEN;
+  const el=document.getElementById('schemaBox'); if(el) el.innerHTML=renderSchemaHtml(id);
+}
+function schemaPick(id,i){
+  schemaTab[id]=i;
+  const el=document.getElementById('schemaBox'); if(el) el.innerHTML=renderSchemaHtml(id);
 }
 function renderCheckHtml(id){
   const c=CHECK_CACHE[id]; if(!c) return '';
