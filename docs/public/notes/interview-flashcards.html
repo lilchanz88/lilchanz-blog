@@ -15,22 +15,31 @@ h1{font-size:21px}
 .tabs button.on{background:#185fa5;border-color:#185fa5;color:#fff}
 button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-size:14px}
 .panel{display:none}.panel.on{display:block}
-.statrow{display:flex;gap:10px;margin-bottom:16px}
+#cdBanner{display:none;background:#faeeda;border-radius:12px;padding:10px 16px;margin-bottom:14px;font-size:14px;cursor:pointer}
+#cdBanner b{font-size:18px;color:#854f0b}
+.statrow{display:flex;gap:10px;margin-bottom:14px}
 .stat{flex:1;background:#fff;border-radius:12px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .stat .v{font-size:22px;font-weight:600}.stat .l{font-size:11px;color:#888780}
+.heatmap{display:flex;gap:3px;margin:6px 0 4px;overflow-x:auto;padding-bottom:4px}
+.hmcol{display:flex;flex-direction:column;gap:3px}
+.hmcell{width:11px;height:11px;border-radius:2px;background:#e5e3dc;flex:none}
+.dlegend{display:flex;gap:12px;font-size:11px;color:#888780;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.dlegend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.hmbox{background:#fff;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:14px}
+.dist{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:2px 0 8px}
+.dist div{height:100%}
 #startBtn{width:100%;padding:14px;font-size:16px;background:#185fa5;color:#fff;font-weight:600}
 #startBtn:disabled{background:#b4b2a9;cursor:default}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.actions button{flex:1;min-width:140px;padding:10px;background:#fff;border:1px solid #d3d1c7;color:#2c2c2a;font-weight:500}
+.actions button:hover{border-color:#185fa5;color:#185fa5}
 .tip{font-size:12px;color:#888780;margin-top:12px}
-.dist{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0 4px}
-.dist div{height:100%}
-.dlegend{display:flex;gap:12px;font-size:11px;color:#888780;margin-bottom:16px;flex-wrap:wrap}
-.dlegend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.mleaves{margin:8px 0 0 18px;border-left:2px solid #e5e3dc;padding-left:4px}
 .mbranch{margin-bottom:26px;background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .mroot{display:inline-block;padding:6px 16px;border-radius:10px;font-weight:600;font-size:14px;color:#fff}
-.mleaves{margin:8px 0 0 18px;border-left:2px solid #e5e3dc;padding-left:4px}
 .mleaf{position:relative;margin:2px 0}
 .mleaf::before{content:'';position:absolute;left:-4px;top:50%;width:14px;border-top:2px solid #e5e3dc}
-.mleaf button{background:none;border:none;font-size:13px;color:#2c2c2a;padding:4px 6px;cursor:pointer;text-align:left;width:100%}
+.mleaf button{background:none;border:none;font-size:13px;color:#2c2c2a;padding:4px 6px;cursor:pointer;text-align:left;width:100%;display:flex;align-items:center}
 .mleaf button:hover{color:#185fa5;text-decoration:underline}
 .mdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;flex:none}
 .mleaf span.txt{flex:1}
@@ -52,38 +61,71 @@ button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-si
 #detailBody .fq{color:#993c1d;background:#faecea;border-radius:6px;padding:4px 8px;margin:4px 0}
 #detailBody .li{padding-left:10px}
 #detailBody code{background:#eceae4;padding:1px 5px;border-radius:4px;font-size:12px}
+.sqlLink{margin-top:10px;background:#e1f5ee;color:#0f6e56;font-size:13px;padding:8px 14px;border-radius:8px;font-weight:500}
+.sqlLink:hover{background:#9fe1cb}
 #quitBtn{margin-top:12px;padding:8px 16px;background:transparent;color:#888780;border:1px solid #d3d1c7}
-#doneBox{background:#fff;border-radius:16px;padding:26px;text-align:center}
-#doneBox .big{font-size:38px}
+#doneBox,#mockDone{background:#fff;border-radius:16px;padding:26px;text-align:center}
+#doneBox .big,#mockDone .big{font-size:38px}
 .srow{display:flex;justify-content:space-around;margin:16px 0}
 .srow .sv{font-size:22px;font-weight:600}.srow .sl{font-size:11px;color:#888780}
+#mockIntro{background:#fff;border-radius:14px;padding:20px}
+#mockIntro li{margin-left:18px;font-size:13px;color:#5f5e5a}
+#mockQ{background:#fff;border-radius:16px;padding:22px}
+.mtimer{display:flex;align-items:center;gap:10px;margin:10px 0}
+.mtimer .t{font-size:18px;font-weight:600;min-width:44px;text-align:right}
+.mbar{flex:1;height:8px;background:#e5e3dc;border-radius:4px;overflow:hidden}
+#mockFill{height:100%;background:#ef9f27;width:100%;transition:width 1s linear}
+#mockBtns{display:flex;gap:10px;margin-top:16px}
+#mockBtns button{flex:1;padding:12px;font-weight:600;color:#fff}
+.mockFQ{background:#faecea;color:#993c1d;border-radius:8px;padding:6px 10px;margin:4px 0;font-size:13px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>🃏 闪卡 · 间隔重复记忆</h1>
-  <p class="sub">2026 数据开发面试 · 56 张 · 忘了 1 天再见 · 模糊 3 天 · 秒答 7 天起步翻倍</p>
+  <p class="sub">2026 数据开发面试 · 56 张 · 忘了 1 天 · 模糊 3 天 · 秒答 7 天起步翻倍</p>
   <div class="tabs">
     <button id="tabStudy" class="on" onclick="switchTab('study')">🧠 每日复习</button>
     <button id="tabMap" onclick="switchTab('map')">🗺 导图总览</button>
+    <button id="tabMock" onclick="switchTab('mock')">🎤 模拟面试</button>
   </div>
 
   <div id="pStudy" class="panel on">
+    <div id="cdBanner" onclick="setTarget()"></div>
     <div id="home">
       <div class="statrow">
         <div class="stat"><div class="v" id="stDue">0</div><div class="l">今日到期</div></div>
         <div class="stat"><div class="v" id="stToday">0</div><div class="l">今日已刷</div></div>
         <div class="stat"><div class="v" id="stMaster">0</div><div class="l">长期掌握</div></div>
       </div>
-      <div class="dist" id="distBar"></div>
-      <div class="dlegend">
-        <span><i style="background:#b4b2a9"></i>新卡</span>
-        <span><i style="background:#e24b4a"></i>易忘(1天)</span>
-        <span><i style="background:#ef9f27"></i>巩固中(3天)</span>
-        <span><i style="background:#639922"></i>长期(7天+)</span>
+      <div class="hmbox">
+        <div style="font-size:12px;color:#888780;margin-bottom:4px">🔥 最近 13 周坚持记录</div>
+        <div class="heatmap" id="heatmap"></div>
+        <div class="dlegend" style="margin:6px 0 0">少
+          <i style="width:11px;height:11px;border-radius:2px;background:#e5e3dc"></i>
+          <i style="width:11px;height:11px;border-radius:2px;background:#c0dd97"></i>
+          <i style="width:11px;height:11px;border-radius:2px;background:#97c459"></i>
+          <i style="width:11px;height:11px;border-radius:2px;background:#3b6d11"></i> 多</div>
+      </div>
+      <div class="hmbox">
+        <div style="font-size:12px;color:#888780;margin-bottom:6px">掌握分布</div>
+        <div class="dist" id="distBar"></div>
+        <div class="dlegend" style="margin:0">
+          <span><i style="background:#b4b2a9"></i>新卡</span>
+          <span><i style="background:#e24b4a"></i>易忘(1天)</span>
+          <span><i style="background:#ef9f27"></i>巩固中(3天)</span>
+          <span><i style="background:#639922"></i>长期(7天+)</span>
+        </div>
       </div>
       <button id="startBtn"></button>
-      <p class="tip">📖 打分越诚实，算法越准：真想不起来就点「忘了」，别骗它。详解里藏着面试官追问，展开多看一眼。</p>
+      <div class="actions">
+        <button id="wrongBtn" onclick="startWrong()">📌 错题本</button>
+        <button onclick="startInterleave()">🔄 乱序小卷 10 题</button>
+        <button onclick="doExport()">💾 导出进度</button>
+        <button onclick="document.getElementById('importFile').click()">📥 导入进度</button>
+      </div>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+      <p class="tip">📖 打分越诚实，算法越准。错题本收录「忘了」≥2 次的卡，秒答一次即移出。详解里藏着面试官追问。</p>
       <div style="text-align:right"><button id="resetBtn" style="font-size:12px;color:#b4b2a9;background:none;text-decoration:underline">清空全部进度</button></div>
     </div>
     <div id="study" style="display:none">
@@ -101,6 +143,23 @@ button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-si
   </div>
 
   <div id="pMap" class="panel"></div>
+
+  <div id="pMock" class="panel">
+    <div id="mockIntro">
+      <h2 style="font-size:16px">🎤 模拟面试 · 5 题限时挑战</h2>
+      <p class="tip" style="margin:8px 0">规则：</p>
+      <li>全题库随机抽 5 题，每题限时 90 秒</li>
+      <li>先自己口述作答，再点「答上来了 / 没答上来」</li>
+      <li>交卷后立即看答案 + 面试官追问连击</li>
+      <li>纯演练不计入复习计划，只记入坚持热力图</li>
+      <button id="mockStartBtn" style="width:100%;margin-top:14px;padding:13px;background:#993556;color:#fff;font-weight:600">🎲 开始模拟</button>
+    </div>
+    <div id="mockStudy" style="display:none">
+      <div class="pbar"><div id="mockPfill"></div></div>
+      <div id="mockQ"></div>
+    </div>
+    <div id="mockDone" style="display:none"></div>
+  </div>
 </div>
 
 <script>
@@ -171,7 +230,7 @@ const DETAILS = [
 "**A**：对比句「**业务驱动 vs 数据驱动**」。Kimball：快速构建集市、高效交付，事实表+维度表，星型/雪花。范式模型：企业级全局设计、避免冗余、周期长。\n**追问**：维度建模四步流程？→ **选业务过程 → 声明粒度 → 确定维度 → 确定事实**（「过程-粒度-维度-事实」口诀）。",
 "**A**：星型 = 事实表 + **一层**维度表，允许冗余，**空间换时间**，取数高效；雪花 = 维度表再分层，省存储但多层 join 伤查询。\n**追问**：case？→ 星型：订单事实表 + 商品/用户维表；雪花：商品维表再延伸行业/类目维表。\n**追问**：还有别的模型吗？→ **星系模型**：多事实表共享同一套维度表。",
 "**A**：会。历史原因存在跨域，但主体边界明确；特殊的是**用户、商家这类实体宽表一定会跨域**。",
-"**A**：数字钩子「**3 条**」：①高内聚低耦合（业务相近/粒度相同放一起，高概率同时访问的放一起）②公共逻辑下沉 DWS（口径统一）③核心模型与扩展模型分离（高复用字段进核心表，低复用进扩展表）。\n**追问**：字段命名呢？→ 同义字段必须同名，用规范定义里的名称。\n\n---\n\n## 分支二：数仓分层与事实/维度表设计（10张）",
+"**A**：数字钩子「**3 条**」：①高内聚低耦合（业务相近/粒度相同放一起，高概率同时访问的放一起）②公共逻辑下沉 DWS（口径统一）③核心模型与扩展模型分离（高复用字段进核心表，低复用进扩展表）。\n**追问**：字段命名呢？→ 同义字段必须同名，用规范定义里的名称。",
 "**A**：口诀「**贴源 - 明细 - 汇总 - 应用**」：\n- ODS 贴源层：同构抽取 ≈ 原始数据 + 技术字段\n- DWD 明细层：清洗转换维度退化，按业务过程拆事实表\n- DWS 汇总层：轻度汇总（商家×用户、商家×渠道），算人数/客单价\n- ADS 应用层：报表展示（转化率、留存、画像）",
 "**A**：ODS 100-200 / DWD 约100 / DWS 约150 / ADS 上百-上千 / DIM 约150。主题域 7 个：**用户、行为、商品、广告、订单、触点、商家**。",
 "**A**：把关键维度属性**直接冗余进事实表**。三类可退化：①高基数（订单编号、发票号）②简单维度（订单状态、优惠券类型）③高复用属性（交易时间戳）。\n**追问**：退化力度？→ **DWD 谨慎退化（保原子性一致性），DWS 积极退化（优化查询）**。",
@@ -181,7 +240,7 @@ const DETAILS = [
 "**A**：数字钩子「**3 种**」：①事务事实表（每行一个事件）②**周期快照**（记录周期末状态，月表按月产出）③**累计快照**（一行 = 一个业务全生命周期，订单从下单到售后）。",
 "**A**：每天增量写 → 用**更宽的时间范围筛选**：退款周期15天就筛过去一个月数据，取状态=退款且退款时间=昨天的，增量写入。",
 "**A**：放 **DWD**——只是明细多表关联，没做聚合。\n**追问**：为什么不放 DWM？→ 我们为简化层级没设 DWM 层；DWM=粒度不变/轻度聚合+宽表，DWS=高度聚合。\n**追问**：字段越来越多怎么办？→ ①核心/扩展模型分离 ②技术上数据湖（Iceberg）。",
-"**A**：关键词「**数据回刷**」：先建单事务事实表（下单/支付/发货/收货各一，状态进各自分区）→ 建多事务宽表，**回刷过去30天**，下单表作左表 left join 各状态表取事件时间，写回对应分区。\n**追问**：SQL 套路 → `INSERT OVERWRITE ... PARTITION(order_date)` + 多个 LEFT JOIN + CASE WHEN 定位 current_status。\n\n---\n\n## 分支三：指标体系与数据质量（8张）",
+"**A**：关键词「**数据回刷**」：先建单事务事实表（下单/支付/发货/收货各一，状态进各自分区）→ 建多事务宽表，**回刷过去30天**，下单表作左表 left join 各状态表取事件时间，写回对应分区。\n**追问**：SQL 套路 → `INSERT OVERWRITE ... PARTITION(order_date)` + 多个 LEFT JOIN + CASE WHEN 定位 current_status。",
 "**A**：骨架句「**目标 → 策略 → 度量**」。例：O=提升 GMV；S=提单量/提客单价/降退款/提履约；指标分三级：\n- 一级（战略）：GMV、订单完成金额\n- 二级（策略）：订单数、转化率、客单价、退款率\n- 三级（诊断）：分渠道/品类/新老客/地区/时段",
 "**A**：UJM=用户旅程地图，以用户为中心描述「接触→兴趣→下单→复购」全路径。关系：**OSM 定宏观目标，UJM 把策略具体化成每个触点的优化点和指标**。\n**追问**：UJM 拆解六要素？→ 用户行为/业务目标/接触点/潜在痛点/机会点/衡量指标。",
 "**A**：数字钩子「**3 个层面**」：①**模型层**：统一出入口，公共逻辑下沉 DWS，一致性维度表 ②**平台规范层**：指标管理平台统一口径 + 命名/开发规范 ③**质量层**：表级（量级波动）+ 字段级（空值率、主键唯一）监控 + 交叉验证。",
@@ -189,7 +248,7 @@ const DETAILS = [
 "**A**：数字钩子「**4 重验证**」：①源数据直查 ②质量监控（波动/阈值告警）③**多源交叉验证**（5 个订单↔5 个包裹↔库存扣减）④业务合理性（对比近30天）。",
 "**A**：三段式「**抽-转-载**」：抽取（按数据量判断增量/全量，wedata 平台）→ 转换（清洗：去重/完整性/正确性；转换：格式标准化、字段拆合、关联维表、衍生指标）→ 加载（增量/全量）。",
 "**A**：三个视角：①质量：时效正确、不破基线 ②应用：口径一致、**模型复用率高**（大部分指标 DWS 直接取）③业务：有效赋能、交付效率高、数据资产价值。",
-"**A**：数据赋能路径：打通跨设备 ID（idmapping）→ 用户行为宽表作标签底表 → **三类标签**（统计类：累计消费；规则类：近30天消费>500=高价值流失人群；算法类：流失风险分）→ BI 平台圈人，运营执行。\n**追问**：怎么流程化？→ 标签注入资产管理平台，运营拖拉拽组业务流（圈人→发券）一键执行。\n\n---\n\n## 分支四：Hadoop / Spark / Flink / 数据湖（13张）",
+"**A**：数据赋能路径：打通跨设备 ID（idmapping）→ 用户行为宽表作标签底表 → **三类标签**（统计类：累计消费；规则类：近30天消费>500=高价值流失人群；算法类：流失风险分）→ BI 平台圈人，运营执行。\n**追问**：怎么流程化？→ 标签注入资产管理平台，运营拖拉拽组业务流（圈人→发券）一键执行。",
 "**A**：**HDFS + MapReduce + YARN**。HDFS 主从：NameNode 存元数据，DataNode 存数据块，**默认 3 副本**，一次写入多次读取。MapReduce 分而治之。YARN 主从：RM 全局资源，NM 节点资源，AM 申请容器。",
 "**A**：map 阶段：切片→<k,v>→环形缓冲区→溢写磁盘；reduce 拉取同 key 分区处理再外写。\nShuffle 六步（数字钩子 **map3 + reduce3**）：map 侧 ①分区（hash%Reduce数）②排序溢写 ③归并合并；reduce 侧 ①拷贝 ②归并 ③输入计算。",
 "**A**：数字钩子「**3 条**」：①数据本地性（移动计算不移动数据）②容错（任务失败换节点重启）③并行海量数据。",
@@ -202,8 +261,8 @@ const DETAILS = [
 "**A**：演进线「**Hash → 合并 Hash → Sort**」：M×R 文件爆炸 → Core×R 仍多 → 默认 Sort Shuffle（2×M：1 数据文件+1 索引）。\nSort 内部 **3 种写入器**按条件自动选：①Bypass（无聚合+分区≤200）②Unsafe（无聚合+序列化支持重定位+分区≤2²⁴，二进制排序省内存）③SortShuffle（通用，内存→溢写，key 排序）。",
 "**A**：三大危害：①NameNode 元数据内存耗尽 ②海量 task 调度开销>计算时间 ③资源利用率低、吞吐下降。\n治理：**事前** repartition/coalesce 控制写入数量；**事后**定期合并。\n**追问**：OOM？→ 分 driver（collect 操作/加大内存）和 executor（合理分区数/加大内存/调比例）。",
 "**A**：一句话「**先本地聚合，再 shuffle**」——groupByKey 全量走网络，性能差；reduceByKey 节点内先聚，大幅减少 shuffle 量。",
-"**A**：Flink：主从（JobManager 调度/checkpoint，TaskManager 计算），数字钩子「**4 特性**」：①时间语义（事件/处理/摄入时间，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（定期异步快照→HDFS，精准一次）。\n湖：原始格式全量存储，**Schema-on-Read**，灵活但治理难。湖仓一体三优势：**事务支持（ACID）、开放格式（Parquet/Iceberg）、流批统一**。\n**追问**：UDF 写过吗？→ spark sql 的 udf；例：getLastMonthDays（上月天数）、getUpdateCycle（按分区长度判断更新周期）。\n\n---\n\n## 分支五：SQL 题型套路（8张）",
-"**A**：Flink：主从（JobManager 调度/checkpoint，TaskManager 计算），数字钩子「**4 特性**」：①时间语义（事件/处理/摄入时间，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（定期异步快照→HDFS，精准一次）。\n湖：原始格式全量存储，**Schema-on-Read**，灵活但治理难。湖仓一体三优势：**事务支持（ACID）、开放格式（Parquet/Iceberg）、流批统一**。\n**追问**：UDF 写过吗？→ spark sql 的 udf；例：getLastMonthDays（上月天数）、getUpdateCycle（按分区长度判断更新周期）。\n\n---\n\n## 分支五：SQL 题型套路（8张）",
+"**A**：Flink：主从（JobManager 调度/checkpoint，TaskManager 计算），数字钩子「**4 特性**」：①时间语义（事件/处理/摄入时间，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（定期异步快照→HDFS，精准一次）。\n湖：原始格式全量存储，**Schema-on-Read**，灵活但治理难。湖仓一体三优势：**事务支持（ACID）、开放格式（Parquet/Iceberg）、流批统一**。\n**追问**：UDF 写过吗？→ spark sql 的 udf；例：getLastMonthDays（上月天数）、getUpdateCycle（按分区长度判断更新周期）。",
+"本题是「Flink 关键特性」的追问延伸。\n**追问**：UDF 写过吗？→ spark sql 的 udf；例：getLastMonthDays（上月天数）、getUpdateCycle（按分区长度判断更新周期）。",
 "**A**：数据 a,b,b,c,c 的排序结果：**ROW_NUMBER=1,2,3,4,5（不并列）；DENSE_RANK=1,2,2,3,3（并列不跳号）；RANK=1,2,2,4,4（并列跳号）**。\n**追问**：还有哪些窗口函数？→ lead/lag over、sum/count/avg/max/min over。",
 "**A**：分区=HDFS **目录**，分桶=目录里的**文件**；没分桶要扫全目录，有分桶直接定位对应文件。分桶函数：ntile over、hash。场景：①大表 join 按 key 分桶，同 key 落同号桶免 shuffle ②高效随机抽样。",
 "**A**：行转列 = **max(case when subject='数学' then score end) + group by 学生**；列转行 = 多段 union all，每段固定 subject 字面量。",
@@ -211,52 +270,70 @@ const DETAILS = [
 "**A**：套路「**enter=+1，leave=-1，按时间累计求和取 max**」：先 group by 时间点算净值 flag，再 sum(flag) over(order by time) 得在线曲线，取 max。",
 "**A**：核心套路「**日期减排名 = 连续组号**」：`date_sub(login_date, row_number() over(partition by uid order by date))` 相同即为同一段连续 → group by 组号 count → max。\n**追问**：间隔1天也算连续？→ 改用 lag + **date_diff ≤ 2 打标**，sum(flag) over 生成组号。\n**追问**：连续登录月？→ 先按 yyyy-MM 去重取月首日，再用 `date_sub(月首日, interval rnk month)` 分组。",
 "**A**：两法：①自 join 反转匹配 + `where f1.user1 < f1.user2` 防重复计数 ②把每对按小大归一 `IF(u1<u2,u1,u2)` group by 后 **having count(*)>1** 即双向。",
-"**A**：四个高频题一套思路：\n- **留存**：min(event_date)=注册日 → date_add(register, n)=event_date 打标 → 人数比值\n- **TopN**：row_number over(partition by 部门 order by 薪资 desc) ≤ N\n- **连续3次**：`id - row_number() over(partition by num)` 分组 having count≥3\n- **波峰波谷**：lag/lead 取前后价，case when 双向比较\n\n---\n\n## 分支六：Doris 与叙事题（7张）",
+"**A**：四个高频题一套思路：\n- **留存**：min(event_date)=注册日 → date_add(register, n)=event_date 打标 → 人数比值\n- **TopN**：row_number over(partition by 部门 order by 薪资 desc) ≤ N\n- **连续3次**：`id - row_number() over(partition by num)` 分组 having count≥3\n- **波峰波谷**：lag/lead 取前后价，case when 双向比较",
 "**A**：**FE + BE** 两类节点。FE（Frontend）：负责元数据管理、查询解析、查询规划、集群管理，类似「大脑」；BE（Backend）：负责数据存储和查询执行，类似「肌肉」。元数据用 **BDB JE（类 Paxos 多数派）** 保证一致性。",
 "**A**：数字钩子「**3 个快**」：①**MPP 架构**：多节点并行执行，一份数据多副本分摊查询 ②**列存 + 前缀索引**：按列存储压缩率高，前缀索引（有序稀疏索引）加速过滤 ③**预聚合模型**：建表即选定聚合方式，查询直接读结果。",
 "**A**：①**Duplicate**：不去重，存明细 ②**Aggregate**：建表时指定聚合（SUM/MAX/MIN/REPLACE），导入时预聚合 ③**Unique**：主键唯一，REPLACE 语义实现更新。选型口诀「**明细用 Duplicate、报表用 Aggregate、更新用 Unique**」。",
 "**A**：两层：**分区（Partition）按时间/范围切**，利于裁剪和冷热分离；**分桶（Bucket）按高基数 join key 哈希**，桶数经验值 = BE 数 × 其核数左右，单桶数据量 1-10G 为佳。",
 "**A**：**Hive/Spark 管离线批量加工**（T+1 大规模 ETL），**Doris 管交互式查询和高并发报表**（亚秒级响应）。常用链路：DWD/DWS 结果通过 Broker Load / 例行导入进入 Doris，对外服务查询。关键词「**湖仓加工、MPP 服务**」。",
 "**A**：数字钩子「**基建10个月 + 质量2-3个月**」：①调研 1-2 月：数据域、分层、命名规范 ②建设：ODS 1-2 / DWD 2-3 / DWS 2-3 / ADS 1-2 月 ③质量规则+告警+报表 2-3 月；之后日常需求迭代。\n**追问**：难点？→ 指标不一致（模型/规范/监控三层解）、数据质量差（质量监控+交叉验证）。想不起就说「复杂业务怎么抽象建模」。",
-"**A**：①**棘手问题**：口径对不齐被投诉 → 解法：统一机制平台 + 公共逻辑下沉 DWS ②**职业发展**：内部基建 → 数据理解 → 赋能业务价值 / 结合 AI 做数据 ③**数仓未来**：AI 三方向——开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。\n\n---\n\n## 附：三大背诵武器\n\n| 武器 | 内容 |\n|---|---|\n| **骨架句** | 每题先说一句总纲（如「业务过程×一致性维度」），再展开 |\n| **数字钩子** | 3种划分 / 4步建模 / 3层一致性 / 5条Spark优势 / 3种shuffle / 4个Flink特性 |\n| **SQL套路** | 日期减排名=连续组号；enter+1/leave-1累计；case when行列互换；row_number取TopN |\n\n## 自测打分表\n\n| 分支 | 卡号 | 自评（√/△/×） | 复习日期 |\n|---|---|---|---|\n| OneData与总线 | 1-9 | | |\n| 分层与表设计 | 10-19 | | |\n| 指标与质量 | 20-27 | | |\n| 计算引擎 | 28-40 | | |\n| SQL套路 | 41-48 | | |\n| Doris与叙事 | 49-55 | | |"
+"**A**：①**棘手问题**：口径对不齐被投诉 → 解法：统一机制平台 + 公共逻辑下沉 DWS ②**职业发展**：内部基建 → 数据理解 → 赋能业务价值 / 结合 AI 做数据 ③**数仓未来**：AI 三方向——开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。"
 ];
 
 const LS_KEY = 'sr-2026dd';
+const TRAINER_URL = 'https://lilchanz88.github.io/lilchanz-blog/notes/sql-trainer.html';
+const SQL_LINKS = [
+  {kw:'排名函数', id:'Z5', label:'闯关实战：中级 Z5 DENSE_RANK 排名'},
+  {kw:'连续登录', id:'Z1', label:'闯关实战：中级 Z1 ROW_NUMBER 分组套路'},
+  {kw:'TopN', id:'Z5', label:'闯关实战：中级 Z5 排名取 TopN'},
+  {kw:'分区分桶', id:'', label:'去 SQL 闯关：高级 G 系列（分桶/聚合）'}
+];
 const pad = n => String(n).padStart(2,'0');
 const today = () => { const d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
 const addDays = n => { const d = new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
 
-let S = {}, meta = {day: today(), cnt: 0};
-try { const raw = JSON.parse(localStorage.getItem(LS_KEY) || '{}') || {}; S = raw.cards || {}; meta = raw.meta || meta; } catch(e) {}
+let S = {}, meta = {day: today(), cnt: 0, log: {}, target: null};
+try { const raw = JSON.parse(localStorage.getItem(LS_KEY) || '{}') || {}; S = raw.cards || {}; meta = Object.assign(meta, raw.meta || {}); } catch(e) {}
+meta.log = meta.log || {};
 
 // 迁移：莱特纳盒 + 最老的会/模糊标记
 try {
   if(localStorage.getItem('leitner-2026dd') && !localStorage.getItem('leitner-migrated')){
     const L = JSON.parse(localStorage.getItem('leitner-2026dd') || '{}') || {};
     const IV = [1,2,4,8,16];
-    Object.keys(L).forEach(k=>{ const b = L[k].b||1; S[k] = {iv: IV[b-1]||1, due: L[k].d||today(), streak: b>=3?1:0}; });
+    Object.keys(L).forEach(k=>{ const b = L[k].b||1; S[k] = {iv: IV[b-1]||1, due: L[k].d||today(), streak: b>=3?1:0, f:0}; });
     localStorage.setItem('leitner-migrated','1');
   }
   if(localStorage.getItem('flashcard-marks-2026dd') && !localStorage.getItem('marks-migrated')){
     const M = JSON.parse(localStorage.getItem('flashcard-marks-2026dd') || '{}') || {};
     Object.keys(M).forEach(k=>{
       if(S[k]) return;
-      if(M[k]==='会') S[k] = {iv:7, due:addDays(7), streak:1};
-      else S[k] = {iv:1, due:today(), streak:0};
+      if(M[k]==='会') S[k] = {iv:7, due:addDays(7), streak:1, f:0};
+      else S[k] = {iv:1, due:today(), streak:0, f:0};
     });
     localStorage.setItem('marks-migrated','1');
   }
 } catch(e) {}
-function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify({cards:S, meta})); } catch(e) {} }
+function save(){
+  try {
+    const cutoff = addDays(-200);
+    Object.keys(meta.log).forEach(k=>{ if(k < cutoff) delete meta.log[k]; });
+    localStorage.setItem(LS_KEY, JSON.stringify({cards:S, meta}));
+  } catch(e) {}
+}
+function logStudy(n){ if(meta.day !== today()){ meta.day = today(); meta.cnt = 0; } meta.cnt += n; meta.log[today()] = (meta.log[today()]||0) + n; save(); }
 
 const isDue = i => { const s = S[i]; return !s || s.due <= today(); };
+const wrongList = () => CARDS.map((c,i)=>i).filter(i=>S[i] && (S[i].f||0) >= 2);
 
 function switchTab(t){
-  document.getElementById('tabStudy').classList.toggle('on', t==='study');
-  document.getElementById('tabMap').classList.toggle('on', t==='map');
-  document.getElementById('pStudy').classList.toggle('on', t==='study');
-  document.getElementById('pMap').classList.toggle('on', t==='map');
-  if(t==='map') renderMap(); else renderHome();
+  ['Study','Map','Mock'].forEach(x=>{
+    document.getElementById('tab'+x).classList.toggle('on', t===x.toLowerCase());
+    document.getElementById('p'+x).classList.toggle('on', t===x.toLowerCase());
+  });
+  if(t==='map') renderMap();
+  if(t==='study') renderHome();
+  if(t==='mock') renderMockHome();
 }
 
 function fmtDetail(t){
@@ -268,6 +345,10 @@ function fmtDetail(t){
     return `<div>${s}</div>`;
   }).join('');
 }
+function fqList(i){
+  const d = DETAILS[i] || '';
+  return d.split('\n').filter(l=>/^(追问|\*\*追问)/.test(l.trim())).map(l=>`<div class="mockFQ">🎤 ${l.trim()}</div>`).join('');
+}
 function toggleDetail(){
   const b = document.getElementById('detailBody');
   const btn = document.getElementById('detailBtn');
@@ -276,13 +357,12 @@ function toggleDetail(){
   btn.textContent = open ? '📖 展开详解（追问 · 数字钩子）' : '📑 收起详解';
 }
 
-let queue = [], qi = 0, cnt = null, returnTo = 'study';
+let queue = [], qi = 0, returnTo = 'study';
 const shuffle = a => { for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; } return a; };
 
 function startSession(list, from){
-  if(meta.day !== today()){ meta.day = today(); meta.cnt = 0; }
-  queue = list.slice(); qi = 0; cnt = {...meta}; returnTo = from;
-  if(!queue.length) return;
+  if(!list.length){ alert('没有可刷的卡'); return; }
+  queue = list.slice(); qi = 0; returnTo = from;
   document.getElementById('home').style.display = 'none';
   document.getElementById('doneBox').style.display = 'none';
   document.getElementById('pMap').classList.remove('on');
@@ -295,11 +375,13 @@ function renderStudy(){
   const i = queue[qi], c = CARDS[i], s = S[i];
   document.getElementById('pfill').style.width = (qi/queue.length*100)+'%';
   const hasDetail = DETAILS[i] && DETAILS[i].length > 0;
+  const link = c.b==='SQL套路' ? (SQL_LINKS.find(l=>c.q.includes(l.kw)) || {id:'', label:'去 SQL 闯关实战'}) : null;
   document.getElementById('card').innerHTML =
-    `<span class="tag">${c.b}${s ? ` · 间隔${s.iv}天` : ' · 新卡'} · 第 ${qi+1}/${queue.length} 张</span>
+    `<span class="tag">${c.b}${s ? ` · 间隔${s.iv}天${s.f ? ` · 错${s.f}次` : ''}` : ' · 新卡'} · 第 ${qi+1}/${queue.length} 张</span>
      <div class="q">【Q】${c.q}</div>
      <div class="a" id="ansArea" style="display:none">${c.a}</div>
      ${hasDetail ? `<div id="detailBox" style="display:none"><button id="detailBtn" onclick="toggleDetail()">📖 展开详解（追问 · 数字钩子）</button><div id="detailBody" style="display:none">${fmtDetail(DETAILS[i])}</div></div>` : ''}
+     ${link ? `<button class="sqlLink" onclick="window.open('${TRAINER_URL}','_blank')">⚔️ ${link.label}</button>` : ''}
      <div class="hint" id="hintArea" style="display:none">按真实回忆质量评分 · 详解随答案一起展开/收起</div>`;
   document.getElementById('showBtn').style.display = 'block';
   document.getElementById('gradeBar').style.display = 'none';
@@ -319,13 +401,12 @@ document.getElementById('g3btn').onclick = ()=>grade(2);
 
 function grade(g){ // 0忘 1模糊 2秒答
   const i = queue[qi];
-  if(meta.day !== today()){ meta.day = today(); meta.cnt = 0; }
-  meta.cnt++;
-  const s = S[i] ? {...S[i]} : {iv:0, due:today(), streak:0};
-  if(g === 0){ s.iv = 1; s.due = addDays(1); s.streak = 0; }
+  const s = S[i] ? {...S[i]} : {iv:0, due:today(), streak:0, f:0};
+  if(g === 0){ s.iv = 1; s.due = addDays(1); s.streak = 0; s.f = (s.f||0)+1; }
   else if(g === 1){ s.iv = 3; s.due = addDays(3); s.streak = 0; }
-  else { s.streak = (s.streak||0) + 1; s.iv = [7,14,30,30,30][Math.min(s.streak-1,4)]; s.due = addDays(s.iv); }
-  S[i] = s; save();
+  else { s.streak = (s.streak||0) + 1; s.iv = [7,14,30,30,30][Math.min(s.streak-1,4)]; s.due = addDays(s.iv); s.f = 0; }
+  S[i] = s;
+  logStudy(1);
   qi++;
   if(returnTo === 'map' && qi >= queue.length) return switchTab('map');
   renderStudy();
@@ -336,7 +417,7 @@ function endSession(early){
   const d = document.getElementById('doneBox');
   d.style.display = 'block';
   d.innerHTML = `<div class="big">${early?'⏸':'🎉'}</div><h2 style="font-size:16px">${early?'本次收工':'今日队列完成！'}</h2>
-    <p class="tip" style="margin:8px 0 14px">忘了的明天见，秒答的最长 30 天后见。坚持每天清队列，效果自己会长出来。</p>
+    <p class="tip" style="margin:8px 0 14px">忘了的明天见，秒答的最长 30 天后见。错题本：忘了≥2次自动收录，秒答一次移出。</p>
     <button id="backBtn" style="padding:10px 24px;background:#185fa5;color:#fff;font-weight:600">返回${returnTo==='map'?'导图':'总览'}</button>`;
   document.getElementById('backBtn').onclick = ()=>{ switchTab(returnTo); };
 }
@@ -348,10 +429,49 @@ function stateColor(i){
   return '#639922';
 }
 
+function setTarget(){
+  const v = prompt('设置面试目标日期（格式 YYYY-MM-DD；输入空并确定则清除）', meta.target || '');
+  if(v === null) return;
+  if(v.trim() === ''){ meta.target = null; save(); renderHome(); return; }
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(v.trim())){ alert('格式不对，请用 YYYY-MM-DD'); return; }
+  meta.target = v.trim(); save(); renderHome();
+}
+function renderCdBanner(){
+  const el = document.getElementById('cdBanner');
+  if(!meta.target){ el.style.display = 'none'; return; }
+  const diff = Math.round((new Date(meta.target+'T12:00:00') - new Date(today()+'T12:00:00')) / 86400000);
+  el.style.display = 'block';
+  el.innerHTML = diff > 0
+    ? `⏳ 距面试（${meta.target}）还有 <b>${diff}</b> 天 · 点击修改/清除`
+    : `🎯 面试日已到或已过（${meta.target}）· 冲！点击修改/清除`;
+}
+
+function renderHeatmap(){
+  const el = document.getElementById('heatmap');
+  const cells = [];
+  const base = new Date(); base.setHours(12,0,0,0);
+  const dow = base.getDay();
+  const start = new Date(base); start.setDate(base.getDate() - (dow + 7*12));
+  for(let w=0; w<13; w++){
+    let col = '';
+    for(let d=0; d<7; d++){
+      const dt = new Date(start); dt.setDate(start.getDate() + w*7 + d);
+      if(dt > base){ col += '<div class="hmcell" style="visibility:hidden"></div>'; continue; }
+      const k = dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());
+      const n = meta.log[k] || 0;
+      const c = n===0 ? '#e5e3dc' : n<3 ? '#c0dd97' : n<6 ? '#97c459' : '#3b6d11';
+      col += `<div class="hmcell" style="background:${c}" title="${k} · ${n} 题"></div>`;
+    }
+    cells.push(`<div class="hmcol">${col}</div>`);
+  }
+  el.innerHTML = cells.join('');
+}
+
 function renderHome(){
   document.getElementById('study').style.display = 'none';
   document.getElementById('doneBox').style.display = 'none';
   document.getElementById('home').style.display = 'block';
+  renderCdBanner();
   if(meta.day !== today()) meta.cnt = 0;
   const due = CARDS.map((c,i)=>i).filter(isDue);
   const counts = {new:0, red:0, amber:0, green:0};
@@ -371,6 +491,10 @@ function renderHome(){
      <div style="width:${counts.red/total*100}%;background:#e24b4a"></div>
      <div style="width:${counts.amber/total*100}%;background:#ef9f27"></div>
      <div style="width:${counts.green/total*100}%;background:#639922"></div>`;
+  renderHeatmap();
+  const wrong = wrongList();
+  const wbtn = document.getElementById('wrongBtn');
+  wbtn.textContent = wrong.length ? `📌 错题本（${wrong.length}）` : '📌 错题本（空）';
   const btn = document.getElementById('startBtn');
   btn.textContent = due.length ? `▶ 开始今日复习（${due.length} 张到期）` : '✅ 今日无到期卡片，明天再来';
   btn.disabled = !due.length;
@@ -380,6 +504,38 @@ function renderHome(){
     startSession(reviewed.concat(fresh), 'study');
   };
 }
+
+function startWrong(){
+  const list = wrongList();
+  if(!list.length){ alert('错题本暂空——「忘了」≥2 次的卡会自动进来'); return; }
+  startSession(list, 'study');
+}
+function startInterleave(){
+  startSession(shuffle(CARDS.map((c,i)=>i)).slice(0,10), 'study');
+}
+function doExport(){
+  const blob = new Blob([JSON.stringify({app:'flashcard-sr', exportedAt: today(), cards:S, meta}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '闪卡进度-'+today()+'.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+document.getElementById('importFile').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const obj = JSON.parse(r.result);
+      if(!obj || typeof obj.cards !== 'object' || !obj.meta){ alert('文件格式不对：需要本工具导出的 JSON'); return; }
+      if(!confirm('导入将覆盖当前进度，确定？')) return;
+      S = obj.cards; meta = Object.assign({day:today(), cnt:0, log:{}, target:null}, obj.meta);
+      save(); renderHome(); alert('导入成功 ✓');
+    } catch(err){ alert('导入失败：' + err.message); }
+  };
+  r.readAsText(f);
+  e.target.value = '';
+};
 
 function renderMap(){
   document.getElementById('doneBox').style.display = 'none';
@@ -400,10 +556,75 @@ function renderMap(){
   }).join('') + `<p class="tip">🟢 长期掌握 · 🟡 巩固中 · 🔴 易忘 · ⚪ 新卡。点任意题目单独复习，评分后自动回到导图。</p>`;
 }
 
+/* ---------- 模拟面试 ---------- */
+let mock = null;
+function renderMockHome(){
+  document.getElementById('mockStudy').style.display = 'none';
+  document.getElementById('mockDone').style.display = 'none';
+  document.getElementById('mockIntro').style.display = 'block';
+}
+document.getElementById('mockStartBtn').onclick = ()=>{
+  mock = {qs: shuffle(CARDS.map((c,i)=>i)).slice(0,5), i:0, t:90, timer:null, results:[]};
+  document.getElementById('mockIntro').style.display = 'none';
+  document.getElementById('mockDone').style.display = 'none';
+  document.getElementById('mockStudy').style.display = 'block';
+  mockStartQ();
+};
+function mockStartQ(){
+  mock.t = 90;
+  const i = mock.qs[mock.i], c = CARDS[i];
+  document.getElementById('mockPfill').style.width = (mock.i/mock.qs.length*100)+'%';
+  document.getElementById('mockQ').innerHTML =
+    `<span class="tag">${c.b} · 第 ${mock.i+1}/${mock.qs.length} 题</span>
+     <div class="mtimer"><div class="t" id="mockTime">90s</div><div class="mbar"><div id="mockFill"></div></div></div>
+     <div class="q">【Q】${c.q}</div>
+     <div class="a" id="mockAns" style="display:none">${c.a}${(DETAILS[i]?'<br><br>'+fmtDetail(DETAILS[i]):'')}</div>
+     <div id="mockBtns">
+       <button style="background:#639922" onclick="mockAnswer(true)">😎 答上来了</button>
+       <button style="background:#e24b4a" onclick="mockAnswer(false)">😵 没答上来</button>
+     </div>`;
+  clearInterval(mock.timer);
+  mock.timer = setInterval(()=>{
+    mock.t--;
+    const t = document.getElementById('mockTime'), f = document.getElementById('mockFill');
+    if(t) t.textContent = Math.max(mock.t,0) + 's';
+    if(f) f.style.width = Math.max(mock.t,0)/90*100 + '%';
+    if(mock.t <= 0){ mockAnswer(false); }
+  }, 1000);
+}
+function mockAnswer(ok){
+  clearInterval(mock.timer);
+  const i = mock.qs[mock.i];
+  mock.results.push({i, ok});
+  logStudy(1);
+  const fq = fqList(i);
+  document.getElementById('mockAns').style.display = 'block';
+  document.getElementById('mockBtns').innerHTML =
+    `${fq || '<div class="mockFQ">🎤 这题没有预设追问——面试官可能追问「为什么」，提前想想。</div>'}
+     <button style="background:#185fa5;margin-top:8px" onclick="mockNext()">${mock.i+1 < mock.qs.length ? '下一题 →' : '看战报 →'}</button>`;
+}
+function mockNext(){
+  mock.i++;
+  if(mock.i >= mock.qs.length){
+    clearInterval(mock.timer);
+    document.getElementById('mockStudy').style.display = 'none';
+    const ok = mock.results.filter(r=>r.ok).length;
+    document.getElementById('mockDone').style.display = 'block';
+    document.getElementById('mockDone').innerHTML =
+      `<div class="big">${ok>=4?'🏆':ok>=3?'💪':'📚'}</div><h2 style="font-size:16px">战报：${ok} / ${mock.qs.length} 题答上</h2>
+       <div class="srow">${mock.results.map((r,k)=>`<div class="s"><div class="sv" style="color:${r.ok?'#639922':'#e24b4a'}">${r.ok?'✓':'✗'}</div><div class="sl">第${k+1}题</div></div>`).join('')}</div>
+       <p class="tip">没答上的题已按「忘了」记一次吗？——没有，模拟面试不影响复习计划；想强化就去总览点那几题。</p>
+       <button id="mockBackBtn" style="margin-top:10px;padding:10px 24px;background:#185fa5;color:#fff;font-weight:600">返回模拟首页</button>`;
+    document.getElementById('mockBackBtn').onclick = renderMockHome;
+    return;
+  }
+  mockStartQ();
+}
+
 document.getElementById('quitBtn').onclick = ()=>endSession(true);
 document.getElementById('resetBtn').onclick = ()=>{
   if(!confirm('确定清空全部复习进度吗？此操作不可恢复。')) return;
-  S = {}; meta = {day: today(), cnt: 0}; save(); renderHome();
+  S = {}; meta = {day: today(), cnt: 0, log: {}, target: null}; save(); renderHome();
 };
 
 renderHome();
