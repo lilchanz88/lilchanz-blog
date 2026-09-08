@@ -1,74 +1,76 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="irFa4lvhnkFiqi2E1NRXKA">
-<head data-page-node-id="F2AbWJxKBEGmHNciIrcEYB">
-<meta charset="UTF-8" data-page-node-id="e3QznceOaz3HFD4QvFcm7K">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="4BrnfS1ThKDbCjEVzhG3PT">
-<title>闪卡自测 · 2026数据开发面试</title>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>闪卡 · 莱特纳记忆盒 · 2026数据开发面试</title>
 <style>
-  :root{
-    --bg:#0f1117; --panel:#1a1d27; --card:#212532; --line:#2e3342;
-    --text:#e8eaf0; --sub:#9aa1b2; --accent:#6c8cff; --green:#4ade80; --amber:#fbbf24; --red:#f87171;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-  body{background:var(--bg);color:var(--text);padding:24px;max-width:960px;margin:0 auto}
-  h1{font-size:20px;margin-bottom:4px}
-  .meta{color:var(--sub);font-size:13px;margin-bottom:18px}
-  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-  .filters button{background:var(--panel);border:1px solid var(--line);color:var(--sub);
-    padding:6px 12px;border-radius:18px;font-size:13px;cursor:pointer;transition:.15s}
-  .filters button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
-    min-height:300px;padding:26px;margin-bottom:14px;cursor:pointer;
-    display:flex;flex-direction:column;justify-content:center;position:relative;transition:.2s}
-  .card:hover{border-color:var(--accent)}
-  .tag{position:absolute;top:14px;left:16px;font-size:12px;color:var(--accent);background:rgba(108,140,255,.12);
-    padding:3px 10px;border-radius:10px}
-  .num{position:absolute;top:14px;right:16px;font-size:12px;color:var(--sub)}
-  .q{font-size:19px;font-weight:600;line-height:1.55}
-  .a{font-size:15px;line-height:1.8;color:var(--text)}
-  .a b{color:var(--amber)}
-  .followup{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--sub);line-height:1.7}
-  .hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:var(--sub)}
-  .score{display:flex;gap:10px;margin-bottom:16px}
-  .score button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);
-    background:var(--panel);color:var(--text);font-size:14px;cursor:pointer}
-  .score .g{border-color:var(--green);color:var(--green)}
-  .score .y{border-color:var(--amber);color:var(--amber)}
-  .score .r{border-color:var(--red);color:var(--red)}
-  .nav{display:flex;justify-content:space-between;align-items:center;color:var(--sub);font-size:13px}
-  .nav button{background:var(--panel);border:1px solid var(--line);color:var(--text);
-    padding:8px 18px;border-radius:8px;font-size:14px;cursor:pointer}
-  .nav button:disabled{opacity:.35;cursor:default}
-  .stats{font-size:12px;color:var(--sub)}
-  .mark-badge{position:absolute;bottom:34px;right:16px;font-size:12px;padding:3px 10px;border-radius:10px;font-weight:600}
-  .mark-badge.g{color:var(--green);background:rgba(74,222,129,.12)}
-  .mark-badge.y{color:var(--amber);background:rgba(251,191,36,.12)}
-  .mark-badge.r{color:var(--red);background:rgba(248,113,113,.12)}
-  #resetBtn{background:none;border:1px solid var(--line);color:var(--sub);font-size:12px;
-    padding:4px 10px;border-radius:8px;cursor:pointer;margin-left:10px}
-  #resetBtn:hover{color:var(--red);border-color:var(--red)}
-.blk{display:inline-block;min-width:72px;padding:0 8px;margin:0 2px;border:1.5px dashed #888780;border-radius:6px;text-align:center;cursor:pointer;color:transparent;user-select:none;transition:.15s}
-.blk.done{border-style:solid;color:inherit;cursor:default}
-.cloze-bar{margin-top:12px;display:flex;gap:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f5f1;color:#2c2c2a;line-height:1.6;padding:24px 16px}
+.wrap{max-width:720px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}
+.sub{color:#888780;font-size:13px;margin-bottom:20px}
+button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-size:14px}
+#boxes{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.box{flex:1;min-width:96px;border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s}
+.box:hover{transform:translateY(-2px)}
+.box .bn{font-size:20px;font-weight:600}
+.box .bl{font-size:11px;opacity:.75}
+.box.cur{border-color:#2c2c2a}
+#startBtn{width:100%;padding:14px;font-size:16px;background:#185fa5;color:#fff;font-weight:600}
+#startBtn:hover{background:#0c447c}
+#startBtn:disabled{background:#b4b2a9;cursor:default}
+.tip{font-size:12px;color:#888780;margin-top:14px}
+.pbar{height:6px;background:#e5e3dc;border-radius:3px;margin-bottom:16px;overflow:hidden}
+#pfill{height:100%;background:#1d9e75;width:0;transition:.3s}
+#card{background:#fff;border-radius:16px;padding:24px;min-height:200px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tag{display:inline-block;font-size:12px;background:#e6f1fb;color:#185fa5;padding:2px 10px;border-radius:20px;margin-bottom:10px}
+.q{font-size:17px;font-weight:600}
+.a{font-size:14px;margin-top:14px;padding-top:14px;border-top:1px dashed #d3d1c7;white-space:pre-wrap}
+.hint{color:#b4b2a9;font-size:13px;margin-top:14px}
+#showBtn{margin-top:16px;padding:10px 22px;background:#f1efe8;font-weight:500}
+#gradeBar{display:flex;gap:10px;margin-top:16px}
+#gradeBar button{flex:1;padding:12px;font-size:15px;font-weight:600;color:#fff}
+.g1{background:#e24b4a}.g2{background:#ef9f27}.g3{background:#639922}
+#quitBtn{margin-top:14px;padding:8px 16px;background:transparent;color:#888780;border:1px solid #d3d1c7}
+#doneBox{background:#fff;border-radius:16px;padding:28px;text-align:center}
+#doneBox .big{font-size:40px;margin-bottom:8px}
+.srow{display:flex;justify-content:space-around;margin:18px 0}
+.srow .s{text-align:center}
+.srow .sv{font-size:24px;font-weight:600}
+.srow .sl{font-size:12px;color:#888780}
+.legend{font-size:11px;color:#b4b2a9;text-align:center;margin-top:10px}
+h2{font-size:15px;margin:22px 0 10px}
 </style>
 </head>
-<body data-page-node-id="wMOLgmRyykL7PDYq6MDNTq">
-<h1 data-page-node-id="JmqoZrf8RNy3ktfFChMDL9">🎴 闪卡自测 · 2026数据开发面试</h1>
-<div class="meta" data-page-node-id="WLHzFWvfTPNzu5IFCB8iBl">共 55 张 · 点击卡片翻面 · 用「会/模糊/不会」标记，先攻薄弱分支</div>
-<div class="filters" id="filters" data-page-node-id="71rgC8rqBlrVPOJtyJ3aQR"></div>
-<div class="card" id="card" onclick="flip()" data-page-node-id="wDhYtpCAuLin5hJAqUC3nW"></div>
-<div class="score" id="scoreBar" style="display:none" data-page-node-id="lL7aAhYOKaIs0HxPOU3Z7q">
-  <button class="g" onclick="mark('会')" data-page-node-id="1V5WMxE2I3YyBtiRSijBzo">😎 会了</button>
-  <button class="y" onclick="mark('模糊')" data-page-node-id="nGcJ9kMzp1Sf56VF4QXVkC">🤔 模糊</button>
-  <button class="r" onclick="mark('不会')" data-page-node-id="pjEe9uGmJkQSkHGDG3bfgV">😵 不会</button>
-</div>
-<div class="nav" data-page-node-id="G281VNYdpmCbapXB1hGGgx">
-  <button id="prevBtn" onclick="move(-1)" data-page-node-id="T03ys3kNFmR63VUswetsKu">← 上一张</button>
-  <span class="stats" id="stats" data-page-node-id="1kbdIGeHjbg8c7FJD7EBl8"></span>
-  <span>
-    <button id="resetBtn" onclick="resetMarks()">🗑 重置记录</button>
-    <button id="nextBtn" onclick="move(1)" data-page-node-id="93rrJphnyAlh8eX1E8zkXj">下一张 →</button>
-  </span>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🃏 莱特纳记忆盒</h1>
+    <p class="sub">2026 数据开发面试 · 56 张卡 · 答对爬盒、答错回炉，盒位越高隔得越久</p>
+  </header>
+
+  <div id="home">
+    <h2>记忆盒总览 <span class="legend" style="font-size:12px">（点任意盒子可专刷该盒）</span></h2>
+    <div id="boxes"></div>
+    <button id="startBtn"></button>
+    <p class="tip">📖 规则：忘了 → 打回盒1 · 模糊 → 留本盒再约 · 答对 → 升一盒。间隔：盒1=1天 盒2=2天 盒3=4天 盒4=8天 盒5=16天（毕业）。到期的卡今天必须再见一面——这就是对抗遗忘的全部秘密。</p>
+    <div style="text-align:right"><button id="resetBtn" style="font-size:12px;color:#b4b2a9;background:none;text-decoration:underline">清空全部进度</button></div>
+  </div>
+
+  <div id="study" style="display:none">
+    <div class="pbar"><div id="pfill"></div></div>
+    <div id="card"></div>
+    <button id="showBtn" style="display:none">👁 显示答案（先自己口述！）</button>
+    <div id="gradeBar" style="display:none">
+      <button class="g1" onclick="grade(0)">😵 忘了</button>
+      <button class="g2" onclick="grade(1)">🤔 模糊</button>
+      <button class="g3" onclick="grade(2)">😎 答对</button>
+    </div>
+    <button id="quitBtn" onclick="endSession(true)">⏹ 提前结束</button>
+  </div>
+
+  <div id="doneBox" style="display:none"></div>
 </div>
 
 <script>
@@ -131,101 +133,141 @@ const CARDS = [
 {b:"Doris与叙事",q:"开放题三板斧：棘手问题/职业发展/数仓未来？",a:"①棘手问题：口径对不齐被投诉→统一机制平台+公共逻辑下沉 DWS ②职业发展：内部基建→数据理解→赋能业务价值/结合 AI ③数仓未来 AI 三方向：开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。"},
 ];
 
-let filtered = CARDS.map((c,i)=>i), idx = 0, flipped = false;
-const STORE_KEY = 'flashcard-marks-2026dd';
-let marks = {};  // 持久化：刷新/重开浏览器不丢
-try { marks = JSON.parse(localStorage.getItem(STORE_KEY) || '{}') || {}; } catch(e) { console.warn('标记数据损坏，已重置', e); }
-const save = ()=>localStorage.setItem(STORE_KEY, JSON.stringify(marks));
-let curBranch = "全部", weakOnly = false;
+const INTERVALS = [1,2,4,8,16];
+const BOX_NAMES = ['新卡','盒1·1天','盒2·2天','盒3·4天','盒4·8天','盒5·16天'];
+const BOX_COLORS = ['#f1efe8','#fcebeb','#faeeda','#eaf3de','#e1f5ee','#e6f1fb'];
+const BOX_STROKES = ['#b4b2a9','#e24b4a','#ef9f27','#639922','#0f6e56','#185fa5'];
+const LS_KEY = 'leitner-2026dd', OLD_KEY = 'flashcard-marks-2026dd';
+const pad = n => String(n).padStart(2,'0');
+const today = () => { const d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+const addDays = (n) => { const d = new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
 
-const applyFilter = ()=>{
-  filtered = CARDS.map((c,i)=>i)
-    .filter(i=>curBranch==="全部"||CARDS[i].b===curBranch)
-    .filter(i=>!weakOnly||(marks[i]&&marks[i]!=='会'));  // 薄弱 = 标过「模糊/不会」的
-  idx=0; flipped=false; render();
+let state = {};
+try { state = JSON.parse(localStorage.getItem(LS_KEY) || '{}') || {}; } catch(e) { state = {}; }
+if(!localStorage.getItem(LS_KEY) && Object.keys(state).length === 0){
+  let old = {};
+  try { old = JSON.parse(localStorage.getItem(OLD_KEY) || '{}') || {}; } catch(e) {}
+  CARDS.forEach((c,i)=>{ const m = old[i];
+    if(m === '会') state[i] = {b:3, d:today()};
+    else if(m === '模糊' || m === '不会') state[i] = {b:1, d:today()};
+  });
+  save();
+}
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {} }
+
+const boxOf = i => state[i] ? state[i].b : 0;
+const isDue = i => { const s = state[i]; return !s || s.d <= today(); };
+
+let queue = [], qi = 0, session = null, mode = 'due';
+const shuffle = a => { for(let k=a.length-1;k>0;k--){ const j = Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; } return a; };
+
+function startSession(list, m){
+  mode = m; session = {up:0, down:0, stay:0, fresh:0};
+  if(mode === 'due') queue = list.filter(i=>boxOf(i)>0).concat(list.filter(i=>boxOf(i)===0));
+  else queue = shuffle(list.slice());
+  if(!queue.length){ renderHome(); alert('这个盒子暂时没有可刷的卡！'); return; }
+  qi = 0;
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('doneBox').style.display = 'none';
+  document.getElementById('study').style.display = 'block';
+  renderStudy();
+}
+
+function renderStudy(){
+  if(qi >= queue.length) return endSession(false);
+  const i = queue[qi], c = CARDS[i];
+  document.getElementById('pfill').style.width = (qi/queue.length*100)+'%';
+  const el = document.getElementById('card');
+  el.innerHTML = `<span class="tag">${c.b} · ${BOX_NAMES[boxOf(i)]} · 第 ${qi+1}/${queue.length} 张</span>
+    <div class="q">【Q】${c.q}</div>
+    <div class="a" id="ansArea" style="display:none">${c.a}</div>
+    <div class="hint" id="hintArea" style="display:none">按回忆质量评分，评分后自动进入下一张</div>`;
+  document.getElementById('showBtn').style.display = 'block';
+  document.getElementById('gradeBar').style.display = 'none';
+}
+
+function showAns(){
+  document.getElementById('ansArea').style.display = 'block';
+  document.getElementById('hintArea').style.display = 'block';
+  document.getElementById('showBtn').style.display = 'none';
+  document.getElementById('gradeBar').style.display = 'flex';
+}
+document.getElementById('showBtn').onclick = showAns;
+
+function grade(g){ // 0忘 1模糊 2答对
+  const i = queue[qi];
+  const prev = boxOf(i);
+  const s = state[i] ? {...state[i]} : {b:0, d:today()};
+  if(prev === 0) session.fresh++;
+  if(g === 0){ s.b = 1; s.d = addDays(INTERVALS[0]); session.down++; }
+  else if(g === 1){
+    if(s.b === 0){ s.b = 1; s.d = addDays(1); }
+    else s.d = addDays(INTERVALS[s.b-1]);
+    session.stay++;
+  } else {
+    s.b = Math.min(5, s.b + 1);
+    s.d = addDays(INTERVALS[s.b-1]);
+    if(s.b > prev) session.up++;
+  }
+  state[i] = s; save();
+  qi++; renderStudy();
+}
+
+function endSession(early){
+  document.getElementById('study').style.display = 'none';
+  const d = document.getElementById('doneBox');
+  d.style.display = 'block';
+  d.innerHTML = `<div class="big">${early ? '⏸' : '🎉'}</div>
+    <h2 style="margin-top:0">${early ? '本次提前收工' : '今日复习完成！'}</h2>
+    <div class="srow">
+      <div class="s"><div class="sv">${session.up}</div><div class="sl">升级</div></div>
+      <div class="s"><div class="sv">${session.stay}</div><div class="sl">留级</div></div>
+      <div class="s"><div class="sv">${session.down}</div><div class="sl">打回</div></div>
+      <div class="s"><div class="sv">${session.fresh}</div><div class="sl">新学</div></div>
+    </div>
+    <button id="backBtn" style="padding:10px 24px;background:#185fa5;color:#fff;font-weight:600">返回总览</button>`;
+  document.getElementById('backBtn').onclick = renderHome;
+}
+
+function renderHome(){
+  document.getElementById('study').style.display = 'none';
+  document.getElementById('doneBox').style.display = 'none';
+  document.getElementById('home').style.display = 'block';
+  const counts = [0,0,0,0,0,0];
+  CARDS.forEach((c,i)=>counts[boxOf(i)]++);
+  const boxesEl = document.getElementById('boxes');
+  boxesEl.innerHTML = '';
+  BOX_NAMES.forEach((n,k)=>{
+    const div = document.createElement('div');
+    div.className = 'box';
+    div.style.background = BOX_COLORS[k];
+    div.style.borderColor = BOX_STROKES[k];
+    div.innerHTML = `<div class="bn" style="color:${BOX_STROKES[k]}">${counts[k]}</div><div class="bl">${n}</div>`;
+    div.onclick = ()=>{
+      const list = CARDS.map((c,i)=>i).filter(i=>boxOf(i)===k);
+      startSession(list, 'free');
+    };
+    boxesEl.appendChild(div);
+  });
+  const due = CARDS.map((c,i)=>i).filter(isDue);
+  const btn = document.getElementById('startBtn');
+  btn.textContent = due.length ? `▶ 开始今日复习（${due.length} 张到期）` : '✅ 今日无到期卡片，明天再来';
+  btn.disabled = !due.length;
+  btn.onclick = ()=>startSession(due, 'due');
+  const next = CARDS.map((c,i)=>({i,d:state[i]?state[i].d:null})).filter(x=>x.d && x.d>today()).map(x=>x.d).sort()[0];
+  document.getElementById('homeStats')?.remove();
+  const st = document.createElement('p');
+  st.className = 'tip'; st.id = 'homeStats';
+  st.textContent = due.length ? '到期卡优先刷，新卡排在队尾。' : (next ? `下一批到期：${next}` : '全部毕业，可点盒子自由复习保持手感。');
+  document.querySelector('.tip').before(st);
+}
+
+document.getElementById('resetBtn').onclick = ()=>{
+  if(!confirm('确定清空全部爬盒进度吗？此操作不可恢复。')) return;
+  state = {}; save(); renderHome();
 };
 
-const branches = ["全部", ...new Set(CARDS.map(c=>c.b))];
-const filtersEl = document.getElementById('filters');
-branches.forEach(b=>{
-  const btn = document.createElement('button');
-  btn.textContent = b;
-  if(b==="全部") btn.classList.add('active');
-  btn.onclick = ()=>{ curBranch=b;
-    document.querySelectorAll('.filters button[data-branch]').forEach(x=>x.classList.remove('active'));
-    btn.classList.add('active');
-    applyFilter();
-  };
-  btn.dataset.branch = b;
-  filtersEl.appendChild(btn);
-});
-// 只看薄弱卡开关（与分支筛选叠加）
-const weakBtn = document.createElement('button');
-weakBtn.textContent = '🔥 只看薄弱';
-weakBtn.dataset.weak = '1';
-weakBtn.onclick = ()=>{ weakOnly = !weakOnly; weakBtn.classList.toggle('active', weakOnly); applyFilter(); };
-filtersEl.appendChild(weakBtn);
-
-// 填空模式：答案关键术语自动挖空，点击揭示
-let clozeMode = false;
-try { clozeMode = localStorage.getItem('flashcard-cloze-2026dd') === '1'; } catch(e) {}
-const clozeBtn = document.createElement('button');
-clozeBtn.textContent = '✏️ 填空模式';
-clozeBtn.dataset.cloze = '1';
-clozeBtn.classList.toggle('active', clozeMode);
-clozeBtn.onclick = ()=>{ clozeMode = !clozeMode;
-  try { localStorage.setItem('flashcard-cloze-2026dd', clozeMode ? '1' : '0'); } catch(e) {}
-  clozeBtn.classList.toggle('active', clozeMode); render(); };
-filtersEl.appendChild(clozeBtn);
-
-// 每卡确定性挖空：同卡同词，便于记忆巩固
-function clozeSet(text, seed){
-  const ms = [...text.matchAll(/[A-Za-z][A-Za-z0-9_.\-]{2,}/g)].map(m=>m[0]);
-  const seen = new Set(), uniq = [];
-  ms.forEach(w=>{ const k = w.toLowerCase(); if(!seen.has(k)){ seen.add(k); uniq.push(w); } });
-  if(!uniq.length) return new Set();
-  const N = Math.min(6, uniq.length), out = new Set();
-  for(let j=0;j<N;j++) out.add(uniq[Math.round(j*(uniq.length-1)/Math.max(N-1,1))].toLowerCase());
-  return out;
-}
-function clozeHtml(text, seed){
-  const blanks = clozeSet(text, seed);
-  if(!blanks.size) return text;
-  return text.replace(/[A-Za-z][A-Za-z0-9_.\-]{2,}/g, w =>
-    blanks.has(w.toLowerCase())
-      ? `<span class="blk" data-w="${w}" onclick="revealBlk(this)">点击揭示</span>`
-      : w);
-}
-function revealBlk(el){ el.textContent = el.dataset.w; el.classList.add('done'); el.onclick = null; }
-function revealAll(){ document.querySelectorAll('#card .blk').forEach(el=>{ el.textContent = el.dataset.w; el.classList.add('done'); el.onclick = null; }); }
-
-function render(){
-  const i = filtered[idx], c = CARDS[i];
-  const badge = marks[i] ? {会:['g','😎 会了'],模糊:['y','🤔 模糊'],不会:['r','😵 不会']}[marks[i]] : null;
-  const el = document.getElementById('card');
-  el.innerHTML = `<span class="tag">${c.b}</span><span class="num">${idx+1} / ${filtered.length}</span>` +
-    (badge ? `<span class="mark-badge ${badge[0]}">${badge[1]}</span>` : '') +
-    (flipped
-      ? (clozeMode
-          ? `<div class="a"><b>Q：${c.q}</b><br><br>${clozeHtml(c.a, i)}<div class="cloze-bar"><button onclick="revealAll()">👁 全部揭示</button><button onclick="render()">🔁 重挖</button></div></div>`
-          : `<div class="a"><b>Q：${c.q}</b><br><br>${c.a}</div>`)
-      : `<div class="q">【Q】${c.q}</div><div class="hint">点击翻面看答案${clozeMode ? '（填空模式：翻面后点击空格揭示关键词）' : ''}</div>`);
-  document.getElementById('scoreBar').style.display = flipped ? 'flex' : 'none';
-  document.getElementById('prevBtn').disabled = idx===0;
-  document.getElementById('nextBtn').disabled = idx===filtered.length-1;
-  const m = Object.values(marks);
-  document.getElementById('stats').textContent =
-    `已标 ${m.length} 张 · 会 ${m.filter(x=>x==='会').length} · 模糊 ${m.filter(x=>x==='模糊').length} · 不会 ${m.filter(x=>x==='不会').length}（已保存）`;
-}
-function flip(){ flipped = !flipped; render(); }
-function move(d){ if(idx+d>=0 && idx+d<filtered.length){ idx+=d; flipped=false; render(); } }
-function mark(v){ marks[filtered[idx]] = v; save(); move(1); }
-function resetMarks(){
-  if(!confirm('确定清空所有「会/模糊/不会」标记吗？此操作不可恢复。')) return;
-  Object.keys(marks).forEach(k=>delete marks[k]);
-  save(); applyFilter();
-}
-render();
+renderHome();
 </script>
 </body>
 </html>
