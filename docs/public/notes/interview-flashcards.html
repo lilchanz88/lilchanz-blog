@@ -3,74 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>闪卡 · 莱特纳记忆盒 · 2026数据开发面试</title>
+<title>闪卡 · 间隔重复 · 2026数据开发面试</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f5f1;color:#2c2c2a;line-height:1.6;padding:24px 16px}
-.wrap{max-width:720px;margin:0 auto}
-h1{font-size:22px;margin-bottom:4px}
-.sub{color:#888780;font-size:13px;margin-bottom:20px}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f5f1;color:#2c2c2a;line-height:1.6;padding:20px 14px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:21px}
+.sub{color:#888780;font-size:13px;margin-bottom:14px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tabs button{flex:1;padding:10px;border-radius:10px;background:#fff;border:1px solid #d3d1c7;font-size:14px;font-weight:600;color:#5f5e5a}
+.tabs button.on{background:#185fa5;border-color:#185fa5;color:#fff}
 button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-size:14px}
-#boxes{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.box{flex:1;min-width:96px;border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.15s}
-.box:hover{transform:translateY(-2px)}
-.box .bn{font-size:20px;font-weight:600}
-.box .bl{font-size:11px;opacity:.75}
-.box.cur{border-color:#2c2c2a}
+.panel{display:none}.panel.on{display:block}
+.statrow{display:flex;gap:10px;margin-bottom:16px}
+.stat{flex:1;background:#fff;border-radius:12px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat .v{font-size:22px;font-weight:600}.stat .l{font-size:11px;color:#888780}
 #startBtn{width:100%;padding:14px;font-size:16px;background:#185fa5;color:#fff;font-weight:600}
-#startBtn:hover{background:#0c447c}
 #startBtn:disabled{background:#b4b2a9;cursor:default}
-.tip{font-size:12px;color:#888780;margin-top:14px}
-.pbar{height:6px;background:#e5e3dc;border-radius:3px;margin-bottom:16px;overflow:hidden}
+.tip{font-size:12px;color:#888780;margin-top:12px}
+.dist{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0 4px}
+.dist div{height:100%}
+.dlegend{display:flex;gap:12px;font-size:11px;color:#888780;margin-bottom:16px;flex-wrap:wrap}
+.dlegend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.mbranch{margin-bottom:26px;background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.mroot{display:inline-block;padding:6px 16px;border-radius:10px;font-weight:600;font-size:14px;color:#fff}
+.mleaves{margin:8px 0 0 18px;border-left:2px solid #e5e3dc;padding-left:4px}
+.mleaf{position:relative;margin:2px 0}
+.mleaf::before{content:'';position:absolute;left:-4px;top:50%;width:14px;border-top:2px solid #e5e3dc}
+.mleaf button{background:none;border:none;font-size:13px;color:#2c2c2a;padding:4px 6px;cursor:pointer;text-align:left;width:100%}
+.mleaf button:hover{color:#185fa5;text-decoration:underline}
+.mdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;flex:none}
+.mleaf span.txt{flex:1}
+.pbar{height:6px;background:#e5e3dc;border-radius:3px;margin-bottom:14px;overflow:hidden}
 #pfill{height:100%;background:#1d9e75;width:0;transition:.3s}
-#card{background:#fff;border-radius:16px;padding:24px;min-height:200px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+#card{background:#fff;border-radius:16px;padding:22px;min-height:180px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .tag{display:inline-block;font-size:12px;background:#e6f1fb;color:#185fa5;padding:2px 10px;border-radius:20px;margin-bottom:10px}
 .q{font-size:17px;font-weight:600}
-.a{font-size:14px;margin-top:14px;padding-top:14px;border-top:1px dashed #d3d1c7;white-space:pre-wrap}
-.hint{color:#b4b2a9;font-size:13px;margin-top:14px}
-#showBtn{margin-top:16px;padding:10px 22px;background:#f1efe8;font-weight:500}
-#gradeBar{display:flex;gap:10px;margin-top:16px}
-#gradeBar button{flex:1;padding:12px;font-size:15px;font-weight:600;color:#fff}
+.a{font-size:14px;margin-top:12px;padding-top:12px;border-top:1px dashed #d3d1c7;white-space:pre-wrap}
+#showBtn{margin-top:14px;padding:10px 22px;background:#f1efe8;font-weight:500}
+.hint{color:#b4b2a9;font-size:13px;margin-top:12px}
+#gradeBar{display:flex;gap:10px;margin-top:14px}
+#gradeBar button{flex:1;padding:11px 4px;font-size:14px;font-weight:600;color:#fff;line-height:1.3}
+#gradeBar small{display:block;font-size:11px;font-weight:400;opacity:.85}
 .g1{background:#e24b4a}.g2{background:#ef9f27}.g3{background:#639922}
-#quitBtn{margin-top:14px;padding:8px 16px;background:transparent;color:#888780;border:1px solid #d3d1c7}
-#doneBox{background:#fff;border-radius:16px;padding:28px;text-align:center}
-#doneBox .big{font-size:40px;margin-bottom:8px}
-.srow{display:flex;justify-content:space-around;margin:18px 0}
-.srow .s{text-align:center}
-.srow .sv{font-size:24px;font-weight:600}
-.srow .sl{font-size:12px;color:#888780}
-.legend{font-size:11px;color:#b4b2a9;text-align:center;margin-top:10px}
-h2{font-size:15px;margin:22px 0 10px}
+#detailBox{margin-top:12px;border-top:1px dashed #d3d1c7;padding-top:10px}
+#detailBtn{background:none;color:#185fa5;font-size:13px;padding:2px 0;text-decoration:underline}
+#detailBody{font-size:13px;background:#faf9f6;border-radius:10px;padding:12px;margin-top:8px}
+#detailBody .fq{color:#993c1d;background:#faecea;border-radius:6px;padding:4px 8px;margin:4px 0}
+#detailBody .li{padding-left:10px}
+#detailBody code{background:#eceae4;padding:1px 5px;border-radius:4px;font-size:12px}
+#quitBtn{margin-top:12px;padding:8px 16px;background:transparent;color:#888780;border:1px solid #d3d1c7}
+#doneBox{background:#fff;border-radius:16px;padding:26px;text-align:center}
+#doneBox .big{font-size:38px}
+.srow{display:flex;justify-content:space-around;margin:16px 0}
+.srow .sv{font-size:22px;font-weight:600}.srow .sl{font-size:11px;color:#888780}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>🃏 莱特纳记忆盒</h1>
-    <p class="sub">2026 数据开发面试 · 56 张卡 · 答对爬盒、答错回炉，盒位越高隔得越久</p>
-  </header>
-
-  <div id="home">
-    <h2>记忆盒总览 <span class="legend" style="font-size:12px">（点任意盒子可专刷该盒）</span></h2>
-    <div id="boxes"></div>
-    <button id="startBtn"></button>
-    <p class="tip">📖 规则：忘了 → 打回盒1 · 模糊 → 留本盒再约 · 答对 → 升一盒。间隔：盒1=1天 盒2=2天 盒3=4天 盒4=8天 盒5=16天（毕业）。到期的卡今天必须再见一面——这就是对抗遗忘的全部秘密。</p>
-    <div style="text-align:right"><button id="resetBtn" style="font-size:12px;color:#b4b2a9;background:none;text-decoration:underline">清空全部进度</button></div>
+  <h1>🃏 闪卡 · 间隔重复记忆</h1>
+  <p class="sub">2026 数据开发面试 · 56 张 · 忘了 1 天再见 · 模糊 3 天 · 秒答 7 天起步翻倍</p>
+  <div class="tabs">
+    <button id="tabStudy" class="on" onclick="switchTab('study')">🧠 每日复习</button>
+    <button id="tabMap" onclick="switchTab('map')">🗺 导图总览</button>
   </div>
 
-  <div id="study" style="display:none">
-    <div class="pbar"><div id="pfill"></div></div>
-    <div id="card"></div>
-    <button id="showBtn" style="display:none">👁 显示答案（先自己口述！）</button>
-    <div id="gradeBar" style="display:none">
-      <button class="g1" onclick="grade(0)">😵 忘了</button>
-      <button class="g2" onclick="grade(1)">🤔 模糊</button>
-      <button class="g3" onclick="grade(2)">😎 答对</button>
+  <div id="pStudy" class="panel on">
+    <div id="home">
+      <div class="statrow">
+        <div class="stat"><div class="v" id="stDue">0</div><div class="l">今日到期</div></div>
+        <div class="stat"><div class="v" id="stToday">0</div><div class="l">今日已刷</div></div>
+        <div class="stat"><div class="v" id="stMaster">0</div><div class="l">长期掌握</div></div>
+      </div>
+      <div class="dist" id="distBar"></div>
+      <div class="dlegend">
+        <span><i style="background:#b4b2a9"></i>新卡</span>
+        <span><i style="background:#e24b4a"></i>易忘(1天)</span>
+        <span><i style="background:#ef9f27"></i>巩固中(3天)</span>
+        <span><i style="background:#639922"></i>长期(7天+)</span>
+      </div>
+      <button id="startBtn"></button>
+      <p class="tip">📖 打分越诚实，算法越准：真想不起来就点「忘了」，别骗它。详解里藏着面试官追问，展开多看一眼。</p>
+      <div style="text-align:right"><button id="resetBtn" style="font-size:12px;color:#b4b2a9;background:none;text-decoration:underline">清空全部进度</button></div>
     </div>
-    <button id="quitBtn" onclick="endSession(true)">⏹ 提前结束</button>
+    <div id="study" style="display:none">
+      <div class="pbar"><div id="pfill"></div></div>
+      <div id="card"></div>
+      <button id="showBtn" style="display:none">👁 显示答案（先自己口述！）</button>
+      <div id="gradeBar" style="display:none">
+        <button class="g1" id="g1btn">😵 忘了<small>1 天后再见</small></button>
+        <button class="g2" id="g2btn">🤔 模糊<small>3 天后再见</small></button>
+        <button class="g3" id="g3btn">😎 秒答<small>7 天后再见</small></button>
+      </div>
+      <button id="quitBtn">⏹ 结束本次</button>
+    </div>
+    <div id="doneBox" style="display:none"></div>
   </div>
 
-  <div id="doneBox" style="display:none"></div>
+  <div id="pMap" class="panel"></div>
 </div>
 
 <script>
@@ -132,139 +162,248 @@ const CARDS = [
 {b:"Doris与叙事",q:"讲一下你最擅长的项目（叙事框架）？难点？",a:"<b>基建10个月+质量2-3个月</b>：①调研1-2月：数据域、分层、命名规范 ②建设：ODS 1-2/DWD 2-3/DWS 2-3/ADS 1-2月 ③质量规则+告警+报表2-3月，之后日常迭代。难点：指标不一致（模型/规范/监控三层解）、数据质量差（质量监控+交叉验证）；兜底说复杂业务抽象建模。"},
 {b:"Doris与叙事",q:"开放题三板斧：棘手问题/职业发展/数仓未来？",a:"①棘手问题：口径对不齐被投诉→统一机制平台+公共逻辑下沉 DWS ②职业发展：内部基建→数据理解→赋能业务价值/结合 AI ③数仓未来 AI 三方向：开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。"},
 ];
+const DETAILS = [
+"**A**：骨架句「**业务过程 × 一致性维度 = 交点**」——行是业务过程，列是一致性维度。三步走：①划分数据域、确立业务过程 ②确定公共一致性维度和度量 ③判断业务过程与维度的关联。\n**追问**：能举个 case 吗？→ 订单域交易成功：行拆成下单/支付/发货/确认发货，列是商品/品牌/类目 + 城市/金额。",
+"**A**：数字钩子「**3 种划分：部门 / 系统 / 业务**」。没跨部门数据→排除部门划分；系统划分适合传统数仓（电信、证券，系统稳定耦合低）；我们选**业务划分**：抽象核心实体（用户/商品/订单）+ 动作（浏览/下单/退款）→ 组合成用户域、商品域、订单域。",
+"**A**：不同事实表**共享同一套维度表**，统一定义 + 唯一主键。收益三连：准确性 ↑、复用性 ↑、开发维护成本 ↓。\n**追问**：本质是什么？→ 提供**统一的业务视角**。",
+"**A**：消除指标歧义——**一个指标一个口径**。例：销售额算不算运费、扣不扣退款，先定唯一口径，派生指标在此基础上再算。",
+"**A**：阿里方法论，目标「统一、规范、可共享」。数字钩子「**3 个 One**」：\n- OneModel 模型统一（分层、数据域、总线矩阵）\n- OneID 实体统一（核心实体跨系统唯一标识）\n- OneService 服务统一（统一数据出口/接口）",
+"**A**：对比句「**业务驱动 vs 数据驱动**」。Kimball：快速构建集市、高效交付，事实表+维度表，星型/雪花。范式模型：企业级全局设计、避免冗余、周期长。\n**追问**：维度建模四步流程？→ **选业务过程 → 声明粒度 → 确定维度 → 确定事实**（「过程-粒度-维度-事实」口诀）。",
+"**A**：星型 = 事实表 + **一层**维度表，允许冗余，**空间换时间**，取数高效；雪花 = 维度表再分层，省存储但多层 join 伤查询。\n**追问**：case？→ 星型：订单事实表 + 商品/用户维表；雪花：商品维表再延伸行业/类目维表。\n**追问**：还有别的模型吗？→ **星系模型**：多事实表共享同一套维度表。",
+"**A**：会。历史原因存在跨域，但主体边界明确；特殊的是**用户、商家这类实体宽表一定会跨域**。",
+"**A**：数字钩子「**3 条**」：①高内聚低耦合（业务相近/粒度相同放一起，高概率同时访问的放一起）②公共逻辑下沉 DWS（口径统一）③核心模型与扩展模型分离（高复用字段进核心表，低复用进扩展表）。\n**追问**：字段命名呢？→ 同义字段必须同名，用规范定义里的名称。\n\n---\n\n## 分支二：数仓分层与事实/维度表设计（10张）",
+"**A**：口诀「**贴源 - 明细 - 汇总 - 应用**」：\n- ODS 贴源层：同构抽取 ≈ 原始数据 + 技术字段\n- DWD 明细层：清洗转换维度退化，按业务过程拆事实表\n- DWS 汇总层：轻度汇总（商家×用户、商家×渠道），算人数/客单价\n- ADS 应用层：报表展示（转化率、留存、画像）",
+"**A**：ODS 100-200 / DWD 约100 / DWS 约150 / ADS 上百-上千 / DIM 约150。主题域 7 个：**用户、行为、商品、广告、订单、触点、商家**。",
+"**A**：把关键维度属性**直接冗余进事实表**。三类可退化：①高基数（订单编号、发票号）②简单维度（订单状态、优惠券类型）③高复用属性（交易时间戳）。\n**追问**：退化力度？→ **DWD 谨慎退化（保原子性一致性），DWS 积极退化（优化查询）**。",
+"**A**：四步：①识别维度（源表从 ODS 取）②定业务主键（唯一）+ 描述属性 ③维度退化处理 ④缓慢变化维处理（SCD1/2/3）。",
+"**A**：数字钩子「**3 招**」：①覆盖（历史数据有错时，如手机号注册错）②**新加一行**（起始/有效时间标记生命周期）③**新加一列**（历史值写进新字段）。",
+"**A**：记录生命周期，用起始时间 + 有效时间标记，**开链/闭链**。新数据插入：起始时间=今天、有效时间=无穷大，同时**闭链**历史记录（改其有效时间）。",
+"**A**：数字钩子「**3 种**」：①事务事实表（每行一个事件）②**周期快照**（记录周期末状态，月表按月产出）③**累计快照**（一行 = 一个业务全生命周期，订单从下单到售后）。",
+"**A**：每天增量写 → 用**更宽的时间范围筛选**：退款周期15天就筛过去一个月数据，取状态=退款且退款时间=昨天的，增量写入。",
+"**A**：放 **DWD**——只是明细多表关联，没做聚合。\n**追问**：为什么不放 DWM？→ 我们为简化层级没设 DWM 层；DWM=粒度不变/轻度聚合+宽表，DWS=高度聚合。\n**追问**：字段越来越多怎么办？→ ①核心/扩展模型分离 ②技术上数据湖（Iceberg）。",
+"**A**：关键词「**数据回刷**」：先建单事务事实表（下单/支付/发货/收货各一，状态进各自分区）→ 建多事务宽表，**回刷过去30天**，下单表作左表 left join 各状态表取事件时间，写回对应分区。\n**追问**：SQL 套路 → `INSERT OVERWRITE ... PARTITION(order_date)` + 多个 LEFT JOIN + CASE WHEN 定位 current_status。\n\n---\n\n## 分支三：指标体系与数据质量（8张）",
+"**A**：骨架句「**目标 → 策略 → 度量**」。例：O=提升 GMV；S=提单量/提客单价/降退款/提履约；指标分三级：\n- 一级（战略）：GMV、订单完成金额\n- 二级（策略）：订单数、转化率、客单价、退款率\n- 三级（诊断）：分渠道/品类/新老客/地区/时段",
+"**A**：UJM=用户旅程地图，以用户为中心描述「接触→兴趣→下单→复购」全路径。关系：**OSM 定宏观目标，UJM 把策略具体化成每个触点的优化点和指标**。\n**追问**：UJM 拆解六要素？→ 用户行为/业务目标/接触点/潜在痛点/机会点/衡量指标。",
+"**A**：数字钩子「**3 个层面**」：①**模型层**：统一出入口，公共逻辑下沉 DWS，一致性维度表 ②**平台规范层**：指标管理平台统一口径 + 命名/开发规范 ③**质量层**：表级（量级波动）+ 字段级（空值率、主键唯一）监控 + 交叉验证。",
+"**A**：按对象分三类监控：**表**（唯一性、量级波动）、**字段**（空值率、数值/枚举范围）、**任务**（重要任务挂基线，报错/延迟即告警）。\n**追问**：老板问治理？→ 规范制定 → 内部宣讲 → 事后复盘 → 规避问题。",
+"**A**：数字钩子「**4 重验证**」：①源数据直查 ②质量监控（波动/阈值告警）③**多源交叉验证**（5 个订单↔5 个包裹↔库存扣减）④业务合理性（对比近30天）。",
+"**A**：三段式「**抽-转-载**」：抽取（按数据量判断增量/全量，wedata 平台）→ 转换（清洗：去重/完整性/正确性；转换：格式标准化、字段拆合、关联维表、衍生指标）→ 加载（增量/全量）。",
+"**A**：三个视角：①质量：时效正确、不破基线 ②应用：口径一致、**模型复用率高**（大部分指标 DWS 直接取）③业务：有效赋能、交付效率高、数据资产价值。",
+"**A**：数据赋能路径：打通跨设备 ID（idmapping）→ 用户行为宽表作标签底表 → **三类标签**（统计类：累计消费；规则类：近30天消费>500=高价值流失人群；算法类：流失风险分）→ BI 平台圈人，运营执行。\n**追问**：怎么流程化？→ 标签注入资产管理平台，运营拖拉拽组业务流（圈人→发券）一键执行。\n\n---\n\n## 分支四：Hadoop / Spark / Flink / 数据湖（13张）",
+"**A**：**HDFS + MapReduce + YARN**。HDFS 主从：NameNode 存元数据，DataNode 存数据块，**默认 3 副本**，一次写入多次读取。MapReduce 分而治之。YARN 主从：RM 全局资源，NM 节点资源，AM 申请容器。",
+"**A**：map 阶段：切片→<k,v>→环形缓冲区→溢写磁盘；reduce 拉取同 key 分区处理再外写。\nShuffle 六步（数字钩子 **map3 + reduce3**）：map 侧 ①分区（hash%Reduce数）②排序溢写 ③归并合并；reduce 侧 ①拷贝 ②归并 ③输入计算。",
+"**A**：数字钩子「**3 条**」：①数据本地性（移动计算不移动数据）②容错（任务失败换节点重启）③并行海量数据。",
+"**A**：四步链：**惰性记录 RDD 依赖 → 生成 DAG 逻辑计划 → DAGScheduler 按宽依赖切 stage → TaskScheduler 分发 task 给 executor 线程池执行**。\n**追问**：宽窄依赖？→ 宽：一父对多子（groupByKey/reduceByKey）需 shuffle；窄：一对一（map/filter）无需 shuffle。",
+"**A**：两计划：①Catalyst 解析 SQL→逻辑计划：未解析→Catalog 绑定元数据→优化（**谓词下推、列值剪裁**）②逻辑计划→物理计划，**Tungsten 生成字节码**→转 RDD 集群执行。",
+"**A**：数字钩子「**5 条，前3是重点**」：①基于内存计算 vs 磁盘 IO ②DAG 执行引擎 vs 固定两阶段 ③Lineage 血缘容错（只重算丢失分区）④多线程 vs 多进程（省 JVM 启动）⑤shuffle 非必要不排序。",
+"**A**：弹性分布式数据集，三个切面：①**依赖**：宽窄依赖划分 stage ②**容错**：血缘重算，不从头回溯 ③**操作**：转换算子（map/filter/join，惰性）+ 行动算子（count/collect，触发计算）。",
+"**A**：三类原因对应三板斧：\n- **聚合倾斜** → 两阶段聚合+加盐打散（先加盐局部聚合，再去盐全局聚合）\n- **join 倾斜** → 大表小表：广播小表 / 热点 key 分离加盐（两表都加）；大表大表：**分桶表+分桶 join** 免 shuffle\n- **空值倾斜** → 随机值替换 / 分离处理（null 单独 UNION ALL）\n**追问**：Spark3 捷径？→ 开 AQE 自适应查询执行。\n**追问**：真实 case？→ 个别 task 慢+Spark UI 判断→group by 查量级发现某表百万级 vs 常态几千→清历史数据。",
+"**A**：三分类「**参数 / 倾斜 / SQL**」；想不起来就说流程：读取阶段（分区列剪裁）→ 计算阶段（聚合加盐、join 优化、with 替子查询）。\n参数优化四点：executor 核数内存、shuffle 分区数（默认200，瓶颈在内存适当调大）、AQE、小文件自动合并。",
+"**A**：演进线「**Hash → 合并 Hash → Sort**」：M×R 文件爆炸 → Core×R 仍多 → 默认 Sort Shuffle（2×M：1 数据文件+1 索引）。\nSort 内部 **3 种写入器**按条件自动选：①Bypass（无聚合+分区≤200）②Unsafe（无聚合+序列化支持重定位+分区≤2²⁴，二进制排序省内存）③SortShuffle（通用，内存→溢写，key 排序）。",
+"**A**：三大危害：①NameNode 元数据内存耗尽 ②海量 task 调度开销>计算时间 ③资源利用率低、吞吐下降。\n治理：**事前** repartition/coalesce 控制写入数量；**事后**定期合并。\n**追问**：OOM？→ 分 driver（collect 操作/加大内存）和 executor（合理分区数/加大内存/调比例）。",
+"**A**：一句话「**先本地聚合，再 shuffle**」——groupByKey 全量走网络，性能差；reduceByKey 节点内先聚，大幅减少 shuffle 量。",
+"**A**：Flink：主从（JobManager 调度/checkpoint，TaskManager 计算），数字钩子「**4 特性**」：①时间语义（事件/处理/摄入时间，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（定期异步快照→HDFS，精准一次）。\n湖：原始格式全量存储，**Schema-on-Read**，灵活但治理难。湖仓一体三优势：**事务支持（ACID）、开放格式（Parquet/Iceberg）、流批统一**。\n**追问**：UDF 写过吗？→ spark sql 的 udf；例：getLastMonthDays（上月天数）、getUpdateCycle（按分区长度判断更新周期）。\n\n---\n\n## 分支五：SQL 题型套路（8张）",
+"**A**：Flink：主从（JobManager 调度/checkpoint，TaskManager 计算），数字钩子「**4 特性**」：①时间语义（事件/处理/摄入时间，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（定期异步快照→HDFS，精准一次）。\n湖：原始格式全量存储，**Schema-on-Read**，灵活但治理难。湖仓一体三优势：**事务支持（ACID）、开放格式（Parquet/Iceberg）、流批统一**。\n**追问**：UDF 写过吗？→ spark sql 的 udf；例：getLastMonthDays（上月天数）、getUpdateCycle（按分区长度判断更新周期）。\n\n---\n\n## 分支五：SQL 题型套路（8张）",
+"**A**：数据 a,b,b,c,c 的排序结果：**ROW_NUMBER=1,2,3,4,5（不并列）；DENSE_RANK=1,2,2,3,3（并列不跳号）；RANK=1,2,2,4,4（并列跳号）**。\n**追问**：还有哪些窗口函数？→ lead/lag over、sum/count/avg/max/min over。",
+"**A**：分区=HDFS **目录**，分桶=目录里的**文件**；没分桶要扫全目录，有分桶直接定位对应文件。分桶函数：ntile over、hash。场景：①大表 join 按 key 分桶，同 key 落同号桶免 shuffle ②高效随机抽样。",
+"**A**：行转列 = **max(case when subject='数学' then score end) + group by 学生**；列转行 = 多段 union all，每段固定 subject 字面量。",
+"**A**：两法：①row_number 排名 + count(*) over 总数，**取 rnk in (floor((n+1)/2), ceil((n+1)/2))** 再 avg ②percentile_approx(salary, 0.5) 近似。",
+"**A**：套路「**enter=+1，leave=-1，按时间累计求和取 max**」：先 group by 时间点算净值 flag，再 sum(flag) over(order by time) 得在线曲线，取 max。",
+"**A**：核心套路「**日期减排名 = 连续组号**」：`date_sub(login_date, row_number() over(partition by uid order by date))` 相同即为同一段连续 → group by 组号 count → max。\n**追问**：间隔1天也算连续？→ 改用 lag + **date_diff ≤ 2 打标**，sum(flag) over 生成组号。\n**追问**：连续登录月？→ 先按 yyyy-MM 去重取月首日，再用 `date_sub(月首日, interval rnk month)` 分组。",
+"**A**：两法：①自 join 反转匹配 + `where f1.user1 < f1.user2` 防重复计数 ②把每对按小大归一 `IF(u1<u2,u1,u2)` group by 后 **having count(*)>1** 即双向。",
+"**A**：四个高频题一套思路：\n- **留存**：min(event_date)=注册日 → date_add(register, n)=event_date 打标 → 人数比值\n- **TopN**：row_number over(partition by 部门 order by 薪资 desc) ≤ N\n- **连续3次**：`id - row_number() over(partition by num)` 分组 having count≥3\n- **波峰波谷**：lag/lead 取前后价，case when 双向比较\n\n---\n\n## 分支六：Doris 与叙事题（7张）",
+"**A**：**FE + BE** 两类节点。FE（Frontend）：负责元数据管理、查询解析、查询规划、集群管理，类似「大脑」；BE（Backend）：负责数据存储和查询执行，类似「肌肉」。元数据用 **BDB JE（类 Paxos 多数派）** 保证一致性。",
+"**A**：数字钩子「**3 个快**」：①**MPP 架构**：多节点并行执行，一份数据多副本分摊查询 ②**列存 + 前缀索引**：按列存储压缩率高，前缀索引（有序稀疏索引）加速过滤 ③**预聚合模型**：建表即选定聚合方式，查询直接读结果。",
+"**A**：①**Duplicate**：不去重，存明细 ②**Aggregate**：建表时指定聚合（SUM/MAX/MIN/REPLACE），导入时预聚合 ③**Unique**：主键唯一，REPLACE 语义实现更新。选型口诀「**明细用 Duplicate、报表用 Aggregate、更新用 Unique**」。",
+"**A**：两层：**分区（Partition）按时间/范围切**，利于裁剪和冷热分离；**分桶（Bucket）按高基数 join key 哈希**，桶数经验值 = BE 数 × 其核数左右，单桶数据量 1-10G 为佳。",
+"**A**：**Hive/Spark 管离线批量加工**（T+1 大规模 ETL），**Doris 管交互式查询和高并发报表**（亚秒级响应）。常用链路：DWD/DWS 结果通过 Broker Load / 例行导入进入 Doris，对外服务查询。关键词「**湖仓加工、MPP 服务**」。",
+"**A**：数字钩子「**基建10个月 + 质量2-3个月**」：①调研 1-2 月：数据域、分层、命名规范 ②建设：ODS 1-2 / DWD 2-3 / DWS 2-3 / ADS 1-2 月 ③质量规则+告警+报表 2-3 月；之后日常需求迭代。\n**追问**：难点？→ 指标不一致（模型/规范/监控三层解）、数据质量差（质量监控+交叉验证）。想不起就说「复杂业务怎么抽象建模」。",
+"**A**：①**棘手问题**：口径对不齐被投诉 → 解法：统一机制平台 + 公共逻辑下沉 DWS ②**职业发展**：内部基建 → 数据理解 → 赋能业务价值 / 结合 AI 做数据 ③**数仓未来**：AI 三方向——开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。\n\n---\n\n## 附：三大背诵武器\n\n| 武器 | 内容 |\n|---|---|\n| **骨架句** | 每题先说一句总纲（如「业务过程×一致性维度」），再展开 |\n| **数字钩子** | 3种划分 / 4步建模 / 3层一致性 / 5条Spark优势 / 3种shuffle / 4个Flink特性 |\n| **SQL套路** | 日期减排名=连续组号；enter+1/leave-1累计；case when行列互换；row_number取TopN |\n\n## 自测打分表\n\n| 分支 | 卡号 | 自评（√/△/×） | 复习日期 |\n|---|---|---|---|\n| OneData与总线 | 1-9 | | |\n| 分层与表设计 | 10-19 | | |\n| 指标与质量 | 20-27 | | |\n| 计算引擎 | 28-40 | | |\n| SQL套路 | 41-48 | | |\n| Doris与叙事 | 49-55 | | |"
+];
 
-const INTERVALS = [1,2,4,8,16];
-const BOX_NAMES = ['新卡','盒1·1天','盒2·2天','盒3·4天','盒4·8天','盒5·16天'];
-const BOX_COLORS = ['#f1efe8','#fcebeb','#faeeda','#eaf3de','#e1f5ee','#e6f1fb'];
-const BOX_STROKES = ['#b4b2a9','#e24b4a','#ef9f27','#639922','#0f6e56','#185fa5'];
-const LS_KEY = 'leitner-2026dd', OLD_KEY = 'flashcard-marks-2026dd';
+const LS_KEY = 'sr-2026dd';
 const pad = n => String(n).padStart(2,'0');
 const today = () => { const d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
-const addDays = (n) => { const d = new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+const addDays = n => { const d = new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
 
-let state = {};
-try { state = JSON.parse(localStorage.getItem(LS_KEY) || '{}') || {}; } catch(e) { state = {}; }
-if(!localStorage.getItem(LS_KEY) && Object.keys(state).length === 0){
-  let old = {};
-  try { old = JSON.parse(localStorage.getItem(OLD_KEY) || '{}') || {}; } catch(e) {}
-  CARDS.forEach((c,i)=>{ const m = old[i];
-    if(m === '会') state[i] = {b:3, d:today()};
-    else if(m === '模糊' || m === '不会') state[i] = {b:1, d:today()};
-  });
-  save();
+let S = {}, meta = {day: today(), cnt: 0};
+try { const raw = JSON.parse(localStorage.getItem(LS_KEY) || '{}') || {}; S = raw.cards || {}; meta = raw.meta || meta; } catch(e) {}
+
+// 迁移：莱特纳盒 + 最老的会/模糊标记
+try {
+  if(localStorage.getItem('leitner-2026dd') && !localStorage.getItem('leitner-migrated')){
+    const L = JSON.parse(localStorage.getItem('leitner-2026dd') || '{}') || {};
+    const IV = [1,2,4,8,16];
+    Object.keys(L).forEach(k=>{ const b = L[k].b||1; S[k] = {iv: IV[b-1]||1, due: L[k].d||today(), streak: b>=3?1:0}; });
+    localStorage.setItem('leitner-migrated','1');
+  }
+  if(localStorage.getItem('flashcard-marks-2026dd') && !localStorage.getItem('marks-migrated')){
+    const M = JSON.parse(localStorage.getItem('flashcard-marks-2026dd') || '{}') || {};
+    Object.keys(M).forEach(k=>{
+      if(S[k]) return;
+      if(M[k]==='会') S[k] = {iv:7, due:addDays(7), streak:1};
+      else S[k] = {iv:1, due:today(), streak:0};
+    });
+    localStorage.setItem('marks-migrated','1');
+  }
+} catch(e) {}
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify({cards:S, meta})); } catch(e) {} }
+
+const isDue = i => { const s = S[i]; return !s || s.due <= today(); };
+
+function switchTab(t){
+  document.getElementById('tabStudy').classList.toggle('on', t==='study');
+  document.getElementById('tabMap').classList.toggle('on', t==='map');
+  document.getElementById('pStudy').classList.toggle('on', t==='study');
+  document.getElementById('pMap').classList.toggle('on', t==='map');
+  if(t==='map') renderMap(); else renderHome();
 }
-function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {} }
 
-const boxOf = i => state[i] ? state[i].b : 0;
-const isDue = i => { const s = state[i]; return !s || s.d <= today(); };
+function fmtDetail(t){
+  let h = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');
+  return h.split('\n').map(line=>{
+    const s = line.trim(); if(!s) return '';
+    if(/^(追问|\*\*追问)/.test(s)) return `<div class="fq">🎤 ${s}</div>`;
+    if(/^- /.test(s)) return `<div class="li">• ${s.slice(2)}</div>`;
+    return `<div>${s}</div>`;
+  }).join('');
+}
+function toggleDetail(){
+  const b = document.getElementById('detailBody');
+  const btn = document.getElementById('detailBtn');
+  const open = b.style.display !== 'none';
+  b.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '📖 展开详解（追问 · 数字钩子）' : '📑 收起详解';
+}
 
-let queue = [], qi = 0, session = null, mode = 'due';
-const shuffle = a => { for(let k=a.length-1;k>0;k--){ const j = Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; } return a; };
+let queue = [], qi = 0, cnt = null, returnTo = 'study';
+const shuffle = a => { for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; } return a; };
 
-function startSession(list, m){
-  mode = m; session = {up:0, down:0, stay:0, fresh:0};
-  if(mode === 'due') queue = list.filter(i=>boxOf(i)>0).concat(list.filter(i=>boxOf(i)===0));
-  else queue = shuffle(list.slice());
-  if(!queue.length){ renderHome(); alert('这个盒子暂时没有可刷的卡！'); return; }
-  qi = 0;
+function startSession(list, from){
+  if(meta.day !== today()){ meta.day = today(); meta.cnt = 0; }
+  queue = list.slice(); qi = 0; cnt = {...meta}; returnTo = from;
+  if(!queue.length) return;
   document.getElementById('home').style.display = 'none';
   document.getElementById('doneBox').style.display = 'none';
+  document.getElementById('pMap').classList.remove('on');
   document.getElementById('study').style.display = 'block';
   renderStudy();
 }
 
 function renderStudy(){
   if(qi >= queue.length) return endSession(false);
-  const i = queue[qi], c = CARDS[i];
+  const i = queue[qi], c = CARDS[i], s = S[i];
   document.getElementById('pfill').style.width = (qi/queue.length*100)+'%';
-  const el = document.getElementById('card');
-  el.innerHTML = `<span class="tag">${c.b} · ${BOX_NAMES[boxOf(i)]} · 第 ${qi+1}/${queue.length} 张</span>
-    <div class="q">【Q】${c.q}</div>
-    <div class="a" id="ansArea" style="display:none">${c.a}</div>
-    <div class="hint" id="hintArea" style="display:none">按回忆质量评分，评分后自动进入下一张</div>`;
+  const hasDetail = DETAILS[i] && DETAILS[i].length > 0;
+  document.getElementById('card').innerHTML =
+    `<span class="tag">${c.b}${s ? ` · 间隔${s.iv}天` : ' · 新卡'} · 第 ${qi+1}/${queue.length} 张</span>
+     <div class="q">【Q】${c.q}</div>
+     <div class="a" id="ansArea" style="display:none">${c.a}</div>
+     ${hasDetail ? `<div id="detailBox" style="display:none"><button id="detailBtn" onclick="toggleDetail()">📖 展开详解（追问 · 数字钩子）</button><div id="detailBody" style="display:none">${fmtDetail(DETAILS[i])}</div></div>` : ''}
+     <div class="hint" id="hintArea" style="display:none">按真实回忆质量评分 · 详解随答案一起展开/收起</div>`;
   document.getElementById('showBtn').style.display = 'block';
   document.getElementById('gradeBar').style.display = 'none';
+  const streak = s ? s.streak : 0;
+  document.getElementById('g3btn').innerHTML = `😎 秒答<small>${[7,14,30,30,30][Math.min(streak,4)]} 天后再见</small>`;
 }
-
-function showAns(){
+document.getElementById('showBtn').onclick = ()=>{
   document.getElementById('ansArea').style.display = 'block';
+  const db = document.getElementById('detailBox'); if(db) db.style.display = 'block';
   document.getElementById('hintArea').style.display = 'block';
   document.getElementById('showBtn').style.display = 'none';
   document.getElementById('gradeBar').style.display = 'flex';
-}
-document.getElementById('showBtn').onclick = showAns;
+};
+document.getElementById('g1btn').onclick = ()=>grade(0);
+document.getElementById('g2btn').onclick = ()=>grade(1);
+document.getElementById('g3btn').onclick = ()=>grade(2);
 
-function grade(g){ // 0忘 1模糊 2答对
+function grade(g){ // 0忘 1模糊 2秒答
   const i = queue[qi];
-  const prev = boxOf(i);
-  const s = state[i] ? {...state[i]} : {b:0, d:today()};
-  if(prev === 0) session.fresh++;
-  if(g === 0){ s.b = 1; s.d = addDays(INTERVALS[0]); session.down++; }
-  else if(g === 1){
-    if(s.b === 0){ s.b = 1; s.d = addDays(1); }
-    else s.d = addDays(INTERVALS[s.b-1]);
-    session.stay++;
-  } else {
-    s.b = Math.min(5, s.b + 1);
-    s.d = addDays(INTERVALS[s.b-1]);
-    if(s.b > prev) session.up++;
-  }
-  state[i] = s; save();
-  qi++; renderStudy();
+  if(meta.day !== today()){ meta.day = today(); meta.cnt = 0; }
+  meta.cnt++;
+  const s = S[i] ? {...S[i]} : {iv:0, due:today(), streak:0};
+  if(g === 0){ s.iv = 1; s.due = addDays(1); s.streak = 0; }
+  else if(g === 1){ s.iv = 3; s.due = addDays(3); s.streak = 0; }
+  else { s.streak = (s.streak||0) + 1; s.iv = [7,14,30,30,30][Math.min(s.streak-1,4)]; s.due = addDays(s.iv); }
+  S[i] = s; save();
+  qi++;
+  if(returnTo === 'map' && qi >= queue.length) return switchTab('map');
+  renderStudy();
 }
 
 function endSession(early){
   document.getElementById('study').style.display = 'none';
   const d = document.getElementById('doneBox');
   d.style.display = 'block';
-  d.innerHTML = `<div class="big">${early ? '⏸' : '🎉'}</div>
-    <h2 style="margin-top:0">${early ? '本次提前收工' : '今日复习完成！'}</h2>
-    <div class="srow">
-      <div class="s"><div class="sv">${session.up}</div><div class="sl">升级</div></div>
-      <div class="s"><div class="sv">${session.stay}</div><div class="sl">留级</div></div>
-      <div class="s"><div class="sv">${session.down}</div><div class="sl">打回</div></div>
-      <div class="s"><div class="sv">${session.fresh}</div><div class="sl">新学</div></div>
-    </div>
-    <button id="backBtn" style="padding:10px 24px;background:#185fa5;color:#fff;font-weight:600">返回总览</button>`;
-  document.getElementById('backBtn').onclick = renderHome;
+  d.innerHTML = `<div class="big">${early?'⏸':'🎉'}</div><h2 style="font-size:16px">${early?'本次收工':'今日队列完成！'}</h2>
+    <p class="tip" style="margin:8px 0 14px">忘了的明天见，秒答的最长 30 天后见。坚持每天清队列，效果自己会长出来。</p>
+    <button id="backBtn" style="padding:10px 24px;background:#185fa5;color:#fff;font-weight:600">返回${returnTo==='map'?'导图':'总览'}</button>`;
+  document.getElementById('backBtn').onclick = ()=>{ switchTab(returnTo); };
+}
+
+function stateColor(i){
+  const s = S[i]; if(!s) return '#b4b2a9';
+  if(s.iv <= 1) return '#e24b4a';
+  if(s.iv < 7) return '#ef9f27';
+  return '#639922';
 }
 
 function renderHome(){
   document.getElementById('study').style.display = 'none';
   document.getElementById('doneBox').style.display = 'none';
   document.getElementById('home').style.display = 'block';
-  const counts = [0,0,0,0,0,0];
-  CARDS.forEach((c,i)=>counts[boxOf(i)]++);
-  const boxesEl = document.getElementById('boxes');
-  boxesEl.innerHTML = '';
-  BOX_NAMES.forEach((n,k)=>{
-    const div = document.createElement('div');
-    div.className = 'box';
-    div.style.background = BOX_COLORS[k];
-    div.style.borderColor = BOX_STROKES[k];
-    div.innerHTML = `<div class="bn" style="color:${BOX_STROKES[k]}">${counts[k]}</div><div class="bl">${n}</div>`;
-    div.onclick = ()=>{
-      const list = CARDS.map((c,i)=>i).filter(i=>boxOf(i)===k);
-      startSession(list, 'free');
-    };
-    boxesEl.appendChild(div);
-  });
+  if(meta.day !== today()) meta.cnt = 0;
   const due = CARDS.map((c,i)=>i).filter(isDue);
+  const counts = {new:0, red:0, amber:0, green:0};
+  CARDS.forEach((c,i)=>{
+    const s = S[i];
+    if(!s) counts.new++;
+    else if(s.iv <= 1) counts.red++;
+    else if(s.iv < 7) counts.amber++;
+    else counts.green++;
+  });
+  document.getElementById('stDue').textContent = due.length;
+  document.getElementById('stToday').textContent = meta.cnt || 0;
+  document.getElementById('stMaster').textContent = counts.green;
+  const total = CARDS.length;
+  document.getElementById('distBar').innerHTML =
+    `<div style="width:${counts.new/total*100}%;background:#b4b2a9"></div>
+     <div style="width:${counts.red/total*100}%;background:#e24b4a"></div>
+     <div style="width:${counts.amber/total*100}%;background:#ef9f27"></div>
+     <div style="width:${counts.green/total*100}%;background:#639922"></div>`;
   const btn = document.getElementById('startBtn');
   btn.textContent = due.length ? `▶ 开始今日复习（${due.length} 张到期）` : '✅ 今日无到期卡片，明天再来';
   btn.disabled = !due.length;
-  btn.onclick = ()=>startSession(due, 'due');
-  const next = CARDS.map((c,i)=>({i,d:state[i]?state[i].d:null})).filter(x=>x.d && x.d>today()).map(x=>x.d).sort()[0];
-  document.getElementById('homeStats')?.remove();
-  const st = document.createElement('p');
-  st.className = 'tip'; st.id = 'homeStats';
-  st.textContent = due.length ? '到期卡优先刷，新卡排在队尾。' : (next ? `下一批到期：${next}` : '全部毕业，可点盒子自由复习保持手感。');
-  document.querySelector('.tip').before(st);
+  btn.onclick = ()=>{
+    const reviewed = due.filter(i=>S[i]).sort((a,b)=>S[a].due < S[b].due ? -1 : 1);
+    const fresh = shuffle(due.filter(i=>!S[i]));
+    startSession(reviewed.concat(fresh), 'study');
+  };
 }
 
+function renderMap(){
+  document.getElementById('doneBox').style.display = 'none';
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('study').style.display = 'none';
+  const p = document.getElementById('pMap');
+  p.classList.add('on');
+  const branches = [...new Set(CARDS.map(c=>c.b))];
+  const palette = ['#185fa5','#0f6e56','#993556','#ba7517','#534ab7','#5f5e5a'];
+  p.innerHTML = branches.map((b,bi)=>{
+    const idxs = CARDS.map((c,i)=>i).filter(i=>CARDS[i].b===b);
+    const leaves = idxs.map(i=>{
+      const s = S[i];
+      const suffix = s ? ` <small style="color:#b4b2a9">${s.due<=today()?'· 今日到期':'· '+s.iv+'天'}</small>` : ' <small style="color:#b4b2a9">· 新</small>';
+      return `<div class="mleaf"><button onclick="startSession([${i}],'map')"><span class="mdot" style="background:${stateColor(i)}"></span><span class="txt">${CARDS[i].q}</span>${suffix}</button></div>`;
+    }).join('');
+    return `<div class="mbranch"><div class="mroot" style="background:${palette[bi%palette.length]}">${b} · ${idxs.length} 张</div><div class="mleaves">${leaves}</div></div>`;
+  }).join('') + `<p class="tip">🟢 长期掌握 · 🟡 巩固中 · 🔴 易忘 · ⚪ 新卡。点任意题目单独复习，评分后自动回到导图。</p>`;
+}
+
+document.getElementById('quitBtn').onclick = ()=>endSession(true);
 document.getElementById('resetBtn').onclick = ()=>{
-  if(!confirm('确定清空全部爬盒进度吗？此操作不可恢复。')) return;
-  state = {}; save(); renderHome();
+  if(!confirm('确定清空全部复习进度吗？此操作不可恢复。')) return;
+  S = {}; meta = {day: today(), cnt: 0}; save(); renderHome();
 };
 
 renderHome();
