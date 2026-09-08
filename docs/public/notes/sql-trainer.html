@@ -8,7 +8,14 @@
 :root{
   --bg:#f7f5f0; --card:#ffffff; --line:#e5e3dc; --ink:#2c2c2a; --sub:#888780;
   --blue:#185fa5; --green:#3b6d11; --green-l:#e8f2da; --yellow:#ef9f27; --yellow-l:#fdf3e0;
-  --red:#e24b4a; --red-l:#fdeaea; --mono:'SF Mono',Menlo,Consolas,monospace;
+  --red:#e24b4a; --red-l:#fdeaea;
+  --hover:#f4f2ec; --soft:#faf9f5; --soft2:#fbfaf7; --btn:#ffffff; --chip:#f0eee7;
+  --blue-soft:#eef3f9; --blue-soft2:#f0f5fb; --blue-soft3:#d8e6f7;
+  --line-strong:#d5d2c8; --rowline:#f0eee7;
+  --amber-ink:#8a6d1d; --caliber-ink:#6b4a08; --hint-ink:#274b73; --ink2:#3c3a35; --mine-ink:#5a5850; --faint:#b4b2a9;
+  --good-bd:#c5dba2; --mid-bd:#ecd3a2; --bad-bd:#f2c4c4;
+  --toast-bg:#2c2c2a; --toast-ink:#fff;
+  --mono:'SF Mono',Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,'PingFang SC','Microsoft YaHei',sans-serif;padding-bottom:60px}
@@ -17,8 +24,8 @@ header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14p
 h1{font-size:19px}
 .hsub{color:var(--sub);font-size:12px}
 .hbtns{margin-left:auto;display:flex;gap:8px}
-.hbtn{padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:12.5px;color:var(--ink)}
-.hbtn:hover{background:#f4f2ec;border-color:#d5d2c8}
+.hbtn{padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:var(--btn);cursor:pointer;font-size:12.5px;color:var(--ink)}
+.hbtn:hover{background:var(--hover);border-color:var(--line-strong)}
 .statbox{background:var(--card);border-radius:14px;padding:12px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:16px}
 .statrow{display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--sub)}
 .statrow b{font-size:15px;color:var(--ink)}
@@ -34,23 +41,23 @@ h1{font-size:19px}
 .stagecard{background:var(--card);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.05);overflow:hidden}
 .stagecard .sc-head{padding:12px 14px 4px;font-weight:700;font-size:13.5px}
 .searchbox{padding:10px 12px;border-bottom:1px solid var(--line)}
-.searchbox input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#faf9f5;outline:none}
+.searchbox input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:var(--soft);outline:none}
 .searchbox input:focus{border-color:var(--blue)}
 .slist{max-height:46vh;overflow:auto;padding:6px}
 .qitem{padding:8px 10px;border-radius:9px;cursor:pointer;display:block}
-.qitem:hover{background:#f4f2ec}
-.qitem.active{background:#eef3f9}
+.qitem:hover{background:var(--hover)}
+.qitem.active{background:var(--blue-soft)}
 .qitem .t{display:flex;align-items:center;gap:7px;font-size:13px}
 .qitem .qid{font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:700;flex:none}
 .qitem .name{flex:1}
 .qitem .st{flex:none;font-size:11px}
 .qitem .meta{margin-top:2px;padding-left:38px;font-size:11px;color:var(--sub);display:flex;gap:6px;flex-wrap:wrap}
-.qitem .meta .lk{color:#8a6d1d}
+.qitem .meta .lk{color:var(--amber-ink)}
 /* 阶段列表 */
 .stagelist{display:flex;flex-direction:column;gap:8px;padding:12px}
-.stageitem{border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;background:#fff}
-.stageitem:hover{background:#faf9f5}
-.stageitem.active{border-color:var(--blue);background:#f0f5fb}
+.stageitem{border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;background:var(--btn)}
+.stageitem:hover{background:var(--soft)}
+.stageitem.active{border-color:var(--blue);background:var(--blue-soft2)}
 .stageitem.locked{opacity:.62}
 .stageitem .row1{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px}
 .stageitem .dot{width:9px;height:9px;border-radius:50%;flex:none}
@@ -64,30 +71,30 @@ h1{font-size:19px}
 .qidbig{font-family:var(--mono);font-weight:800;color:var(--blue);font-size:15px}
 .qtitle{font-size:16px;font-weight:700}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.chip{font-size:11px;padding:2px 9px;border-radius:20px;background:#f0eee7;color:var(--sub)}
+.chip{font-size:11px;padding:2px 9px;border-radius:20px;background:var(--chip);color:var(--sub)}
 .chip.lvl-简单{background:var(--green-l);color:var(--green)}
-.chip.lvl-中等{background:var(--yellow-l);color:#9a6207}
+.chip.lvl-中等{background:var(--yellow-l);color:var(--amber-ink)}
 .chip.lvl-困难{background:var(--red-l);color:var(--red)}
-.chip.link{background:#e8f0fa;color:var(--blue);cursor:pointer}
-.chip.link:hover{background:#d8e6f7}
+.chip.link{background:var(--blue-soft);color:var(--blue);cursor:pointer}
+.chip.link:hover{background:var(--blue-soft3)}
 .chip.final{background:var(--red-l);color:var(--red);font-weight:700}
 .qdesc{margin:12px 0;font-size:13.5px}
-.caliber{background:var(--yellow-l);border-left:3px solid var(--yellow);border-radius:0 9px 9px 0;padding:8px 12px;font-size:12.5px;color:#6b4a08;margin:10px 0}
+.caliber{background:var(--yellow-l);border-left:3px solid var(--yellow);border-radius:0 9px 9px 0;padding:8px 12px;font-size:12.5px;color:var(--caliber-ink);margin:10px 0}
 .editorwrap{margin-top:12px}
 .edlabel{font-size:12px;color:var(--sub);margin-bottom:5px;display:flex;align-items:center;gap:10px}
-.edlabel .kks{font-size:11px;color:#b4b2a9}
-textarea#answer{width:100%;min-height:170px;resize:vertical;font-family:var(--mono);font-size:12.8px;line-height:1.65;padding:12px;border:1.5px solid var(--line);border-radius:11px;background:#fbfaf7;color:var(--ink);outline:none}
-textarea#answer:focus{border-color:var(--blue);background:#fff}
+.edlabel .kks{font-size:11px;color:var(--faint)}
+textarea#answer{width:100%;min-height:170px;resize:vertical;font-family:var(--mono);font-size:12.8px;line-height:1.65;padding:12px;border:1.5px solid var(--line);border-radius:11px;background:var(--soft2);color:var(--ink);outline:none}
+textarea#answer:focus{border-color:var(--blue);background:var(--btn)}
 .checkarea{margin-top:10px}
 .checkitem{font-size:12.5px;padding:3px 0}
 .checkitem.ok{color:var(--green)}
-.checkitem.miss{color:#9a6207}
+.checkitem.miss{color:var(--amber-ink)}
 .checkall{margin-top:6px;font-size:13px;font-weight:700;color:var(--green)}
-.hintbox{margin-top:10px;background:#eef3f9;border-left:3px solid var(--blue);border-radius:0 9px 9px 0;padding:9px 12px;font-size:12.8px;color:#274b73}
-.stepsbox{margin-top:10px;border:1px dashed #c9c5ba;border-radius:11px;padding:10px 14px;font-size:12.8px}
-.stepsbox .st{padding:3px 0;color:#3c3a35}
+.hintbox{margin-top:10px;background:var(--blue-soft);border-left:3px solid var(--blue);border-radius:0 9px 9px 0;padding:9px 12px;font-size:12.8px;color:var(--hint-ink)}
+.stepsbox{margin-top:10px;border:1px dashed var(--line-strong);border-radius:11px;padding:10px 14px;font-size:12.8px}
+.stepsbox .st{padding:3px 0;color:var(--ink2)}
 .stepsbox .hd{font-weight:700;font-size:12px;color:var(--sub);margin-bottom:4px}
-.refbox{margin-top:10px;background:#faf9f5;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.refbox{margin-top:10px;background:var(--soft);border:1px solid var(--line);border-radius:11px;overflow:hidden}
 .refbox .rb-hd{padding:8px 14px;font-size:12px;color:var(--sub);border-bottom:1px solid var(--line);font-weight:600}
 .refbox .compare{display:grid;grid-template-columns:1fr 1fr}
 @media(max-width:700px){.refbox .compare{grid-template-columns:1fr}}
@@ -96,13 +103,13 @@ textarea#answer:focus{border-color:var(--blue);background:#fff}
 @media(max-width:700px){.refbox .cmp+.cmp{border-left:none;border-top:1px solid var(--line)}}
 .refbox .cmp .clabel{font-size:11px;color:var(--sub);margin-bottom:6px;font-weight:600}
 .refbox pre{font-family:var(--mono);font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
-.refbox .mine{color:#5a5850}
+.refbox .mine{color:var(--mine-ink)}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
-.abtn{padding:8px 15px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:12.5px;color:var(--ink)}
-.abtn:hover{background:#f4f2ec}
-.abtn.good{background:var(--green-l);border-color:#c5dba2;color:var(--green);font-weight:600}
-.abtn.mid{background:var(--yellow-l);border-color:#ecd3a2;color:#9a6207;font-weight:600}
-.abtn.bad{background:var(--red-l);border-color:#f2c4c4;color:var(--red);font-weight:600}
+.abtn{padding:8px 15px;border-radius:9px;border:1px solid var(--line);background:var(--btn);cursor:pointer;font-size:12.5px;color:var(--ink)}
+.abtn:hover{background:var(--hover)}
+.abtn.good{background:var(--green-l);border-color:var(--good-bd);color:var(--green);font-weight:600}
+.abtn.mid{background:var(--yellow-l);border-color:var(--mid-bd);color:var(--amber-ink);font-weight:600}
+.abtn.bad{background:var(--red-l);border-color:var(--bad-bd);color:var(--red);font-weight:600}
 .abtn.on{outline:2px solid var(--blue);outline-offset:1px}
 .abtn:disabled{opacity:.4;cursor:default}
 .spacer{flex:1}
@@ -115,25 +122,55 @@ textarea#answer:focus{border-color:var(--blue);background:#fff}
 .drawer h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center}
 .drawer .close{margin-left:auto;cursor:pointer;border:none;background:none;font-size:20px;color:var(--sub)}
 .ttabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.ttab{padding:5px 11px;border-radius:18px;border:1px solid var(--line);background:#fff;font-size:12px;cursor:pointer;font-family:var(--mono)}
+.ttab{padding:5px 11px;border-radius:18px;border:1px solid var(--line);background:var(--btn);font-size:12px;cursor:pointer;font-family:var(--mono)}
 .ttab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.tcard{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.tcard{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .tname{font-family:var(--mono);font-weight:700;font-size:13.5px;color:var(--blue)}
 .tdesc{font-size:12px;color:var(--sub);margin:2px 0 8px}
 .ftable{width:100%;border-collapse:collapse;font-size:12px}
 .ftable th{text-align:left;color:var(--sub);font-weight:600;padding:4px 6px;border-bottom:1.5px solid var(--line)}
-.ftable td{padding:4px 6px;border-bottom:1px solid #f0eee7;vertical-align:top}
+.ftable td{padding:4px 6px;border-bottom:1px solid var(--rowline);vertical-align:top}
 .ftable td.f{font-family:var(--mono);font-size:11.5px}
-.ftable td.ty{color:#8a6d1d;font-family:var(--mono);font-size:11px;white-space:nowrap}
-.tsample{margin-top:10px;background:#fbfaf7;border-radius:9px;padding:9px 11px}
+.ftable td.ty{color:var(--amber-ink);font-family:var(--mono);font-size:11px;white-space:nowrap}
+.tsample{margin-top:10px;background:var(--soft2);border-radius:9px;padding:9px 11px}
 .tsample .lb{font-size:11px;color:var(--sub);margin-bottom:4px}
 .tsample pre{font-family:var(--mono);font-size:11px;line-height:1.6;white-space:pre-wrap}
 /* toast */
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#2c2c2a;color:#fff;padding:9px 20px;border-radius:22px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:99}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--toast-bg);color:var(--toast-ink);padding:9px 20px;border-radius:22px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:99}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green)}
 .empty{padding:60px 20px;text-align:center;color:var(--sub)}
 .empty .big{font-size:38px;margin-bottom:8px}
+
+/* ===== 深色主题 ===== */
+body.dark{
+  --bg:#14161a; --card:#1d2026; --line:#2e323a; --ink:#e8e6df; --sub:#9a99a3;
+  --blue:#5b9bd5; --green:#8fc353; --green-l:#243019; --yellow:#f0b04a; --yellow-l:#332a16;
+  --red:#ef6b6a; --red-l:#382323;
+  --hover:#262a31; --soft:#202329; --soft2:#23262c; --btn:#1d2026; --chip:#2a2d34;
+  --blue-soft:#1f2c3a; --blue-soft2:#1e2a38; --blue-soft3:#2b415c;
+  --line-strong:#3a3e47; --rowline:#2a2d34;
+  --amber-ink:#e0b25e; --caliber-ink:#d9b36a; --hint-ink:#9cc3ea; --ink2:#cfcdc5; --mine-ink:#b5b3ab; --faint:#6d6c66;
+  --good-bd:#3f5229; --mid-bd:#5a4a22; --bad-bd:#5c3030;
+  --toast-bg:#f0ede4; --toast-ink:#1d2026;
+}
+body.dark{color-scheme:dark}
+/* ===== 校验结果横幅 ===== */
+.verdict{margin-top:8px;padding:10px 13px;border-radius:11px;border:1px solid var(--line);background:var(--soft);font-size:12.5px}
+.verdict .vlabel{font-weight:700;font-size:13.5px;margin-right:10px}
+.verdict .vscore{color:var(--sub);font-size:11.5px}
+.verdict.v-ok{border-color:var(--good-bd);background:var(--green-l)}
+.verdict.v-ok .vlabel{color:var(--green)}
+.verdict.v-mid{border-color:var(--mid-bd);background:var(--yellow-l)}
+.verdict.v-mid .vlabel{color:var(--amber-ink)}
+.verdict.v-bad{border-color:var(--bad-bd);background:var(--red-l)}
+.verdict.v-bad .vlabel{color:var(--red)}
+.vbar{height:6px;border-radius:4px;background:var(--rowline);margin:7px 0 4px;overflow:hidden}
+.vbar i{display:block;height:100%;border-radius:4px;background:var(--blue)}
+.verdict.v-ok .vbar i{background:var(--green)}
+.verdict.v-mid .vbar i{background:var(--yellow)}
+.verdict.v-bad .vbar i{background:var(--red)}
+.vsub{color:var(--sub);font-size:11.5px}
 </style>
 </head>
 <body>
@@ -143,6 +180,7 @@ textarea#answer:focus{border-color:var(--blue);background:#fff}
     <div class="hbtns">
       <button class="hbtn" onclick="randomQ()">🎲 随机一题</button>
       <button class="hbtn" onclick="openWrongMode()">🔁 错题重刷 <span id="wrongCnt"></span></button>
+      <button class="hbtn" id="themeBtn" onclick="toggleTheme()">🌙 深色</button>
       <button class="hbtn" onclick="openDrawer()">📚 表结构速查</button>
     </div>
   </header>
@@ -668,6 +706,13 @@ const STEPS = {
 /* ===== 状态 ===== */
 const STORE='sql-trainer-questions-v1', PROGRESS='sql-trainer-progress-v1', UNLOCK='sql-trainer-unlock-v1';
 function esc(s){ return String(s).replace(/</g,'&lt;'); }
+function applyTheme(t){
+  document.body.classList.toggle('dark',t==='dark');
+  const b=document.getElementById('themeBtn'); if(b) b.textContent=t==='dark'?'☀️ 浅色':'🌙 深色';
+  save('sql-trainer-theme-v1',t);
+}
+function toggleTheme(){ applyTheme(document.body.classList.contains('dark')?'light':'dark'); }
+applyTheme(load('sql-trainer-theme-v1')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
 function load(k){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } }
 function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
 const questions = load(STORE) || SAMPLE;
@@ -799,7 +844,7 @@ function renderQ(){
     <div class="editorwrap">
       <div class="edlabel">✏️ 你的 SQL<span class="kks">Tab 缩进 · ⌘/Ctrl+Enter 下一题</span>
         <span class="spacer" style="flex:1"></span>
-        <button class="abtn" style="padding:4px 12px;font-size:11.5px" onclick="runCheck('${q.id}')">✅ 考点自检</button>
+        <button class="abtn" style="padding:4px 12px;font-size:11.5px" onclick="runCheck('${q.id}')">✅ 校验答案</button>
         <button class="abtn" style="padding:4px 12px;font-size:11.5px" onclick="toggleHint('${q.id}')">💡 提示</button>
       </div>
       <textarea id="answer" placeholder="在这里写你的 SQL…">${ans.replace(/</g,'&lt;')}</textarea>
@@ -822,7 +867,9 @@ function renderQ(){
   document.getElementById('checkArea').innerHTML=renderCheckHtml(q.id);
   document.getElementById('refArea').innerHTML=renderRefHtml(q.id);
   const ta=document.getElementById('answer');
-  ta.addEventListener('input',()=>save('answer-'+q.id,ta.value));
+  ta.addEventListener('input',()=>{ save('answer-'+q.id,ta.value);
+    clearTimeout(ta._ct); ta._ct=setTimeout(()=>{ if(ta.value.trim()) runCheck(q.id); },700);
+  });
   ta.addEventListener('keydown',e=>{
     if(e.key==='Tab'){ e.preventDefault();
       const s0=ta.selectionStart;
@@ -862,18 +909,38 @@ function toggleHint(id){
 function renderHintHtml(id){
   return UI_OPEN.hint.has(id)?`<div class="hintbox">💡 ${HINTS[id]||'再想想口径和考点标签。'}</div>`:'';
 }
+function requiredTables(id){
+  const q=questions.find(x=>x.id===id);
+  const m=(q.ref||'').match(/\b(?:from|join)\s+(dwd_sea_[a-z_]+|dim_cust)/gi)||[];
+  return [...new Set(m.map(s=>s.replace(/\s+/g,' ').trim().split(' ')[1]))];
+}
 function renderCheckHtml(id){
-  const items=CHECK_CACHE[id]; if(!items) return '';
-  const pass=items.filter(i=>i.ok).length;
-  return items.map(i=>`<div class="checkitem ${i.ok?'ok':'miss'}">${i.ok?'✓':'✗'} ${i.l}</div>`).join('')
-    +(pass===items.length?'<div class="checkall">🎉 考点全覆盖！可以对照参考答案了</div>'
-      :`<div class="checkitem miss" style="margin-top:4px">${pass}/${items.length} 覆盖，缺的考点想想再补</div>`);
+  const c=CHECK_CACHE[id]; if(!c) return '';
+  const row=i=>`<div class="checkitem ${i.ok?'ok':'miss'}">${i.ok?'✓':'✗'} ${i.l}</div>`;
+  const syn=c.syn.filter(i=>i.ok).length, tab=c.tab.filter(i=>i.ok).length, pt=c.pts.filter(i=>i.ok).length;
+  const total=c.syn.length+c.tab.length+c.pts.length, pass=syn+tab+pt;
+  const pct=Math.round(pass/total*100);
+  const cls=pct===100?'v-ok':pct>=60?'v-mid':'v-bad';
+  const label=pct===100?'✅ 校验通过':pct>=60?'⚠️ 基本通过':'❌ 未通过';
+  let h=`<div class="verdict ${cls}"><span class="vlabel">${label}</span><span class="vscore">${pass}/${total} · ${pct}%</span>
+    <div class="vbar"><i style="width:${pct}%"></i></div>
+    <div class="vsub">语法 ${syn}/${c.syn.length} · 数据表 ${c.tab.length?tab+'/'+c.tab.length:'—'} · 考点 ${pt}/${c.pts.length}</div></div>`;
+  return h + c.syn.map(row).join('') + c.tab.map(row).join('') + c.pts.map(row).join('');
 }
 function runCheck(id){
-  const ans=(document.getElementById('answer').value||'').toLowerCase();
+  const raw=(document.getElementById('answer').value||'');
+  const ans=raw.toLowerCase();
   const area=document.getElementById('checkArea');
-  if(!ans.trim()){ CHECK_CACHE[id]=null; area.innerHTML='<div class="checkitem miss">还没写答案，先动笔再自检。</div>'; return; }
-  CHECK_CACHE[id]=(CHECKS[id]||[]).map(it=>({l:it.l, ok: it.re?it.re.test(ans):ans.includes(it.kw)}));
+  if(!ans.trim()){ CHECK_CACHE[id]=null; area.innerHTML=''; return; }
+  const syn=[
+    {l:'语法：包含 SELECT',ok:/\bselect\b/.test(ans)},
+    {l:'语法：包含 FROM 或 JOIN',ok:/\b(from|join)\b/.test(ans)},
+    {l:'语法：括号配对完整',ok:(ans.match(/\(/g)||[]).length===(ans.match(/\)/g)||[]).length},
+  ];
+  const need=requiredTables(id);
+  const tab=need.map(t=>({l:'数据表：用到 '+t, ok:ans.includes(t)}));
+  const pts=(CHECKS[id]||[]).map(it=>({l:'考点：'+it.l, ok: it.re?it.re.test(ans):ans.includes(it.kw)}));
+  CHECK_CACHE[id]={syn,tab,pts};
   area.innerHTML=renderCheckHtml(id);
 }
 function renderRefHtml(id){
