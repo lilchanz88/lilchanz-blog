@@ -35,6 +35,24 @@ button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-si
 .actions button:hover{border-color:#185fa5;color:#185fa5}
 .tip{font-size:12px;color:#888780;margin-top:12px}
 .mleaves{margin:8px 0 0 18px;border-left:2px solid #e5e3dc;padding-left:4px}
+/* --- 导图 v2：子主题 + 页内查看 --- */
+.msub{margin:12px 0 0 8px;padding-left:14px;border-left:2px solid #e5e3dc}
+.msubname{font-size:13px;font-weight:700;color:#55534c;display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.msubname .mtick{width:8px;height:8px;border-radius:2px;background:currentColor;opacity:.5;flex:none}
+.msubname small{color:#b4b2a9;font-weight:400}
+.mleafbtn{background:none;border:none;font-size:13px;color:#2c2c2a;padding:4px 6px;cursor:pointer;text-align:left;width:100%;display:flex;align-items:center;border-radius:8px;line-height:1.5}
+.mleaf .mleafbtn:hover{background:#f4f2ec;color:#185fa5;text-decoration:none}
+.mleaf.open .mleafbtn{background:#f0ede4;color:#185fa5;font-weight:600}
+.mleafbtn .mside{margin-left:auto;color:#b4b2a9;font-size:11px;flex:none;padding-left:8px}
+.mview{margin:2px 0 8px 15px;background:#faf9f5;border:1px solid #e5e3dc;border-left:3px solid #185fa5;border-radius:0 10px 10px 10px;padding:12px 14px;font-size:13px;line-height:1.75}
+.mview .mvq{font-weight:700;margin-bottom:8px}
+.mview .mvd{margin-top:10px;padding-top:10px;border-top:1px dashed #ddd;color:#55534c;font-size:12.5px}
+.mview .mvbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.mview .mvbar button{padding:7px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:12px;cursor:pointer;color:#3c3a35}
+.mview .mvbar button:hover{background:#f4f2ec}
+.mview .mvbar button.primary{background:#185fa5;color:#fff;border-color:#185fa5;font-weight:600}
+.mview .mvbar button.primary:hover{background:#124a82}
+.mroot .cnt{font-weight:400;opacity:.75;font-size:12px;margin-left:6px}
 .mbranch{margin-bottom:26px;background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .mroot{display:inline-block;padding:6px 16px;border-radius:10px;font-weight:600;font-size:14px;color:#fff}
 .mleaf{position:relative;margin:2px 0}
@@ -541,6 +559,35 @@ document.getElementById('importFile').onchange = e => {
   e.target.value = '';
 };
 
+const SUBGROUPS = {
+  'OneData与总线': [['OneData 体系',[4,1,0,7]],['一致性维度 / 事实',[2,3]],['维度建模',[5,6,8]]],
+  '分层与表设计': [['分层与主题域',[9,10]],['维度表技术',[11,12,13,14]],['事实表设计',[15,16,17,18]]],
+  '指标与质量': [['指标体系',[19,20]],['数据质量',[21,22,23,24]],['价值叙事',[25,26]]],
+  '计算引擎': [['Hadoop 与 MapReduce',[27,28,29]],['Spark 核心',[30,31,33,38]],['Spark 优化',[32,34,35,36,37]],['Flink 与湖仓',[39,40]]],
+  'SQL套路': [['窗口与排名',[41,42,44]],['经典题型',[43,45,46,47,48]]],
+  'Doris与叙事': [['Doris 架构与原理',[49,50,51,52,53]],['面试叙事',[54,55]]],
+};
+let MAP_EXPAND = null;
+
+function mapCardHtml(i){
+  const s = S[i];
+  const side = s ? `<span class="mside">${s.due<=today()?'今日到期':s.iv+'天后'}</span>` : `<span class="mside">新</span>`;
+  let out = `<div class="mleaf ${MAP_EXPAND===i?'open':''}"><button class="mleafbtn" onclick="openMapCard(${i})"><span class="mdot" style="background:${stateColor(i)}"></span><span class="txt">${CARDS[i].q}</span>${side}</button>`;
+  if(MAP_EXPAND === i){
+    const c = CARDS[i], d = DETAILS[i];
+    out += `<div class="mview">
+      <div class="mvq">【Q】${c.q}</div>
+      <div class="mva">${c.a}</div>
+      ${d ? `<div class="mvd">${fmtDetail(d)}</div>` : ''}
+      <div class="mvbar">
+        <button onclick="mapNav(-1)">« 上一题</button>
+        <button class="primary" onclick="startSession([${i}],'map')">⚔️ 进入背诵评分</button>
+        <button onclick="mapNav(1)">下一题 »</button>
+      </div></div>`;
+  }
+  return out + '</div>';
+}
+
 function renderMap(){
   document.getElementById('doneBox').style.display = 'none';
   document.getElementById('home').style.display = 'none';
@@ -550,14 +597,39 @@ function renderMap(){
   const branches = [...new Set(CARDS.map(c=>c.b))];
   const palette = ['#185fa5','#0f6e56','#993556','#ba7517','#534ab7','#5f5e5a'];
   p.innerHTML = branches.map((b,bi)=>{
-    const idxs = CARDS.map((c,i)=>i).filter(i=>CARDS[i].b===b);
-    const leaves = idxs.map(i=>{
-      const s = S[i];
-      const suffix = s ? ` <small style="color:#b4b2a9">${s.due<=today()?'· 今日到期':'· '+s.iv+'天'}</small>` : ' <small style="color:#b4b2a9">· 新</small>';
-      return `<div class="mleaf"><button onclick="startSession([${i}],'map')"><span class="mdot" style="background:${stateColor(i)}"></span><span class="txt">${CARDS[i].q}</span>${suffix}</button></div>`;
-    }).join('');
-    return `<div class="mbranch"><div class="mroot" style="background:${palette[bi%palette.length]}">${b} · ${idxs.length} 张</div><div class="mleaves">${leaves}</div></div>`;
-  }).join('') + `<p class="tip">🟢 长期掌握 · 🟡 巩固中 · 🔴 易忘 · ⚪ 新卡。点任意题目单独复习，评分后自动回到导图。</p>`;
+    const cnt = CARDS.filter(c=>c.b===b).length;
+    const subs = (SUBGROUPS[b]||[]).map(([name, idxs])=>`
+      <div class="msub"><div class="msubname"><span class="mtick"></span>${name}<small>${idxs.length} 题</small></div>${idxs.map(mapCardHtml).join('')}</div>`).join('');
+    return `<div class="mbranch" style="border-top:3px solid ${palette[bi%palette.length]}">
+      <div class="mroot" style="background:${palette[bi%palette.length]}">${b}<span class="cnt">${cnt} 题</span></div>
+      ${subs}</div>`;
+  }).join('') + `<p class="tip">🟢 长期掌握 · 🟡 巩固中 · 🔴 易忘 · ⚪ 新卡 · 点题目直接展开查看，« » 键翻阅全题库，要练口述再进「背诵评分」（评分后自动回导图）。</p>`;
+}
+
+function openMapCard(i){
+  MAP_EXPAND = (MAP_EXPAND === i) ? null : i;
+  renderMap();
+  if(MAP_EXPAND !== null){
+    const el = document.querySelector('.mleaf.open');
+    if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth', block:'center'}), 30);
+  }
+}
+document.addEventListener('keydown', e=>{
+  if(!document.getElementById('pMap').classList.contains('on')) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if(e.key === 'ArrowRight') mapNav(1);
+  else if(e.key === 'ArrowLeft') mapNav(-1);
+  else if(e.key === 'Escape' && MAP_EXPAND !== null){ MAP_EXPAND = null; renderMap(); }
+});
+function mapNav(dir){
+  if(MAP_EXPAND === null) return;
+  const n = MAP_EXPAND + dir;
+  if(n < 0 || n >= CARDS.length) return;
+  MAP_EXPAND = n;
+  renderMap();
+  const el = document.querySelector('.mleaf.open');
+  if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth', block:'center'}), 30);
 }
 
 /* ---------- 模拟面试 ---------- */
