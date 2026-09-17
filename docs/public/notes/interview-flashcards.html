@@ -53,6 +53,12 @@ button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-si
 .mview .mvbar button.primary{background:#185fa5;color:#fff;border-color:#185fa5;font-weight:600}
 .mview .mvbar button.primary:hover{background:#124a82}
 .mroot .cnt{font-weight:400;opacity:.75;font-size:12px;margin-left:6px}
+/* --- 进度码弹窗 --- */
+.codebox{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99;padding:20px 14px;overflow:auto}
+.codebox .inner{max-width:580px;margin:36px auto;background:#fff;border-radius:14px;padding:18px}
+.codebox textarea{width:100%;height:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;padding:10px;border:1px solid #d3d1c7;border-radius:10px;resize:vertical;background:#faf9f5;color:#2c2c2a}
+.codebox textarea:focus{outline:none;border-color:#185fa5}
+.codebox .actions{margin-top:10px}
 .mbranch{margin-bottom:26px;background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .mroot{display:inline-block;padding:6px 16px;border-radius:10px;font-weight:600;font-size:14px;color:#fff}
 .mleaf{position:relative;margin:2px 0}
@@ -141,6 +147,8 @@ button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-si
         <button onclick="startInterleave()">🔄 乱序小卷 10 题</button>
         <button onclick="doExport()">💾 导出进度</button>
         <button onclick="document.getElementById('importFile').click()">📥 导入进度</button>
+        <button onclick="openCode('gen')">🔗 生成进度码</button>
+        <button onclick="openCode('load')">📲 用进度码恢复</button>
       </div>
       <input type="file" id="importFile" accept=".json,application/json" style="display:none">
       <p class="tip">📖 打分越诚实，算法越准。错题本收录「忘了」≥2 次的卡，秒答一次即移出。详解里藏着面试官追问。</p>
@@ -177,6 +185,23 @@ button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-si
       <div id="mockQ"></div>
     </div>
     <div id="mockDone" style="display:none"></div>
+  </div>
+</div>
+
+<div class="codebox" id="codeModal" style="display:none">
+  <div class="inner">
+    <h2 id="codeTitle" style="font-size:16px;margin-bottom:4px">🔗 生成进度码</h2>
+    <p class="tip" id="codeDesc" style="margin:0 0 10px"></p>
+    <textarea id="codeBox" spellcheck="false" placeholder="粘贴进度码…"></textarea>
+    <div class="actions">
+      <button id="codeCopy" onclick="copyCode()">📋 复制进度码</button>
+      <button id="codeLink" onclick="copyLink()">🔗 复制为链接</button>
+      <button id="codeApply" onclick="applyCode()" style="background:#185fa5;border-color:#185fa5;color:#fff;font-weight:600">✅ 应用</button>
+    </div>
+    <div class="actions">
+      <button onclick="closeCode()">关闭</button>
+    </div>
+    <p class="tip" id="codeHint" style="margin-top:10px"></p>
   </div>
 </div>
 
@@ -703,6 +728,124 @@ document.getElementById('resetBtn').onclick = ()=>{
   S = {}; meta = {day: today(), cnt: 0, log: {}, target: null}; save(); renderHome();
 };
 
+// ==== 进度码：跨设备同步（纯前端，无后端） ====
+// 格式： SR1~卡片~meta~日志
+//   卡片 下标-间隔-到期偏移-连对-错次 （负数偏移用 m 前缀，如 m3 = -3）
+//   多张卡片用 . 连接；meta 为「今日题数,面试目标日期」；日志为「距今天数=题数」，逗号分隔
+function packProgress(){
+  const t = today();
+  const dayDiff = (a,b) => Math.round((new Date(a+'T00:00:00') - new Date(b+'T00:00:00')) / 86400000);
+  const encNum = n => n < 0 ? 'm'+(-n) : ''+n;
+  const cards = Object.keys(S).filter(k=>/^\d+$/.test(k)).map(k=>{
+    const s = S[k] || {};
+    return k+'-'+(s.iv||0)+'-'+encNum(dayDiff(s.due||t, t))+'-'+(s.streak||0)+'-'+(s.f||0);
+  }).join('.');
+  const log = Object.keys(meta.log||{}).map(d=>{
+    const off = dayDiff(t, d);
+    return (off >= 0 && off <= 400) ? off+'='+meta.log[d] : '';
+  }).filter(Boolean).join(',');
+  return 'SR1~'+cards+'~'+(meta.cnt||0)+','+(meta.target||'')+'~'+log;
+}
+function unpackProgress(code){
+  const t = today();
+  const decNum = s => String(s).charAt(0) === 'm' ? -Number(String(s).slice(1)) : Number(s);
+  const raw = String(code||'').trim().replace(/\s+/g,'');
+  if(!raw) throw new Error('进度码是空的');
+  const seg = raw.split('~');
+  if(seg[0] !== 'SR1') throw new Error('格式不对，应以 SR1~ 开头');
+  const cards = {};
+  let skipped = 0;
+  (seg[1]||'').split('.').filter(Boolean).forEach(item=>{
+    const p = item.split('-');
+    if(p.length !== 5 || !/^\d+$/.test(p[0])) return;
+    const i = Number(p[0]);
+    if(i >= CARDS.length){ skipped++; return; }
+    const off = decNum(p[2]);
+    cards[i] = {iv:+p[1]||0, due:addDays(isNaN(off)?0:off), streak:+p[3]||0, f:+p[4]||0};
+  });
+  const m = (seg[2]||'0,').split(',');
+  const log = {};
+  (seg[3]||'').split(',').filter(Boolean).forEach(item=>{
+    const q = item.split('=');
+    const off = Number(q[0]);
+    if(!(off >= 0 && off <= 400)) return;
+    log[addDays(-off)] = +q[1]||0;
+  });
+  const target = String(m[1]||'').trim();
+  return {cards, skipped, meta: {day:t, cnt:+m[0]||0, log, target: /^\d{4}-\d{2}-\d{2}$/.test(target) ? target : null}};
+}
+function flashBtn(btn, txt){ const o = btn.textContent; btn.textContent = txt; setTimeout(()=>{ btn.textContent = o; }, 1500); }
+function openCode(mode){
+  const gen = mode === 'gen';
+  const ta = document.getElementById('codeBox');
+  document.getElementById('codeTitle').textContent = gen ? '🔗 生成进度码' : '📲 用进度码恢复';
+  document.getElementById('codeDesc').textContent = gen
+    ? '把这串码发到手机上，打开本页 →「用进度码恢复」粘贴即可。长期建议还是导出 JSON 留底。'
+    : '粘贴另一台设备生成的进度码，点「应用」覆盖本机进度。';
+  document.getElementById('codeCopy').style.display = gen ? '' : 'none';
+  document.getElementById('codeLink').style.display = gen ? '' : 'none';
+  document.getElementById('codeApply').style.display = gen ? 'none' : '';
+  const hint = document.getElementById('codeHint');
+  if(gen){
+    const code = packProgress();
+    ta.readOnly = true; ta.value = code;
+    hint.textContent = '有记录的卡片 ' + Object.keys(S).length + ' 张 · 共 ' + code.length + ' 字符';
+  } else {
+    ta.readOnly = false; ta.value = '';
+    hint.textContent = '⚠️ 恢复会覆盖本机现有进度，不可撤销。';
+  }
+  document.getElementById('codeModal').style.display = 'block';
+  if(!gen) ta.focus();
+}
+function closeCode(){ document.getElementById('codeModal').style.display = 'none'; }
+function copyCode(){
+  const btn = document.getElementById('codeCopy'), ta = document.getElementById('codeBox');
+  const done = ()=>flashBtn(btn,'✅ 已复制');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ta.value).then(done, ()=>{ ta.select(); document.execCommand('copy'); done(); });
+  } else { ta.select(); document.execCommand('copy'); done(); }
+}
+function copyLink(){
+  const btn = document.getElementById('codeLink');
+  if(location.protocol === 'file:'){ alert('本地文件方式打开无法生成链接，请改用「复制进度码」。'); return; }
+  const url = location.origin + location.pathname + '#p=' + packProgress();
+  const done = ()=>flashBtn(btn,'✅ 链接已复制');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done, ()=>{ prompt('手动复制链接：', url); });
+  } else { prompt('手动复制链接：', url); }
+}
+function applyCode(){
+  let obj;
+  try { obj = unpackProgress(document.getElementById('codeBox').value); }
+  catch(e){ alert('进度码无效：' + e.message); return; }
+  const n = Object.keys(obj.cards).length;
+  if(!n){ alert('这段码里没有卡片记录，检查是否复制完整。'); return; }
+  if(!confirm('将用这段进度码覆盖本机进度（' + n + ' 张卡有记录），确定？')) return;
+  S = obj.cards;
+  meta = Object.assign({day:today(), cnt:0, log:{}, target:null}, obj.meta);
+  save(); renderHome(); closeCode();
+  alert('恢复成功 ✓ ' + n + ' 张卡有记录' + (obj.skipped ? '（' + obj.skipped + ' 张超出当前题库已跳过）' : ''));
+}
+document.getElementById('codeModal').addEventListener('click', e=>{ if(e.target.id === 'codeModal') closeCode(); });
+
+(function loadFromHash(){
+  let obj = null;
+  try {
+    const m = location.hash.match(/[#&]p=([^&]*)/);
+    if(!m || !m[1]) return;
+    obj = unpackProgress(decodeURIComponent(m[1]));
+    try { history.replaceState(null, '', location.pathname + location.search); } catch(e) {}
+  } catch(e){ return; }
+  const n = Object.keys(obj.cards || {}).length;
+  if(!n) return;
+  setTimeout(()=>{
+    if(confirm('检测到链接里携带的进度（' + n + ' 张卡有记录），要恢复到本机吗？')){
+      S = obj.cards;
+      meta = Object.assign({day:today(), cnt:0, log:{}, target:null}, obj.meta);
+      save(); renderHome(); alert('恢复成功 ✓ ' + n + ' 张卡有记录');
+    }
+  }, 300);
+})();
 renderHome();
 </script>
 </body>
