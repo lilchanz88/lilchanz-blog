@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试模拟器 · 口述版</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f5f1;color:#2c2c2a;line-height:1.6;padding:16px 12px 40px;margin:0}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:19px;font-weight:700;margin:0 0 4px}
+h2{font-size:16px;font-weight:700;margin:0 0 10px}
+.sub{font-size:13px;color:#5f5e5a;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e5e3dc;border-radius:12px;padding:14px;margin-bottom:12px}
+.view{display:none}.view.on{display:block}
+.note{font-size:12.5px;padding:9px 11px;border-radius:9px;margin-bottom:12px;line-height:1.5}
+.note.ok{background:#e6f4ef;color:#0f6e56;border:1px solid #bfe0d4}
+.note.warn{background:#fdf3e4;color:#854f0b;border:1px solid #f0dcb8}
+.note.err{background:#fdecec;color:#a32d2d;border:1px solid #f2cccc}
+.field{margin-bottom:13px}
+.field>label{display:block;font-size:12.5px;font-weight:600;color:#5f5e5a;margin-bottom:7px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:7px 13px;border-radius:20px;background:#fff;border:1px solid #d3d1c7;font-size:13px;color:#5f5e5a;cursor:pointer;font-family:inherit;transition:.12s}
+.chip:hover{border-color:#b4b2a9}
+.chip.on{background:#0f6e56;border-color:#0f6e56;color:#fff;font-weight:600}
+button{font-family:inherit;cursor:pointer}
+.primary{width:100%;padding:13px;border-radius:11px;background:#0f6e56;border:none;color:#fff;font-size:15px;font-weight:700;margin-top:4px}
+.primary:active{background:#0a5a45}
+.actions{display:flex;gap:9px}
+.actions button{flex:1;padding:12px;border-radius:11px;background:#fff;border:1px solid #d3d1c7;font-size:14px;font-weight:600;color:#5f5e5a}
+.actions button.go{background:#0f6e56;border-color:#0f6e56;color:#fff}
+.ghost{background:#fff;color:#888780;border:1px solid #e5e3dc;border-radius:11px;padding:12px;flex:1;font-size:14px}
+.bar{display:flex;align-items:center;gap:9px;font-size:12.5px;color:#5f5e5a;margin-bottom:9px;flex-wrap:wrap}
+.bar .tag{background:#eceae4;padding:2px 9px;border-radius:20px;font-size:12px}
+.bar .spacer{flex:1}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;color:#0f6e56}
+.timer.hurry{color:#e24b4a}
+.track{height:4px;background:#e5e3dc;border-radius:3px;overflow:hidden;margin-bottom:12px}
+.track>i{display:block;height:100%;background:#0f6e56;width:0;transition:width .2s linear}
+.qlabel{font-size:11.5px;font-weight:700;color:#888780;letter-spacing:.6px;margin-bottom:7px}
+.qtext{font-size:17px;font-weight:600;line-height:1.5;margin-bottom:14px}
+.micpanel{text-align:center;padding:6px 0 10px}
+.micBtn{width:100%;padding:16px;border-radius:12px;border:1.5px solid #0f6e56;background:#f2faf7;color:#0f6e56;font-size:16px;font-weight:700;transition:.15s}
+.micBtn.live{background:#fdecec;border-color:#e24b4a;color:#a32d2d}
+.micstatus{font-size:12.5px;color:#888780;margin-top:9px;min-height:18px}
+.subs{margin-top:11px;padding:11px;background:#faf9f6;border:1px solid #eceae4;border-radius:10px;min-height:54px;max-height:190px;overflow-y:auto;font-size:14px;line-height:1.75}
+.subs .fin{color:#2c2c2a}
+.subs .inter{color:#a5a5a0}
+.subs .ph{color:#b4b2a9;font-size:13px}
+.aStd{font-size:14.5px;line-height:1.75}
+.aStd b{color:#0f6e56}
+.aStd code{background:#eceae4;padding:1px 5px;border-radius:4px;font-size:13px;font-family:'SF Mono',Menlo,monospace}
+.yours{margin-top:14px;border-top:1px dashed #d3d1c7;padding-top:11px}
+.yours .lbl{font-size:11.5px;font-weight:700;color:#888780;margin-bottom:6px}
+.yours .txt{font-size:14px;line-height:1.75;color:#444441;white-space:pre-wrap}
+.yours .txt.empty{color:#b4b2a9;font-style:italic}
+.expBtn{background:none;border:none;color:#0f6e56;font-size:13.5px;padding:10px 0 0;text-decoration:underline;display:block}
+#detailBody{margin-top:9px;font-size:13.5px;line-height:1.75;max-height:420px;overflow-y:auto;padding-right:4px}
+#detailBody .fsec{font-weight:700;color:#0f6e56;margin:9px 0 3px;font-size:13px}
+#detailBody .fsec.warn{color:#ba7517}
+#detailBody .fq{background:#f2faf7;border-left:3px solid #5dcaa5;padding:6px 10px;border-radius:0 7px 7px 0;margin:6px 0;font-size:13px;color:#0f6e56}
+#detailBody .li{margin:2px 0 2px 4px}
+#detailBody pre.fcode{background:#2c2c2a;color:#e8e6e0;padding:11px;border-radius:9px;overflow-x:auto;font-size:12.5px;line-height:1.6;font-family:'SF Mono',Menlo,monospace;margin:7px 0}
+#diaBody{margin-top:9px;background:#fff;border:1px solid #e5e3dc;border-radius:10px;padding:8px 4px;overflow-x:auto}
+.grade{margin-top:2px}
+.glabel{font-size:12.5px;font-weight:600;color:#5f5e5a;margin-bottom:8px;text-align:center}
+.grow{display:flex;gap:8px}
+.grow button{flex:1;padding:13px 6px;border-radius:11px;font-size:14px;font-weight:700;border:1.5px solid}
+.g-good{background:#e6f4ef;border-color:#5dcaa5;color:#0f6e56}
+.g-mid{background:#fdf3e4;border-color:#ef9f27;color:#854f0b}
+.g-bad{background:#fdecec;border-color:#f09595;color:#a32d2d}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:15px}
+.stat{background:#faf9f6;border:1px solid #eceae4;border-radius:10px;padding:11px 8px;text-align:center}
+.stat .n{font-size:20px;font-weight:700;color:#0f6e56;font-variant-numeric:tabular-nums}
+.stat .l{font-size:11.5px;color:#888780;margin-top:3px}
+.catRow{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-size:13px}
+.catRow .nm{width:110px;flex-shrink:0;color:#5f5e5a}
+.catRow .bw{flex:1;height:16px;background:#eceae4;border-radius:5px;overflow:hidden}
+.catRow .bw>i{display:block;height:100%;border-radius:5px}
+.catRow .vv{width:58px;text-align:right;font-size:12px;color:#888780;font-variant-numeric:tabular-nums}
+.rItem{display:flex;gap:9px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f0eee8;font-size:13.5px}
+.rItem:last-child{border-bottom:none}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0}
+.dot.g{background:#5dcaa5}.dot.m{background:#ef9f27}.dot.b{background:#f09595}
+.rItem .rt{flex:1;line-height:1.55}
+.rItem .rm{font-size:11.5px;color:#a5a5a0;margin-top:2px}
+.histRow{display:flex;justify-content:space-between;font-size:12.5px;color:#888780;padding:6px 0;border-bottom:1px solid #f0eee8}
+.histRow:last-child{border-bottom:none}
+.hint{font-size:12px;color:#a5a5a0;text-align:center;margin-top:11px;line-height:1.6}
+@media(max-width:520px){
+  .qtext{font-size:16px}
+  .stats{grid-template-columns:repeat(3,1fr);gap:6px}
+  .stat .n{font-size:17px}
+  .catRow .nm{width:82px;font-size:12px}
+  .grow{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="v-setup" class="view on">
+  <div class="card">
+    <h1>面试模拟器 · 口述版</h1>
+    <p class="sub">对着麦克风把答案讲出来，讲完揭晓参考答案与架构图。共 <b id="poolTotal">56</b> 题。</p>
+    <div id="micNote" class="note"></div>
+
+    <div class="field">
+      <label>题目范围</label>
+      <div id="catChips" class="chips"></div>
+    </div>
+    <div class="field">
+      <label>本轮题量</label>
+      <div id="cntChips" class="chips"></div>
+    </div>
+    <div class="field">
+      <label>单题时限</label>
+      <div id="limChips" class="chips"></div>
+    </div>
+    <div class="field">
+      <label>抽题策略</label>
+      <div id="pickChips" class="chips"></div>
+    </div>
+    <button class="primary" onclick="startRound()">开始模拟面试</button>
+    <div class="hint">建议用 Safari 打开 · 麦克风权限需允许一次</div>
+  </div>
+  <div class="card" id="histCard" style="display:none">
+    <h2>最近练习</h2>
+    <div id="histList"></div>
+  </div>
+</div>
+
+<div id="v-quiz" class="view">
+  <div class="bar">
+    <span id="qProg"></span>
+    <span class="tag" id="qCat"></span>
+    <span class="spacer"></span>
+    <span class="timer" id="qTimer"></span>
+  </div>
+  <div class="track"><i id="qTrack"></i></div>
+  <div class="card">
+    <div class="qlabel">面试官提问</div>
+    <div class="qtext" id="qText"></div>
+    <div class="micpanel">
+      <button id="micBtn" class="micBtn" onclick="toggleMic()">🎤 开始回答</button>
+      <div class="micstatus" id="micStatus">点一下开始，然后大声把答案讲出来</div>
+    </div>
+    <div class="subs" id="subs"><span class="ph">你讲的话会实时显示在这里…</span></div>
+  </div>
+  <div class="actions">
+    <button class="go" onclick="reveal()">看参考答案</button>
+    <button class="ghost" onclick="skipCard()">跳过</button>
+  </div>
+</div>
+
+<div id="v-answer" class="view">
+  <div class="card">
+    <div class="qlabel">标准回答</div>
+    <div class="aStd" id="aStd"></div>
+    <div class="yours" id="yours"></div>
+    <button class="expBtn" id="btnDetail" onclick="togglePart('detail')">📖 展开详解（追问 · 数字钩子）</button>
+    <div id="detailBody" style="display:none"></div>
+    <button class="expBtn" id="btnDia" onclick="togglePart('dia')">🏗 展开架构图</button>
+    <div id="diaBody" style="display:none"></div>
+  </div>
+  <div class="grade">
+    <div class="glabel" id="glabel">刚才这一题讲得怎么样？</div>
+    <div class="grow">
+      <button class="g-good" onclick="grade(2)">挺顺</button>
+      <button class="g-mid" onclick="grade(1)">磕巴</button>
+      <button class="g-bad" onclick="grade(0)">没答上来</button>
+    </div>
+  </div>
+</div>
+
+<div id="v-report" class="view">
+  <div class="card">
+    <h1>本轮面试报告</h1>
+    <p class="sub" id="rSub"></p>
+    <div class="stats" id="rStats"></div>
+    <h2 style="margin-top:6px">分类表现</h2>
+    <div id="rCats"></div>
+    <h2 style="margin-top:18px">逐题回顾</h2>
+    <div id="rList"></div>
+  </div>
+  <div class="actions">
+    <button class="go" onclick="startRound()">再来一轮</button>
+    <button onclick="copyReport()" id="btnCopy">复制报告</button>
+  </div>
+  <div class="actions" style="margin-top:9px">
+    <button class="ghost" onclick="backHome()">返回设置</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const CARDS = [
+{b:"OneData与总线",q:"总线架构是怎么设计的？",a:"<b>业务过程 × 一致性维度 = 交点</b>——行是业务过程，列是一致性维度。三步：①划分数据域、确立业务过程 ②确定公共一致性维度和度量 ③判断业务过程与维度的关联。case：订单域交易成功，行拆下单/支付/发货/确认发货，列是商品/品牌/类目+城市/金额。"},
+{b:"OneData与总线",q:"为什么用业务划分主题域，而不是其他方式？",a:"<b>3 种划分：部门 / 系统 / 业务</b>。没跨部门数据→排除部门；系统划分适合传统数仓（电信证券，系统稳定耦合低）；选业务划分：抽象实体（用户/商品/订单）+ 动作（浏览/下单/退款）→ 组合成用户域、商品域、订单域。"},
+{b:"OneData与总线",q:"一致性维度表是什么？",a:"不同事实表<b>共享同一套维度表</b>，统一定义+唯一主键。收益：准确性↑、复用性↑、开发维护成本↓。本质：提供<b>统一的业务视角</b>。"},
+{b:"OneData与总线",q:"一致性事实表是什么？",a:"消除指标歧义——<b>一个指标一个口径</b>。例：销售额算不算运费、扣不扣退款，先定唯一口径，派生指标在此基础上再算。"},
+{b:"OneData与总线",q:"OneData 是什么？三个 One 分别是什么？",a:"阿里方法论，目标统一、规范、可共享。<b>OneModel</b> 模型统一（分层/数据域/总线矩阵）；<b>OneID</b> 实体统一（核心实体跨系统唯一标识）；<b>OneService</b> 服务统一（统一数据出口/接口）。"},
+{b:"OneData与总线",q:"Kimball 和范式模型的区别？维度建模四步？",a:"对比：<b>业务驱动 vs 数据驱动</b>。Kimball 快速建集市、事实表+维度表、星型/雪花；范式模型企业级全局设计、避免冗余、周期长。四步口诀：<b>过程-粒度-维度-事实</b>（选业务过程→声明粒度→确定维度→确定事实）。"},
+{b:"OneData与总线",q:"星型 vs 雪花？还有别的模型吗？",a:"星型=事实表+<b>一层</b>维度表，允许冗余，<b>空间换时间</b>；雪花=维度表再分层，省存储但多层 join 伤查询。case：星型订单事实+商品/用户维表；雪花商品维表再延伸行业/类目。另有<b>星系模型</b>：多事实表共享同一套维度表。"},
+{b:"OneData与总线",q:"DWS 会跨域吗？",a:"会。历史原因存在跨域，但主体边界明确；特殊的是<b>用户、商家这类实体宽表一定会跨域</b>。"},
+{b:"OneData与总线",q:"建模三条经验？",a:"<b>①高内聚低耦合</b>（业务相近/粒度相同放一起，高概率同时访问的放一起）②<b>公共逻辑下沉 DWS</b>（口径统一）③<b>核心/扩展模型分离</b>（高复用字段进核心表）。追问：同义字段必须同名，用规范定义名称。"},
+{b:"分层与表设计",q:"数仓四层怎么分工？",a:"口诀<b>贴源-明细-汇总-应用</b>：ODS 贴源（同构抽取+技术字段）；DWD 明细（清洗转换维度退化，按业务过程拆事实表）；DWS 汇总（轻度汇总：商家×用户/渠道/商品，算人数/客单价）；ADS 应用（报表：转化率、留存、画像）。"},
+{b:"分层与表设计",q:"每层大概多少张表？几个主题域？",a:"ODS 100-200 / DWD 约100 / DWS 约150 / ADS 上百-上千 / DIM 约150。主题域 <b>7 个</b>：用户、行为、商品、广告、订单、触点、商家。"},
+{b:"分层与表设计",q:"维度退化是什么？哪些适合退化？力度怎么把握？",a:"把关键维度属性<b>直接冗余进事实表</b>。三类：①高基数（订单编号/发票号）②简单维度（订单状态/优惠券类型）③高复用属性（交易时间戳）。力度：<b>DWD 谨慎退化</b>（保原子性一致性），<b>DWS 积极退化</b>（优化查询）。"},
+{b:"分层与表设计",q:"维度表是怎么建设/处理的？",a:"四步：①识别维度（源表从 ODS 取）②定业务主键（唯一）+描述属性（商品维表主键 sku，属性品类/品牌）③维度退化处理 ④缓慢变化维处理（SCD1/2/3）。"},
+{b:"分层与表设计",q:"缓慢变化维怎么处理？",a:"<b>3 招</b>：①覆盖（历史数据有错，如手机号注册错）②<b>新加一行</b>（起始/有效时间标记生命周期）③<b>新加一列</b>（历史值写进新字段）。"},
+{b:"分层与表设计",q:"拉链表怎么设计？",a:"记录生命周期：起始时间+有效时间标记，<b>开链/闭链</b>。新数据：起始时间=今天、有效时间=无穷大，同时<b>闭链</b>历史记录（改其有效时间）。"},
+{b:"分层与表设计",q:"除了事务事实表还有哪些事实表？",a:"<b>3 种</b>：①事务事实表（每行一个事件）②<b>周期快照</b>（记录周期末状态，月表按月产出）③<b>累计快照</b>（一行=一个业务全生命周期，订单从下单到售后）。"},
+{b:"分层与表设计",q:"退款周期15天，事实表怎么处理？",a:"每天增量写 → 用<b>更宽的时间范围筛选</b>：退款周期15天就筛过去一个月数据，取状态=退款且退款时间=昨天的，增量写入。"},
+{b:"分层与表设计",q:"订单全链路明细宽表放哪层？为什么？字段越来越多怎么办？",a:"放 <b>DWD</b>——只是多表关联明细，没做聚合。不放 DWM：我们为简化层级没设 DWM（DWM=粒度不变/轻度聚合+宽表，DWS=高度聚合）。字段多：①核心/扩展模型分离 ②技术上数据湖（Iceberg）。"},
+{b:"分层与表设计",q:"订单各环节时效怎么算（1号下单/5号支付/10号发货）？",a:"关键词<b>数据回刷</b>：先建单事务事实表（各业务过程状态进各自分区）→建多事务宽表，<b>回刷过去30天</b>，下单表作左表 left join 各状态表取事件时间，写回对应分区。SQL 套路：INSERT OVERWRITE+PARTITION+多 LEFT JOIN+CASE WHEN 定位状态。"},
+{b:"指标与质量",q:"OSM 指标体系怎么搭？",a:"<b>目标→策略→度量</b>。O=提升 GMV；S=提单量/提客单价/降退款/提履约。指标三级：一级（战略）GMV、订单完成金额；二级（策略）订单数/转化率/客单价/退款率；三级（诊断）分渠道/品类/新老客/地区/时段。"},
+{b:"指标与质量",q:"UJM 是什么？和 OSM 什么关系？拆解六要素？",a:"UJM=用户旅程地图，以用户为中心描述接触→兴趣→下单→复购全路径。关系：<b>OSM 定宏观目标，UJM 把策略具体化成每个触点的优化点和指标</b>。六要素：用户行为/业务目标/接触点/潜在痛点/机会点/衡量指标。"},
+{b:"指标与质量",q:"数据一致性怎么保证？",a:"<b>3 个层面</b>：①模型层：统一出入口，公共逻辑下沉 DWS，一致性维度表 ②平台规范层：指标管理平台统一口径+命名/开发规范 ③质量层：表级（量级波动）+字段级（空值率/主键唯一）监控+交叉验证。"},
+{b:"指标与质量",q:"质量监控体系怎么搭？任务时效怎么保证？",a:"三类监控对象：<b>表</b>（唯一性/量级波动）、<b>字段</b>（空值率/数值枚举范围）、<b>任务</b>（重要任务挂基线，报错/延迟即告警）。治理四步：规范制定→内部宣讲→事后复盘→规避问题。"},
+{b:"指标与质量",q:"一条记录=5，怎么判断它是对的？",a:"<b>4 重验证</b>：①源数据直查 ②质量监控（波动/阈值告警）③<b>多源交叉验证</b>（5个订单↔5个包裹↔库存扣减）④业务合理性（对比近30天）。"},
+{b:"指标与质量",q:"ETL 流程说一下？清洗转换怎么做的？",a:"三段式<b>抽-转-载</b>：抽取（增量/全量判断，wedata 平台）→转换→加载（增量/全量）。清洗：表级去重、字段级完整性/正确性/一致性、缺失值错误值处理。转换：格式标准化、字段拆合、关联维表、衍生指标。"},
+{b:"指标与质量",q:"怎么评价数仓做得好？",a:"三个视角：①质量：时效正确、不破基线 ②应用：口径一致、<b>模型复用率高</b>（大部分指标 DWS 直接取）③业务：有效赋能、交付效率高、数据资产价值。"},
+{b:"指标与质量",q:"大促转化率提升2.5pp 怎么做到的？怎么流程化？",a:"路径：打通跨设备 ID（idmapping）→用户行为宽表作标签底表→<b>三类标签</b>（统计类：累计消费；规则类：近30天消费>500=高价值流失人群；算法类：流失风险分）→BI 平台圈人。流程化：标签注入资产管理平台，运营拖拉拽组业务流一键执行。"},
+{b:"计算引擎",q:"Hadoop 三大组件？",a:"<b>HDFS+MapReduce+YARN</b>。HDFS 主从：NameNode 存元数据，DataNode 存数据块，<b>默认3副本</b>，一次写入多次读取。MapReduce 分而治之。YARN：RM 全局资源、NM 节点资源，AM 申请容器执行任务。"},
+{b:"计算引擎",q:"MapReduce 流程？shuffle 参与了哪些工作？",a:"map：切片→kv→环形缓冲区→溢写磁盘；reduce 拉取同 key 分区处理。Shuffle <b>map3+reduce3</b>：map 侧①分区（hash%Reduce数）②排序溢写③归并合并；reduce 侧①拷贝②归并③输入计算。"},
+{b:"计算引擎",q:"MapReduce 框架优势？",a:"<b>3 条</b>：①数据本地性（移动计算不移动数据）②容错（失败换节点重启，作业不重来）③并行海量数据。"},
+{b:"计算引擎",q:"Spark 提交后的执行流程？宽窄依赖？",a:"四步链：惰性记录 RDD 依赖→生成 DAG 逻辑计划→DAGScheduler 按宽依赖切 stage→TaskScheduler 分发 task 给 executor 线程池。宽=一父对多子（groupByKey/reduceByKey）需 shuffle；窄=一对一（map/filter）无需 shuffle。"},
+{b:"计算引擎",q:"Spark SQL 执行过程？",a:"两计划：①Catalyst 解析 SQL→逻辑计划：未解析→<b>Catalog</b> 绑定元数据→优化（<b>谓词下推、列值剪裁</b>）②逻辑→物理计划，<b>Tungsten 生成字节码</b>→转 RDD 集群执行。"},
+{b:"计算引擎",q:"Spark 相对 MapReduce 的优势？（重点）",a:"<b>5 条，前3重点</b>：①基于内存计算 vs 磁盘 IO ②DAG 执行引擎 vs 固定两阶段 ③Lineage 血缘容错（只重算丢失分区）④多线程 vs 多进程（省 JVM 启动）⑤shuffle 非必要不排序。"},
+{b:"计算引擎",q:"RDD 怎么理解？",a:"弹性分布式数据集，三切面：①<b>依赖</b>：宽窄依赖划分 stage ②<b>容错</b>：血缘重算不从头回溯 ③<b>操作</b>：转换算子（map/filter/join，惰性）+行动算子（count/collect，触发计算）。"},
+{b:"计算引擎",q:"数据倾斜怎么优化？（必考）真实 case？",a:"三类三招：①<b>聚合倾斜</b>→两阶段聚合+加盐打散 ②<b>join 倾斜</b>→大表小表广播/热点分离加盐（两表都加）；大表大表<b>分桶 join</b> 免 shuffle ③<b>空值倾斜</b>→随机值替换/分离处理 UNION ALL。捷径：Spark3 开 AQE。case：个别 task 慢→UI 判断→group by 查量级发现百万级 vs 常态几千→清历史数据。"},
+{b:"计算引擎",q:"系统优化整体框架？参数优化四点？",a:"三分类<b>参数/倾斜/SQL</b>；记不住就按流程说：读取阶段（分区列剪裁）→计算阶段（加盐聚合、join 优化、with 替子查询）。参数四点：executor 核数内存、shuffle 分区数（默认200，瓶颈在内存适当调大）、AQE、小文件自动合并。"},
+{b:"计算引擎",q:"Spark shuffle 演进？默认哪种？3种写入器？",a:"<b>Hash(M×R 爆炸)→合并 Hash(Core×R)→Sort(默认，2×M：1数据+1索引)</b>。Sort 内部 3 写入器自动选：①Bypass（无聚合+分区≤200）②Unsafe（无聚合+二进制排序省内存，分区≤2²⁴）③SortShuffle（通用，内存→溢写，key 排序）。"},
+{b:"计算引擎",q:"小文件过多危害与治理？OOM 区分？",a:"三危害：①NameNode 元数据内存耗尽 ②海量 task 调度开销>计算时间 ③资源利用率低吞吐降。治理：<b>事前</b> repartition/coalesce 控制数量；<b>事后</b>定期合并。OOM 分 driver（collect/加大内存）和 executor（合理分区/加大内存/调比例）。"},
+{b:"计算引擎",q:"reduceByKey vs groupByKey？",a:"一句话<b>先本地聚合再 shuffle</b>——groupByKey 全量走网络性能差；reduceByKey 节点内先聚，大幅减少 shuffle 量。"},
+{b:"计算引擎",q:"Flink 四大关键特性？数据湖/湖仓一体？",a:"Flink 主从（JM 调度/checkpoint，TM 计算），<b>4 特性</b>：①时间语义（事件/处理/摄入，处理乱序）②水位线（事件时间进度标记，决定窗口触发）③状态管理（内存/RocksDB）④checkpoint（异步快照→HDFS，精准一次）。湖：原始格式全存，<b>Schema-on-Read</b>，灵活但治理难；湖仓一体三优势：事务支持/开放格式/流批统一。"},
+{b:"计算引擎",q:"UDF 写过吗？写过哪两个？",a:"spark sql 的 udf。例①getLastMonthDays 上月天数：上月第一天+1月-1天求差值。例②getUpdateCycle 表更新周期：按分区字段数据长度判断日/周/月更。"},
+{b:"SQL套路",q:"三个排名函数的区别？",a:"数据 a,b,b,c,c：<b>ROW_NUMBER=1,2,3,4,5（不并列）；DENSE_RANK=1,2,2,3,3（并列不跳号）；RANK=1,2,2,4,4（并列跳号）</b>。另有 lead/lag over、聚合 over。"},
+{b:"SQL套路",q:"分区 vs 分桶？分桶函数和场景？",a:"分区=HDFS <b>目录</b>，分桶=目录里的<b>文件</b>；有分桶直接定位文件少扫描。函数：ntile over、hash。场景：①大表 join 按 key 分桶，同 key 落同号桶免 shuffle ②高效随机抽样。"},
+{b:"SQL套路",q:"行转列 / 列转行？",a:"行转列=<b>max(case when subject='数学' then score end)+group by 学生</b>；列转行=多段 union all，每段固定 subject 字面量。"},
+{b:"SQL套路",q:"中位数怎么求？",a:"两法：①row_number 排名+count(*) over 总数，<b>取 rnk in (floor((n+1)/2), ceil((n+1)/2))</b> 再 avg ②percentile_approx(salary, 0.5) 近似。"},
+{b:"SQL套路",q:"直播间最大在线人数？",a:"套路<b>enter=+1，leave=-1，按时间累计求和取 max</b>：先 group by 时间点算净值 flag，再 sum(flag) over(order by time) 得在线曲线，取 max。"},
+{b:"SQL套路",q:"最大连续登录天数？间隔1天也算连续？连续登录月？",a:"核心套路<b>日期减排名=连续组号</b>：date_sub(login_date, row_number()) 相同即连续→group 组号 count→max。间隔1天算连续：改 lag+<b>date_diff≤2 打标</b>，sum(flag) over 生成组号。连续月：按 yyyy-MM 去重取月首日，date_sub(月首日, interval rnk month) 分组。"},
+{b:"SQL套路",q:"双向好友对数怎么统计？",a:"两法：①自 join 反转匹配+<b>where f1.user1 &lt; f1.user2</b> 防重复计数 ②每对按小大归一 group by 后 <b>having count(*)&gt;1</b> 即双向。"},
+{b:"SQL套路",q:"留存率 / TopN / 连续3次 / 波峰波谷？",a:"一套思路：<b>留存</b>：min(event_date)=注册日→date_add(register,n)=event_date 打标→人数比值；<b>TopN</b>：row_number over(partition by 部门 order by 薪资 desc)≤N；<b>连续3次</b>：id-row_number() over(partition by num) 分组 having count≥3；<b>波峰波谷</b>：lag/lead 取前后价 case when 双向比较。"},
+{b:"Doris与叙事",q:"Doris 整体架构？",a:"<b>FE+BE</b> 两类节点。FE（Frontend）：元数据管理、查询解析、查询规划、集群管理——大脑；BE（Backend）：数据存储和查询执行——肌肉。元数据用 <b>BDB JE（类 Paxos 多数派）</b>保证一致性。"},
+{b:"Doris与叙事",q:"Doris 为什么快？（MPP 关键词）",a:"<b>3 个快</b>：①MPP 架构：多节点并行，多副本分摊查询 ②列存+前缀索引（有序稀疏索引）加速过滤 ③预聚合模型：建表即选定聚合方式，查询直接读结果。"},
+{b:"Doris与叙事",q:"Doris 三种数据模型？",a:"①Duplicate：不去重存明细 ②Aggregate：建表指定聚合（SUM/MAX/MIN/REPLACE）预聚合 ③Unique：主键唯一，REPLACE 语义更新。选型口诀<b>明细用 Duplicate、报表用 Aggregate、更新用 Unique</b>。"},
+{b:"Doris与叙事",q:"Doris 分区分桶怎么设计？",a:"两层：<b>分区按时间/范围切</b>（利于裁剪、冷热分离）；<b>分桶按高基数 join key 哈希</b>，桶数经验值=BE数×核数左右，单桶 1-10G 为佳。"},
+{b:"Doris与叙事",q:"Doris 和 Hive 系数仓怎么分工？",a:"<b>Hive/Spark 管离线批量加工</b>（T+1 大规模 ETL），<b>Doris 管交互式查询和高并发报表</b>（亚秒级）。链路：DWD/DWS 结果经 Broker Load/例行导入进 Doris 对外服务。关键词<b>湖仓加工、MPP 服务</b>。"},
+{b:"Doris与叙事",q:"讲一下你最擅长的项目（叙事框架）？难点？",a:"<b>基建10个月+质量2-3个月</b>：①调研1-2月：数据域、分层、命名规范 ②建设：ODS 1-2/DWD 2-3/DWS 2-3/ADS 1-2月 ③质量规则+告警+报表2-3月，之后日常迭代。难点：指标不一致（模型/规范/监控三层解）、数据质量差（质量监控+交叉验证）；兜底说复杂业务抽象建模。"},
+{b:"Doris与叙事",q:"开放题三板斧：棘手问题/职业发展/数仓未来？",a:"①棘手问题：口径对不齐被投诉→统一机制平台+公共逻辑下沉 DWS ②职业发展：内部基建→数据理解→赋能业务价值/结合 AI ③数仓未来 AI 三方向：开发提效（补全纠错）、智能答疑（知识库扫描）、ChatBI 智能体（说需求即出数）。"},
+];
+const DETAILS = [
+"【一句话】**业务过程 × 一致性维度 = 交点**——行是业务过程，列是一致性维度。\n【标准回答】总线架构可以看作是业务过程和维度的交点，行代表业务过程，列代表一致性维度。设计分三步走：①划分数据域，确立数据域下的业务过程；②确定公共一致性维度以及度量（历史累计）；③再确定业务过程同维度之间的关联关系，判断该业务过程是否包含对应维度。\n【数字钩子】三步：**分域定过程 → 定公共维度与度量 → 判关联**\n【追问】**能举个 case 吗？** → 订单数据域中「交易成功」这个业务过程：每行可分解成下单、支付、发货、确认发货；每列的一致性维度可以是商品、品牌、类目 的 ID 和名称，购买城市、成交金额等。\n【追问】**总线架构到底解决什么问题？** → 让不同事实表共享同一套一致性维度，指标口径统一，避免重复建设。它是 OneModel 落地「模型统一」的载体。\n【提醒】case 属于「非必要不回答」，标准回答说完再等面试官追问。",
+"【一句话】三种划分方式里选**业务划分**——因为数仓没有太多跨部门数据。\n【标准回答】划分方式主要有 3 种：部门职能划分、系统划分、业务划分。①我们数仓没有太多跨部门的数据，所以排除部门划分；②系统划分更多用于传统数仓，比如电信、证券、基金，系统比较稳定、系统之间耦合性低、易于划分；③我们主要根据业务划分主题域——对业务进行抽象和归类，从业务中识别核心实体（用户、商品、订单）和动作（浏览、下单、退款），进一步组合成用户域、商品域、订单域等。\n【数字钩子】**部门 / 系统 / 业务，三选一选业务**\n【追问】**为什么不按系统划分？** → 我们业务系统之间耦合高、变更频繁，按系统切会导致同一业务实体散落在多个域。\n【追问】**业务划分具体怎么落地？** → 抽象 = 核心实体 + 动作，实体和动作做笛卡尔组合再收敛成域。",
+"【一句话】不同事实表**共享同一套维度表**，统一定义 + 唯一主键。\n【标准回答】一致性维度表是在数仓中提供统一的业务视角：不同的事实表直接共享同一套维度表，并且具有统一定义和唯一主键。收益是保证数据的准确性、提高数据的复用性、降低开发和维护成本。\n【数字钩子】**一表三收益：准确性 ↑、复用性 ↑、成本 ↓**\n【追问】**本质是什么？** → 提供**统一的业务视角**，让「商品」「用户」在所有事实表里含义完全一致。\n【追问】**和普通维表的区别？** → 普通维表服务于单张事实表；一致性维度表是全域公共资产，主键唯一、定义统一、可被任意事实表引用。",
+"【一句话】消除指标歧义——**一个指标一个口径**。\n【标准回答】一致性事实表是为了消除指标歧义，拥有唯一的指标定义，确保业务指标的计算口径和单位统一。比如「销售额」这个指标，是否包含运费、是否扣除退款，在一致性事实表中要确定唯一口径计算，后续相关指标聚合计算再在此基础上派生计算。\n【数字钩子】**先定原子指标口径，派生指标再往上长**\n【追问】**和一致性维度表是一对吗？** → 是，两者都是 OneData 落地产物：维度表管「怎么看」，事实表管「怎么算」。\n【追问】**举个被口径坑过的例子？** → 业务方看到的销售额含运费，财务口径不含，两边对不上——一致性事实表就是把这个口径提前钉死。",
+"【一句话】阿里方法论，目标「统一、规范、可共享」——**OneModel / OneID / OneService**。\n【标准回答】OneData 是阿里巴巴提出的数据体系设计方法论，目标是建立统一、规范、可共享的全域数据体系，实现数据口径的一致性和资产的复用性，减少数据的冗余和重复性建设。\n- **OneModel（模型统一）**：建立统一的数据模型设计规范，包括分层、数据域划分和总线矩阵构建，确保数据在模型层面是标准化的\n- **OneID（实体统一）**：为核心业务实体赋予跨系统、跨业务的唯一标识\n- **OneService（服务统一）**：对外提供统一的数据服务接口，强调数据的复用性，保证数据出口的一致性\n【数字钩子】**三个 One：模型 / 实体 / 服务**\n【追问】**和总线架构什么关系？** → 总线矩阵是 OneModel 的落地工具，一致性维度/事实表是它的产出。",
+"【一句话】对比句「**业务驱动 vs 数据驱动**」。\n【标准回答】Kimball 模型是业务驱动，基于业务快速构建数据集市、高效交付数据；表分为事实表和维度表，用到的数据结构是星型模型和雪花模型。范式模型是数据驱动，旨在构建企业级数据模型，最开始就做全局设计，尽量避免数据冗余，构建周期长。\n【数字钩子】维度建模四步：**选业务过程 → 声明粒度 → 确定维度 → 确定事实**（口诀：**过程-粒度-维度-事实**）\n【追问】**四步分别是什么？** → ①需求分析选择业务过程，抽象出实体（用户/订单/商品）和动作（浏览/下单/退款）；②声明粒度，确定每一行是什么粒度的数据；③确定维度（商品、用户等）；④确定事实，即最终可分析的度量值。\n【追问】**你们用的哪个？** → 以 Kimball 为主快速交付，同时用 OneData 的一致性约束做全局规范，避免烟囱式集市。",
+"【一句话】星型 = **一层**维表 + 空间换时间；雪花 = 多层维表 + 省存储伤查询。\n【标准回答】星型模型主要是一张事实表 + 多个维度表，维度表允许部分字段冗余，用空间换时间，取数或计算更方便高效；雪花模型是一张事实表 + 多个层级的维度表，存储上更有优势，但取数计算可能需要多层 join，影响查询性能。\n【追问】**有具体 case 吗？** → 订单这个实体：星型模型以下单表作事实表，维度表是商品、用户维表等；雪花模型中商品维度表可以进一步延伸出行业、类目等维度表。\n【追问】**还有其他模型吗？** → **星系模型**，可以看作星型模型的集合，多张事实表共享同一套维度表（本质上就是总线架构的图形表达）。",
+"【一句话】会跨域，但**主体边界明确**，实体宽表必然跨域。\n【标准回答】由于历史原因，DWS 存在很多跨域的情况，但是表的主体边界还是比较明确的。比较特殊的是像用户、商家这种实体宽表，一定会跨域。\n【数字钩子】**历史原因会跨，实体宽表必跨**\n【追问】**为什么不彻底消灭跨域？** → 用户/商家这类实体的属性天然横跨所有业务过程，强行拆分会造成大量重复关联，得不偿失。\n【追问】**跨域有什么风险？** → 口径容易散、归属不清、复用混乱——所以要用一致性维度表 + 公共逻辑下沉来兜。",
+"【一句话】三条经验：**高内聚低耦合、公共逻辑下沉 DWS、核心/扩展模型分离**。\n【标准回答】大概有 3 个方面的经验：\n- **高内聚低耦合**：各主题域/层级中的数据集中处理，处理基础明细表时粒度划分到最细，方便后续上卷维度计算。主要从数据业务特性和访问特性两个角度考虑：将业务相近或相关、粒度相同的数据设计为一个逻辑或物理模型；将高概率同时访问的数据放一起，低概率同时访问的分开存储。\n- **公共逻辑下沉**：常用计算指标下沉到 DWS，方便各方人员取数，且保持口径一致。\n- **核心模型和扩展模型分离**：当表字段过多，按关注点分离原则拆成一张核心表和多张扩展表。比如构建下单事实表时，把商品 ID、订单金额、运费等高复用字段放核心模型；促销标签、渠道详情等低复用字段放扩展模型。\n【数字钩子】**三招：聚合 + 下沉 + 分离**\n【追问】**字段命名有什么要求？** → 具有相同含义的字段在不同表中的命名必须相同，必须使用规范定义中的名称。",
+"【一句话】口诀「**贴源 - 明细 - 汇总 - 应用**」。\n【标准回答】\n- **ODS（Operational Data Store）贴源层**：同构抽取，几乎就是原始数据，只多了数仓技术字段（分区字段、数据来源）\n- **DWD（Data Warehouse Detail）明细层**：对原始数据做清洗、转换、维度退化，根据业务过程把原始表拆解成事实表，比如订单拆成下单表、支付表、退款表等\n- **DWS（Data Warehouse Summary）汇总层**：在一定粒度上做轻度汇总，比如商家×用户、商家×渠道、商家×商品，算下单/支付人数、商品数、客单价、笔单价\n- **ADS（Application Data Service）应用层**：面向应用服务做汇总，如经营分析、用户画像、商品分析，用于报表数据展示\n【数字钩子】**贴源-明细-汇总-应用（ODS-DWD-DWS-ADS）**\n【追问】**DWS 和 ADS 怎么区分？** → DWS 是模型层，放通用指标和维度属性；ADS 偏应用层，主要是报表、响应前端，做个性化拼接。",
+"【一句话】表数量给区间，主题域记**7 个**。\n【标准回答】ODS：100-200 张表；DWD：100 张左右；DWS：150 张左右；ADS：上百到上千张都有；DIM：150 张左右。主题域 7 个：**用户、行为、商品、广告、订单、触点、商家**。\n【数字钩子】**1-2 / 1 / 1.5（百张）· 七域**\n【追问】**数字要背这么精确吗？** → 不用精确，给区间即可，体现你清楚量级和域划分。\n【追问】**业务梳理靠什么工具？** → Xmind 思维导图梳理业务流（《有数业务流》）。",
+"【一句话】把关键维度属性**直接冗余进事实表**。\n【标准回答】将关键的维度属性直接冗余到事实表中。三类适合退化：①**高基数维度属性**（维度值多、唯一性强，如订单编号、发票号码）②**简单维度**（只有简单几条记录，如订单状态、优惠券类型）③**高复用维度属性**（如交易时间戳）。\n【数字钩子】**高基数 / 简单维 / 高复用，三类可退化**\n【追问】**退化的力度怎么把握？** → **DWD 层谨慎退化**，保证数据的原子性和一致性；**DWS 层积极退化**，为了优化查询性能。\n【追问】**为什么高基数反而适合退化？** → 高基数维表本身巨大，join 收益低、代价高；直接冗余到事实表反而省掉一次大表关联。",
+"【一句话】四步：**识别维度 → 定主键和属性 → 维度退化 → 缓慢变化维**。\n【标准回答】基于业务需求和场景：①识别具体维度（维度源表一般从 ODS 层获取）；②确定主维度和相关属性——确定维度的业务主键并保证唯一，同时列出与维度相关的描述性属性，比如商品维度主键是 sku，属性包括品类、品牌等；③维度退化的处理，尽量将维度属性冗余到表中；④缓慢变化维的处理（SCD1、SCD2、SCD3...）。\n【数字钩子】**识维 → 定键 → 退化 → 拉链**\n【追问】**维度表为什么不做明细表？** → 用户域、商品域在 DWD 只做维表不做明细表——实体本身没有「业务过程」，只有属性变化。",
+"【一句话】三招：**覆盖 / 新加一行 / 新加一列**。\n【标准回答】\n- **覆盖**：直接覆盖原有数据。主要场景是历史数据存在错误，比如手机号注册错误\n- **新加一行**：用起始时间、有效时间字段来标记数据的生命周期（拉链表的基础）\n- **新加一列**：将历史数据写到新增的字段中去（适合变化次数少、取值有限的维度）\n【数字钩子】**SCD1 覆盖 / SCD2 加行 / SCD3 加列**\n【追问】**你们主要用哪种？** → SCD2 为主（拉链表），保证历史可追溯；SCD1 只用于纠错场景。\n【追问】**SCD2 的代价？** → 数据量膨胀 + 查询必须带时间条件，否则会取到多条。",
+"【一句话】用**起始时间 + 有效时间**标记生命周期，新数据开链、老数据闭链。\n【标准回答】拉链表记录数据的生命周期，用起始时间、有效时间字段来标记，分**开链**和**闭链**。插入新数据时，起始时间是今天、有效时间设置无穷大（如 9999-12-31），同时更改历史数据的有效时间字段完成闭链。\n【数字钩子】**新开链、老闭链、无穷大收尾**\n【追问】**为什么用拉链表而不是每天全量快照？** → 全量快照每天存一份，存储爆炸；拉链只在属性变化时新增一行，大幅省存储。\n【追问】**怎么取某天的历史快照？** → `where start_date <= '2024-01-01' and end_date > '2024-01-01'`。",
+"【一句话】三种：**事务 / 周期快照 / 累计快照**。\n【标准回答】除了事务事实表，还有**周期快照事实表**和**累计快照事实表**。\n- **周期快照**：记录一个周期最后的数据状态，数据产出按周期时间来，比如月表是一个月产出一次\n- **累计快照**：每一行是一个业务的生命周期，包含业务全流程，比如订单业务从下单、支付、收货、售后都包括在这一行数据中\n【数字钩子】**事务看事件、周期看状态、累计看一生**\n【追问】**累计快照的事实字段怎么变？** → 行内各里程碑时间随流程推进不断被更新（下单时间 → 支付时间 → 发货时间 → 收货时间）。",
+"【一句话】**用更宽的时间范围筛选**，再按「状态 + 业务时间 = 昨天」增量写入。\n【标准回答】事务事实表的原始数据和事实表基本都是每天增量写入的，所以 DWD 处理时会用更广的时间范围筛选数据。比如退款周期是 15 天，就会筛选过去一个月的数据，然后选取状态为退款、并且退款时间为昨天的数据增量写入表中。\n【数字钩子】**窗口 ≥ 业务周期（15 天 → 筛 1 个月）**\n【追问】**为什么不能只看昨天？** → 因为退款可能在支付后 15 天才发生，只看昨天会漏掉今天才变成「已退款」的老订单。\n【追问】**这类表的难点？** → 状态会变，必须按业务时间（而非入库时间）回溯，所以要留足回看窗口。",
+"【一句话】放 **DWD**——只是明细多表关联，没做聚合。\n【标准回答】在 DWD 层，每一行数据是全链路的明细宽表，这里还不涉及聚合操作，只是明细数据，所以放在 DWD 层。\n【追问】**字节有 DWM 层，为什么不放 DWM？** → 我们为了简化模型层级没有设计 DWM 层。概念上：DWM 是数据粒度保持不变或轻度聚合（保留与原始数据相同粒度，通过多表关联形成宽表）；DWS 是高度聚合（按天、地区、商品、类目等维度汇总）。\n【追问】**放 DWD 层字段会越来越多怎么办？** → ①用核心模型和扩展模型分离，按优先级和产出时间拆成一张核心表 + 多张扩展表；②技术层面用数据湖（Iceberg）承载宽表和 schema 演进。\n【数字钩子】**不聚合 = DWD；粒度不变 = DWM；高度聚合 = DWS**",
+"【一句话】关键词「**数据回刷**」——回刷过去 30 天，下单表左连各状态表取事件时间。\n【标准回答】①先根据最细业务过程建立下单、支付、发货、收货的**单事务事实表**，不同状态数据放在不同时间分区中；②再建立全流程的**多事务事实表**，回刷过去 30 天数据，用下单作为左表，关联支付、发货、收货，获取完整流程，并回刷到对应分区。\n【数字钩子】**单事务铺底 → 多事务回刷 30 天**\n【SQL 套路】INSERT OVERWRITE ... PARTITION(order_date) + 多个 LEFT JOIN + CASE WHEN 定位 current_status：\n```\nINSERT OVERWRITE TABLE order_process_status_wide PARTITION(order_date)\nSELECT o.order_id, o.order_time, p.pay_time, d.deliver_time, r.receive_time,\n       ra.refund_apply_time, rf.refund_finish_time,\n       CASE WHEN rf.refund_finish_time IS NOT NULL THEN 'refund_finished'\n            WHEN ra.refund_apply_time IS NOT NULL THEN 'refund_applied'\n            WHEN r.receive_time IS NOT NULL THEN 'received'\n            WHEN d.deliver_time IS NOT NULL THEN 'delivered'\n            WHEN p.pay_time IS NOT NULL THEN 'paid'\n            ELSE 'created' END AS current_status,\n       o.order_date\nFROM order_create_fact o\nLEFT JOIN order_pay_fact p ON o.order_id = p.order_id\nLEFT JOIN order_deliver_fact d ON o.order_id = d.order_id\nLEFT JOIN order_receive_fact r ON o.order_id = r.order_id\nLEFT JOIN order_refund_apply_fact ra ON o.order_id = ra.order_id\nLEFT JOIN order_refund_finish_fact rf ON o.order_id = rf.order_id\nWHERE o.order_date BETWEEN '${start_date}' AND '${end_date}';\n```\n【追问】**平均时效怎么算？** → 各环节时间差（支付-下单、发货-支付、收货-发货）再按订单聚合 avg。",
+"【一句话】骨架句「**目标 → 策略 → 度量**」。\n【标准回答】OSM 主要是确定目标，再根据目标制定策略，最后根据指标量化评估策略的执行效果。\n目标 O：提升交易规模 GMV 和效率。\n策略 S 可以是：①提高订单数量（用户数、转化率）②提高订单金额（客单价）③降低订单取消和退款率（提升交易质量）④提升履约效率（配送时效、退货处理时效）。\n指标分级管理：\n- **一级指标（战略）**：GMV（商品交易总额）、订单完成金额（实际支付金额，剔除退款）\n- **二级指标（策略）**：订单数量（下单/支付/退款订单数）、订单金额（下单/支付/退款金额）、转化率（下单转化率 = 下单用户数/访问用户数；支付转化率 = 支付用户数/下单用户数）、客单价（支付金额/支付用户数）、退款率（退款金额/支付金额）\n- **三级指标（执行/诊断）**：按渠道（APP/小程序/PC）、品类商品、新老用户、地区、时间段拆分的订单指标，用来快速定位二级指标波动原因\n【数字钩子】**一战略、二策略、三诊断**",
+"【一句话】UJM 是**用户旅程地图**；OSM 定宏观目标，UJM 把策略落到每个触点。\n【标准回答】UJM 是一种通过描述用户首次接触产品/服务，到实现核心目标（下单、复购），乃至最终建立忠诚度的完整行为路径，来构建数据指标体系的方法论——以用户为中心，确保指标体系紧密围绕用户体验构建。局限是：用户真实体验可能是非线性的，模型可能过于简化，某些触点数据难以采集和量化。\n与 OSM 的关系：OSM 定义了业务的宏观目标，UJM 对它进行具体化，通过梳理用户旅程，把「我们应该如何做」的策略，转化为用户旅程中每个触点具体的优化点和可衡量的指标。二者可以协同：**OSM 定目标、UJM 定路径**。\n【case】目标是提升 GMV，从 UJM 看路径是：了解平台 → 浏览商品 → 产生兴趣 → 付费下单 → 分享复购。以「支付环节」为例拆解六要素：\n- 用户行为：选择商品、填写收货地址、选择支付方式、确认付款\n- 业务目标：降低支付环节流失率，提升下单成功率\n- 接触点：订单确认页、支付方式选择页、收银台\n- 潜在痛点：支付流程繁琐、支持方式少、页面加载慢\n- 机会点：优化一键支付、接入更多主流支付工具、提升页面性能\n- 衡量指标：下单转化率、支付成功率、订单流失率、平均支付时长\n【数字钩子】UJM 六要素：**行为 / 目标 / 触点 / 痛点 / 机会 / 指标**",
+"【一句话】三个层面：**模型层 → 平台规范层 → 质量层**。\n【标准回答】\n- **模型层面**：让数仓整体把控数据的入口和出口。在 DWD 层统一接入不同类型数据源；数据出口统一将公共逻辑下沉到 DWS，供业务方使用。越靠近数据源，封装的逻辑越通用；越靠近应用层，只做个性化拼接、不做重复计算。同时建立一致性维度表，保证所有事实表共享一套维度表。\n- **平台和规范机制**：通过指标管理平台保证指标统一的生产消费定义；一开始就设定指标开发规范、命名规范。\n- **数据质量层面**：配置表级别（数据量波动）、字段级别（空值率、主键唯一性、数值范围）的质量监控，或做交叉验证。\n【数字钩子】**模型管入口出口、平台管口径规范、质量管监控校验**\n【追问】**哪一层最关键？** → 模型层——越上游越省事，下游靠监控只能事后发现。",
+"【一句话】按**表 / 字段 / 任务**三个对象监控；老板追问就答治理四步。\n【标准回答】分别从表、字段、任务来监控数据质量：\n- **表级别**：监控数据的唯一性、数据量级的波动\n- **字段级别**：监控核心字段的空值率、正确性（数值范围是否正确、格式或枚举值范围是否正确）\n- **任务时效性**：对重要任务挂载基线来保证链路的产出，如果任务报错或延迟产出就告警出来\n- **一致性**：做一些交叉验证的操作来保证数据一致性\n【追问】**如果老板问你怎么治理？** → **规范制定 → 内部团队宣讲 → 事后复盘 → 规避问题**。\n【数字钩子】监控三对象：**表 / 字段 / 任务**；治理四步：**定规 / 宣讲 / 复盘 / 规避**",
+"【一句话】四重验证：**源数据 → 质量监控 → 多源交叉 → 业务合理性**。\n【标准回答】从源数据、质量监控、多源交叉验证、业务合理性等多方面进行验证：\n- **源数据**：直接查看原始数据，判断当前结果是否正确\n- **质量监控**：波动或阈值监控，看其他指标是否有异常，比如订单突然增长几倍会触发告警\n- **多源交叉验证**：通过其他数据源判断当前结果是否合理。比如 5 个订单，判断物流是否有 5 个包裹、商品库存是否有相应减少\n- **业务合理性**：和过去比如近 30 天相比，数据是否有明显异常\n【数字钩子】**源 / 控 / 叉 / 理——四重验证**\n【追问】**只能选一个做验证怎么办？** → 交叉验证最有说服力，因为它是独立的第二数据源。",
+"【一句话】三段式「**抽-转-载**」；清洗看表级+字段级，转换四件事。\n【标准回答】\n- **数据抽取**：从业务系统获取原始数据，根据数据量和业务判断是增量抽取还是全量抽取，用内部 wedata 平台完成\n- **数据转换**：把原始数据加工成符合数仓模型和质量要求的数据，主要做清洗和转换\n- **数据加载**：将满足质量的数据加载到数据仓库目标表，方式分增量加载和全量加载\n【数据清洗】表级别的唯一性（是否需要去重）；字段级别的完整性、正确性、一致性；对缺失值、错误值的处理。\n【数据转换】①格式标准化（日期、金额）②字段拆分/合并（按目标表结构调整）③数据关联（关联维度表获取维度属性）④计算衍生指标（按业务规则生成新字段，如销售额）。\n【数字钩子】**抽-转-载；清四查、转四步**",
+"【一句话】三个视角：**质量、应用、业务**。\n【标准回答】\n- **质量方面**：数据产出时效性、正确性高，没有破基线\n- **应用层面**：数据口径一致性高；模型复用率高——大部分指标可以直接在 DWS 层取到数据\n- **业务角度**：可以对业务有效赋能，开发交付效率更高，体现数据资产价值\n【数字钩子】**不破线、能复用、有赋能**\n【追问】**如果只能说一个指标？** → 模型复用率——它同时反映建模质量、口径统一程度和交付效率。",
+"【一句话】路径：**打通 ID → 行为宽表 → 三类标签 → BI 圈人**；流程化靠资产管理平台拖拉拽。\n【标准回答】大促期间经过一些营销手段之后，订单成交率中用户是新用户的增加了 2.5 个百分点。主要是从数据角度对业务赋能：基于现有人群建设用户画像标签，把标签提供给下游策略或挖掘同学，他们去做运营动作，从而帮助大促营销转化率提升 2.5 个百分点。\n具体工作三步：\n- **数据基础建设**：打通用户跨设备 ID（基于已有的 idmapping 表），制作用户基础行为事件的宽表，作为标签加工的底表\n- **标签设计和开发**：按业务目标设计标签体系，分三类——**统计类**（统计现有事实指标，如累计消费金额）、**规则类**（和运营确定计算规则，如「高价值流失人群」= 近 30 天累计消费金额大于 500 元）、**算法类**（算法同学把模型结果接入标签体系，如用户流失风险分）\n- **产品化赋能**：数据放到内部 BI 平台，运营勾选标签圈定人群包，展开特定运营动作\n【追问】**这种一次性需求怎么流程化？** → 把所有标签注入资产管理平台，运营拖拉拽形成业务流（先拽 35 岁男性、城市北方 → 下发优惠券），点一下执行整个业务流就跑起来。\n【数字钩子】**ID 打通 → 宽表 → 三类标签 → 圈人 → 拖拉拽流程化**",
+"【一句话】**HDFS + MapReduce + YARN** 三大组件。\n【标准回答】\n- **HDFS**：采用主从（Master-Slave）架构，NameNode 承担 Master 角色，存储文件系统元数据（目录结构、文件分块信息等），不存储实际数据；DataNode 存储真实数据块，并定期向 NameNode 汇报健康状况。所以非常适合一次写入多次读取的场景。默认将数据块复制 3 份到不同节点，任务计算失败后 YARN 会自动在另外的节点重新调度执行。\n- **MapReduce**：采用分而治之的思想，分为 map 和 reduce 两个阶段计算。客户端提交 job，map 阶段将文件切片并解析成 <key,value> 键值对，执行 map 函数后写到环形缓冲区，再溢写磁盘；map 完成后启动 reduce 任务，拉取对应分区数据，对相同 key 处理后再外写。\n- **YARN**：采用主从架构，将资源调度与计算解耦。ResourceManager 负责全局资源管控，节点上的 NodeManager 负责本节点资源。用户提交作业后，NodeManager 创建 ApplicationMaster，AM 向 RM 申请资源，然后在分配的容器中执行具体任务。\n【数字钩子】**存算调三件套：HDFS 存、MR 算、YARN 调**\n【追问】**为什么默认 3 副本？** → 平衡可靠性与存储成本，允许 2 个节点同时故障仍不丢数据。",
+"【一句话】map 三拍 + reduce 三拍，shuffle 一共**六步**。\n【标准回答】MapReduce 采用分而治之思想，分为 map 和 reduce 两阶段。客户端提交 job，map 阶段将文件切片并解析成 <key,value>，执行 map 函数后写到环形缓冲区，后面溢写到磁盘；等 map 阶段任务完成后，再启动 reduce 任务，拉取对应分区数据，每次对相同 key 进行处理，处理完成后再外写数据。\n【Shuffle 参与的六步】\n- **Map 阶段**：①**分区**——缓冲区数据快满（80%）时对数据分区，默认规则 key 的 hash % ReduceTask 数量，保证相同 key 落到同一分区；②**排序和溢写**——每个分区内部按 key 快速排序，排序后溢写到磁盘；③**合并**——map 输出很大时会多次溢写产生多个小文件，map 任务结束前对小文件归并排序合并为最终输出文件\n- **Reduce 阶段**：①**拷贝**——reduce 启动多个拷贝线程，从 map 任务节点拉取自己分区的数据；②**归并**——读取数据先放内存，达阈值后溢写磁盘，同时后台线程对小文件归并排序形成更大的有序文件，作为 Reduce 函数输入；③**输入计算**——处理并输出\n【数字钩子】**map3 + reduce3 = shuffle 六步**",
+"【一句话】三条：**数据本地性、容错、并行海量数据**。\n【标准回答】\n- **数据本地性**：框架会尽量将 map 任务分配给它需要处理的数据所在的物理节点上，减少网络开销。思想是「**移动计算而不是移动数据**」。\n- **容错机制**：如果某个 map 或 reduce 任务失败，框架会自动在另外的节点上重启它，整个作业不需要重新开始。\n- **并行处理海量数据**：分而治之，横向扩展。\n【数字钩子】**本地性 / 容错 / 并行——三条**\n【追问】**容错的代价？** → 中间结果落盘 + 任务重试，所以延迟高，这是 Spark 内存计算要取代它的原因之一。",
+"【一句话】四步链：**惰性记依赖 → DAG → 按宽依赖切 stage → 分发 task**。\n【标准回答】①用户提交 Spark 应用后，Spark 会**惰性**地记录 RDD 之间的依赖关系，在内存中构建有向无环图（DAG），即逻辑计划的生成；②DAGScheduler 分析 DAG 中的依赖关系，分为**宽依赖**（一个父分区被多个子分区依赖，如 groupByKey、reduceByKey，需要 shuffle）和**窄依赖**（一个父分区只被一个子分区依赖，如 map、filter，无需 shuffle），遇到宽依赖就划分出一个新的 stage；③再根据 stage 的分区生成对应的 task，TaskScheduler 将 task 分发给合适的 executor，executor 启动线程池并行执行。\n【数字钩子】**记依赖 → 画 DAG → 切 stage → 分 task**\n【追问】**为什么要按宽依赖切？** → 宽依赖意味着数据要跨节点重分布（shuffle），必须等上游全部产出才能开始，是天然的阶段边界。",
+"【一句话】两计划：**Catalyst 逻辑计划 → Tungsten 物理计划**。\n【标准回答】主要分逻辑计划和物理计划两步完成：\n- **第一步：Catalyst 生成逻辑计划**。Catalyst 是 Spark 核心组件（查询优化器），先将 SQL 解析成**未解析的逻辑计划**；再根据内部 Catalog（存储了所有表、字段、函数等元数据的注册中心）把抽象的表名、列名与元数据绑定；然后优化器做**谓词下推、列值剪裁**等优化，得到优化后的逻辑计划。\n- **第二步：生成和执行物理计划**。将逻辑计划转化为一个或多个物理计划，并基于 **Tungsten 生成 Java 字节码**，最终转化为 RDD 任务在集群上运行。\n【数字钩子】**解析 → 绑元数据 → 优化 → 物理计划 → 字节码**\n【追问】**谓词下推的好处？** → 把过滤条件尽量推到数据源侧，减少参与后续计算的数据量。",
+"【一句话】五条优势，**前三条是重点**。\n【标准回答】\n- **计算性能（重点）**：Spark 基于内存计算，中间结果优先存在内存；MapReduce 基于磁盘计算，每个阶段结果写入磁盘，IO 开销大。\n- **计算模型（重点）**：Spark 是 DAG 执行引擎，自动合并连续算子并优化执行顺序，允许无依赖的 stage 并行执行；MapReduce 是固定的 Map 和 Reduce 两阶段模型，无法灵活处理复杂依赖关系。\n- **RDD 容错（重点）**：通过 Lineage 机制记录 RDD 的血缘关系实现高效容错恢复，某个分区计算失败只需重算它的父分区，无需从头开始。\n- **资源管理**：Spark 采用多线程执行任务，通过线程池复用减少任务启动和资源申请开销；MapReduce 采用多进程执行任务，每个任务需要独立启动 JVM，消耗资源更大。\n- **shuffle 优化**：Spark 的 shuffle 非必要不排序（reduceByKey 排序，groupByKey 不排序）；MapReduce 强制全局排序，导致额外计算和 IO 开销。\n【数字钩子】**内存 / DAG / 血缘 / 多线程 / 懒排序**",
+"【一句话】RDD = 弹性分布式数据集，三个切面：**依赖、容错、操作**。\n【标准回答】RDD（Resilient Distributed Dataset，弹性分布式数据集）是 Spark 抽象的逻辑概念。\n- **依赖和阶段划分**：根据 shuffle 划分宽窄依赖。宽依赖——一个父分区被多个子分区依赖（如 groupByKey、reduceByKey），需要 shuffle；窄依赖——一个父分区只被一个子分区依赖（如 map、filter），无需 shuffle。\n- **容错和持久化**：每个 RDD 都记录了自己是如何从其他 RDD 转换而来，如果某个分区丢失，可以根据血缘关系重新计算丢失的数据，而不用从头回溯。\n- **操作方式**：分两类——**转换操作**（map、filter、join 算子）只记录血缘关系，并不会真正计算；**行动操作**（count、collect 算子）会触发真正计算，返回结果或输出数据。\n【数字钩子】**依赖切 stage、血缘管容错、算子分两类**\n【追问】**转换算子为什么惰性？** → 为了给优化器全局视野，可以在生成物理计划时合并算子、避免中间落盘。",
+"【一句话】三类原因对应三板斧，Spark 3 可以直接开 AQE。\n【标准回答】大致分几类原因：shuffle 聚合操作导致的倾斜、shuffle join 操作导致的倾斜、空值导致的倾斜。\n- **聚合倾斜** → **两阶段聚合 + 加盐打散**（热点 key 加随机后缀）。先在第一阶段按 user_id + 盐做局部聚合，第二阶段去盐做全局聚合。\n```\nSELECT user_id, SUM(amount) AS total_amount\nFROM (\n    SELECT user_id, CEIL(RAND() * 10) AS salt, SUM(amount) AS partial_sum\n    FROM orders WHERE dt = '2024-01-01'\n    GROUP BY user_id, CEIL(RAND() * 10)\n) tmp\nGROUP BY user_id;\n```\n- **join 倾斜**：a) 大表 join 小表 → ①**广播小表**（Broadcast Join），各节点本地 join；②识别热点 key 分离处理，非热点正常 join、热点**两表都加盐**后 join，最后 UNION ALL 合并。b) 大表 join 大表且 key 本身倾斜 → **分桶表 + 分桶 join**，按关联 key 分桶，同 key 落同号桶，直接桶对桶 join 避免 shuffle。\n- **空值倾斜** → ①用随机值代替空值（数据无法过滤时，让原本都是空值的记录无法互相匹配）；②**分离处理**，null 单独拎出来 UNION ALL。\n```\nWITH user_orders AS (\n  SELECT o.order_id, o.user_id, o.amount, u.user_name\n  FROM orders o JOIN users u ON o.user_id = u.user_id\n  WHERE o.user_id IS NOT NULL\n),\nguest_orders AS (\n  SELECT order_id, NULL AS user_id, amount, '游客' AS user_name\n  FROM orders WHERE user_id IS NULL\n)\nSELECT * FROM user_orders UNION ALL SELECT * FROM guest_orders;\n```\n【追问】**Spark 3 的捷径？** → 开启 **AQE（自适应查询执行）**，运行时自动解决数据倾斜。\n【真实 case】①质量项目：一个人把更新周期改了，任务越跑越慢。根据 Spark UI 看，大部分 task 很快、个别 task 很慢，判断是数据倾斜；对表 group by 看量级，大部分表是大几千，某张表达百万级，定位后清掉历史数据。②分析每个商品销售额：订单明细表 join 商品维表，某个热点商品在明细表出现千万次，join 时全被 shuffle 到同一节点导致倾斜。\n【数字钩子】**聚合加盐 / join 分大小表 / 空值分离——三招**",
+"【一句话】三分类：**参数 / 倾斜 / SQL**；想不起来就按数据流讲。\n【标准回答】可以从几个方面来说：参数优化、数据倾斜、SQL 优化。\n如果一时想不起上面的分类，可以按数据流说：**数据读取阶段**（列值剪裁、分区剪裁）→ **数据计算阶段**（聚合计算用两阶段加盐打散；join 关联计算按大表大表/小表分别处理；复杂查询用 with 语句代替子查询）。\n【参数优化四点】\n- **executor 的核数和内存配置**：根据集群资源情况和任务运行情况相应调整\n- **partition 的分片数量**：默认是 200，可根据作业情况调整 shuffle 默认分区数；我们的计算瓶颈更多在内存，所以一般会适当调大\n- **AQE 开启**：Spark 3 版本可以开启，运行时自动解决数据倾斜\n- **小文件自动合并**：设置对应参数\n【数字钩子】**参数四件套：核/内存、分区数、AQE、小文件合并**",
+"【一句话】三代演进：**Hash → 合并 Hash → Sort（默认）**。\n【标准回答】\n- **早期 Hash Shuffle**：每个 map 任务都会为下游每个 reduce 任务生成一个文件，产生海量小文件（M × R），实现简单无排序、性能差，已不用了。\n- **合并的 Hash Shuffle**：map 任务复用 executor 中的文件组，合并小文件，也会产生不少小文件（Core × R），没有解决根本问题。\n- **Sort Shuffle（现在默认）**：每个 map 将所有数据排序后合并，生成一个数据文件和一个索引文件，文件数量小（2 × M）；由于引入排序，会有额外的 CPU 消耗。\n【Sort Shuffle 的 3 种写入器】自动按条件选择：\n- **BypassMergeSortShuffleWriter**：当 shuffle 没有聚合操作，且分区数量小于等于合并阈值（`spark.shuffle.sort.bypassMergeThreshold`，默认 200）时触发，避免排序开销\n- **UnsafeShuffleWriter**：也是没有聚合操作，使用的序列化器支持重定位，分区数不能过大（不超过 2 的 24 次方）。将数据序列化后直接在二进制数据上排序，减少内存占用和 GC 压力\n- **SortShuffleWriter**：最通用的机制，在需要聚合或排序的 shuffle 场景中，先写内存、不够再溢写磁盘；溢写前和最后合并时都会按 key 排序，最终每个 map 任务只生成一个数据文件和一个索引文件\n【数字钩子】**M×R → Core×R → 2×M**；写入器 **Bypass / Unsafe / Sort**",
+"【一句话】三危害、两治理；OOM 先分清 driver 还是 executor。\n【标准回答】\n- **HDFS 存储层压力**：NameNode 保存每个文件的元数据，海量小文件会耗尽 NameNode 内存，影响集群性能\n- **任务开销大**：Spark 中通常一个分区对应一个任务，大量小文件会产生海量 task，任务调度耗时远超实际计算时间\n- **资源利用率低**：每个 task 的启动和销毁都需要资源开销，处理微小数据量的 task 频繁启停，无法充分利用 CPU 和内存，集群吞吐量下降\n治理分两段：**事前预防**——数据写入时用 repartition 或 coalesce 合理控制小文件数量；**事后治理**——对已存在的小文件定期合并处理。\n【追问】**OOM 怎么排查？** → 先看是 driver 还是 executor。**driver OOM**：看是否有 collect 操作把大量数据拉到本地，或适当加大 driver 内存。**executor OOM**：调整合理的分区数量避免单分区数据量过大，也可适当加大内存、调整内存分配比例。\n【数字钩子】**三危害：元数据 / 调度 / 利用率；治理：事前 + 事后**",
+"【一句话】**先本地聚合，再走 shuffle**。\n【标准回答】groupByKey 会将所有数据通过网络进行 shuffle，性能比较差；reduceByKey 先在节点内部进行本地聚合，大大减少了需要 shuffle 的数据量。\n【数字钩子】**本地先聚，网络少传**\n【追问】**那 groupByKey 还有用吗？** → 需要拿到某个 key 的全量明细（比如要按 key 收集所有值做非聚合运算）时才用，否则一律 reduceByKey。\n【追问】**还有类似的算子吗？** → combineByKey / aggregateByKey 都能先在 map 端做局部聚合，思路一致。",
+"【一句话】Flink 四特性；数据湖读时模式，湖仓一体三优势。\n【Flink】高性能、低延迟的分布式流处理框架，主从架构：JobManager 负责接收作业、调度任务、协调检查点、故障恢复；TaskManager 是实际负责计算任务的节点。四个关键特性：\n- **时间语义**：事件时间、处理时间、摄入时间。强调基于事件时间的处理，用来处理乱序或延迟数据，保证结果准确性\n- **水位线**：衡量事件时间进展的机制，是插入数据流中的特殊标记，标记「小于等于某个时间戳的数据已全部到达」，对应窗口算子可以触发对该窗口内所有数据的计算并输出结果\n- **状态管理**：提供托管状态或状态后端，将状态存储在内存或 RocksDB 中，支持有状态计算\n- **容错机制**：支持 checkpoint，定期、异步地将整个应用状态做快照并持久化到可靠存储（如 HDFS），实现精准一次的状态一致性；故障时自动从最近一次成功的 checkpoint 恢复，既不丢数据也不重复\n【数据湖】核心是一个集中式存储库，按原始格式保存企业内全量未经加工的数据，包括结构化（数据库表）、半结构化（JSON/XML/CSV）和非结构化（图片、视频、PDF）。关键特性是 **Schema-on-Read（读时模式）**——数据存入时没有预设模型，只有在需求分析时才解析和转换；处理灵活，机器学习等场景能拿到最原始最细粒度数据。代价是**治理更难**（元数据管理、质量监控、权限控制）。\n【湖仓一体】在数据湖低成本存储的基础上，构建数据仓库的管理和性能层，三大优势：**事务支持**（支持 ACID，保证并发读写一致性）、**开放性**（支持 Parquet、Delta Lake、Iceberg 等开放格式）、**流批统一**（对实时流式和批量数据提供统一支持）。\n【数字钩子】Flink 四特性：**时间 / 水位线 / 状态 / 容错**；湖仓一体：**事务 / 开放 / 流批**",
+"【一句话】UDF = UserDefinedFunction，引用的是 **spark sql 中的 udf**。\n【标准回答】全称是 UserDefinedFunction，引用的是 spark sql 中的 udf。写过两个：\n- **getLastMonthDays**（获取上个月的天数）：①获取当前日期的上个月；②获取上个月第一天；③获取上个月最后一天——用上个月第一天 + 一个月 - 一天；④获取二者之间的差值。\n- **getUpdateCycle**（获取表的更新周期）：查看表的分区字段，根据数据长度判断是日更、周更还是月更表。\n【数字钩子】**一个算日期（上月天数），一个判周期（日/周/月更）**\n【追问】**UDF 有什么性能坑？** → UDF 对优化器是黑盒，无法下推、无法做谓词推导，且逐行调用；能用内置函数就别用 UDF。\n【追问】**UDF 和 UDTF 区别？** → UDF 一行进一行出；UDTF 一行进多行出（如 explode）；UDAF 多行进一行出（聚合）。",
+"【一句话】数据 a,b,b,c,c 的结果：**ROW_NUMBER 不并列、DENSE_RANK 并列不跳号、RANK 并列跳号**。\n【标准回答】以 b 列值为 a,b,b,c,c 为例，partition by a order by b：\n- **ROW_NUMBER()** → 1,2,3,4,5（不并列，直接顺序排）\n- **DENSE_RANK()** → 1,2,2,3,3（分排名，且不会跳过）\n- **RANK()** → 1,2,2,4,4（分排名，且会跳过）\n另外还有 lead() over()、lag() over()，以及 sum/count/avg/max/min() over() 等聚合窗口函数。\n【数字钩子】**不并列 / 不跳号 / 跳号——三兄弟**\n【追问】**取 TopN 用哪个？** → 要「前 5 名」用 ROW_NUMBER（正好 5 条）；要「前 5 个分数档」用 DENSE_RANK。",
+"【一句话】分区是**目录**，分桶是**文件**；分桶函数 ntile over、hash。\n【标准回答】分区代表 HDFS 中的一个目录，分桶代表目录中的一个个文件。如果没有分桶，数据计算会扫描目录下的所有文件；有分桶只需要找到对应分桶的文件去计算。\n分桶函数：`ntile() over()`、`hash`。\n使用场景：\n- **大表 join**：对 join 的 key 进行分桶，相同的数据会落入编号相同的桶中，可以直接对编号相同的桶做连接，**减少 shuffle**\n- **高效随机抽样**：如果想要较为均匀的抽样，可以直接在不同的桶中抽取数据\n【数字钩子】**分区切目录、分桶切文件；桶对桶 join 免 shuffle**\n【追问】**分区和分桶能一起用吗？** → 能，典型是「按天分区 + 按 user_id 分桶」，先分区裁剪再桶内 join。",
+"【一句话】行转列 = **max(case when) + group by**；列转行 = **多段 union all**。\n【标准回答】业务场景：学生成绩管理系统需要把多行课程成绩转成每个学生一行的宽表，用于生成成绩单。原始数据 student_scores（student_id, student_name, subject, score），期望输出 math_score/english_score/chinese_score 三个列。\n**行转列**：\n```\nSELECT student_id, student_name,\n       MAX(CASE WHEN subject = '数学' THEN score END) AS math_score,\n       MAX(CASE WHEN subject = '英语' THEN score END) AS english_score,\n       MAX(CASE WHEN subject = '语文' THEN score END) AS chinese_score\nFROM student_scores\nGROUP BY student_id, student_name;\n```\n**列转行**：\n```\nSELECT student_id, student_name, '数学' AS subject, math_score AS score FROM student_scores\nUNION ALL\nSELECT student_id, student_name, '英语' AS subject, english_score AS score FROM student_scores\nUNION ALL\nSELECT student_id, student_name, '语文' AS subject, chinese_score AS score FROM student_scores;\n```\n【数字钩子】**转宽靠 case+max，转长靠 union all**\n【追问】**为什么外面套 max？** → group by 后每个学生每个科目只剩一个非空值，用 max 把这个值捞出来（min/sum 同样可行，因为只有一个值）。",
+"【一句话】两法：**row_number + count over 取中位序号**，或 **percentile_approx**。\n【标准回答】业务场景：统计公司员工工资的中位数，避免极端值影响。\n方法一：用 row_number 排名 + count(*) over() 取总数，筛出中位序号再求平均：\n```\nSELECT AVG(salary) AS mid_salary\nFROM (\n    SELECT employee_id, salary,\n           ROW_NUMBER() OVER(ORDER BY salary) AS rnk,\n           COUNT(*) OVER() AS total_cnt\n    FROM employee_salaries\n)\nWHERE rnk IN (FLOOR((total_cnt + 1) / 2), CEIL((total_cnt + 1) / 2));\n```\n方法二：近似分位数函数：\n```\nSELECT percentile_approx(salary, 0.5) AS mid_salary FROM employee_salaries;\n```\n【数字钩子】**奇数取中间、偶数取中间两个平均**\n【追问】**两种方法怎么选？** → 要精确值用方法一；数据量大、能接受近似用方法二（percentile_approx 可调精度参数）。\n【追问】**为什么用 floor 和 ceil 两个？** → n 为奇数时两者相等（取中间一个）；n 为偶数时分别是中间两个。",
+"【一句话】套路「**enter=+1，leave=-1，按时间累计求和取 max**」。\n【标准回答】业务场景：统计直播间在任意时刻的最大同时在线人数。\n思路三步：①给 enter 打 +1、leave 打 -1；②按同一时间点 group by 求净值（防止同一时刻多人进出）；③按时间累计求和得到在线人数曲线，取最大值。\n```\nWITH event_changes AS (\n    SELECT event_time, SUM(flag) AS net_flag\n    FROM (SELECT event_time,\n                 CASE WHEN action = 'enter' THEN 1 WHEN action = 'leave' THEN -1 END AS flag\n          FROM live_events)\n    GROUP BY event_time\n),\nonline_timeline AS (\n    SELECT event_time, SUM(net_flag) OVER(ORDER BY event_time) AS online_count\n    FROM event_changes\n)\nSELECT MAX(online_count) AS max_online_count FROM online_timeline;\n```\n【数字钩子】**进 1 出 -1，曲线顶点即峰值**\n【追问】**为什么要先 group by 时间点？** → 同一时刻可能有多人进出，先合并成净值才能保证累计曲线正确。",
+"【一句话】核心套路「**日期减排名 = 连续组号**」。\n【标准回答】业务场景：计算每个用户的最大连续登录天数。\n**基础版**：`date_sub(login_date, row_number() over(partition by user_id order by login_date))`，连续的日期减去递增的排名会得到相同的值（组号），按组号 group by 后 count(*) 就是每段连续天数，最后取 max。\n```\nSELECT user_id, MAX(cons_days) AS max_cons_days\nFROM (\n    SELECT user_id, grp, COUNT(*) AS cons_days\n    FROM (\n        SELECT user_id, login_date,\n               ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY login_date) AS day,\n               DATE_SUB(login_date, ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY login_date)) AS grp\n        FROM user_login\n    )\n    GROUP BY user_id, grp\n)\nGROUP BY user_id;\n```\n【追问】**间隔 1 天也算连续怎么做？** → 改用 lag 取上一个登录日，`date_diff(login_date, lag(login_date)) <= 2` 打 0/1 标记，再用 `sum(flag) over(partition by user_id order by login_date)` 生成组号，之后照常 group by 求 max。\n```\nWITH ranked_logins AS (\n    SELECT user_id, login_date,\n           CASE WHEN date_diff(login_date, LAG(login_date) OVER(PARTITION BY user_id ORDER BY login_date)) <= 2\n                THEN 0 ELSE 1 END AS flag\n    FROM user_login\n),\nlogin_groups AS (\n    SELECT user_id, login_date,\n           SUM(flag) OVER(PARTITION BY user_id ORDER BY login_date) AS grp\n    FROM ranked_logins\n)\nSELECT user_id, MAX(cons_days) FROM (\n    SELECT user_id, grp, COUNT(*) AS cons_days FROM login_groups GROUP BY user_id, grp\n) GROUP BY user_id;\n```\n【追问】**连续登录月数？** → 先把登录日期按 `yyyy-MM` 去重、取每月首日 `min(login_date)`，再用 `date_sub(month_start_date, interval rn month)` 分组（按「月」而不是「天」做减法），最后 count 组内月数取 max。\n【数字钩子】**日期 - 排名 = 组号；间隔 1 天用 lag + flag**",
+"【一句话】两法：**自 join 反转匹配** 或 **归一化后 having count>1**。\n【标准回答】业务场景：社交平台统计真正互为好友的用户对数，排除单向关注。\n方法一：friends 表自 join，条件是 f1.user1 = f2.user2 且 f1.user2 = f2.user1（即反转记录存在），再用 `where f1.user1 < f1.user2` 避免重复计数：\n```\nSELECT COUNT(*) AS pair_cnt\nFROM friends f1\nJOIN friends f2 ON f1.user1 = f2.user2 AND f1.user2 = f2.user1\nWHERE f1.user1 < f1.user2;\n```\n方法二：把每对关系按大小归一（小的在前），group by 后 `having count(*) > 1` 说明这条关系出现了两次（双向）：\n```\nSELECT IF(user_id < friend_id, user_id, friend_id) AS u1,\n       IF(user_id < friend_id, friend_id, user_id) AS u2\nFROM friendships\nGROUP BY u1, u2\nHAVING COUNT(*) > 1;\n```\n【数字钩子】**归一 + 计数 = 双向；小在前大在后 = 防重复**\n【追问】**方法二为什么能识别双向？** → 双向关系会生成两条记录，归一后变成完全相同的两行，计数自然为 2。",
+"【一句话】四个高频题一套思路：**留存打标、TopN 排名、连续 3 次分组、波峰波谷比前后**。\n【标准回答】\n- **留存率**：先取 `min(event_date)` 作为注册日，再判断 `date_add(register_date, n) = event_date` 打标，最后算次日/7 日/30 日人数比值。\n- **TopN（分数前五）**：`ROW_NUMBER() OVER(PARTITION BY subject ORDER BY score DESC) <= N`，注意排名函数的选择（要严格 N 条用 row_number，要并列档位用 dense_rank）。\n```\nSELECT * FROM (\n    SELECT student_id, student_name, subject, score,\n           ROW_NUMBER() OVER(PARTITION BY subject ORDER BY score DESC) AS rnk\n    FROM student_scores\n) WHERE rnk <= 5;\n```\n- **连续出现 3 次**：`id - ROW_NUMBER() OVER(PARTITION BY num)` 得到组号，group by 组号 `having count(*) >= 3`。\n- **波峰波谷**：用 lag/lead 取出前后价格，case when 双向比较——price >= 前且 >= 后为波峰，price <= 前且 <= 后为波谷。\n```\nSELECT date, price,\n       CASE WHEN price >= LAG(price) OVER(ORDER BY date)\n             AND price >= LEAD(price) OVER(ORDER BY date) THEN '波峰'\n            WHEN price <= LAG(price) OVER(ORDER BY date)\n             AND price <= LEAD(price) OVER(ORDER BY date) THEN '波谷' END AS price_type\nFROM stock_prices;\n```\n【数字钩子】**留存看日期差、TopN 看排名、连续看组号、峰谷看前后**",
+"【一句话】**FE + BE** 两类节点——FE 是大脑，BE 是肌肉。\n【标准回答】Doris 整体架构分 FE 和 BE 两类节点：\n- **FE（Frontend）**：负责元数据管理、查询解析、查询规划、集群管理，类似「大脑」\n- **BE（Backend）**：负责数据存储和查询执行，类似「肌肉」\n元数据用 **BDB JE（类 Paxos 多数派）** 保证一致性。\n【数字钩子】**FE 管算、BE 管存；元数据靠 BDB JE 多数派**\n【追问】**FE 有几种角色？** → 通常 Follower 负责读和元数据，Observer 扩展读能力，Leader 负责写元数据——面试说「FE 通过多数派选举保证元数据高可用」即可。\n【追问】**和 Hive 架构对比？** → Hive 是 Master-Slave 的批处理（HS2 + MR/Spark），Doris 是 MPP 无共享，节点对等并行。",
+"【一句话】三个快：**MPP 并行、列存+前缀索引、预聚合模型**。\n【标准回答】\n- **MPP 架构**：多节点并行执行，一份数据多副本分摊查询，节点间无共享、可线性扩展\n- **列存 + 前缀索引**：按列存储压缩率高；前缀索引（有序稀疏索引）加速过滤，能快速定位数据块\n- **预聚合模型**：建表即选定聚合方式，导入时预聚合，查询直接读结果\n【数字钩子】**架构快、存储快、模型快**\n【追问】**MPP 和 MapReduce 的区别？** → MPP 是流水线并行、中间结果不落盘、面向交互式查询；MR 是阶段式、中间结果落盘、面向大批量吞吐。\n【追问】**前缀索引为什么能加速？** → 数据按前缀列排序存储，索引记录每个数据块的起始值，查条件可二分定位到块，避免全表扫描。",
+"【一句话】三种模型：**Duplicate 明细 / Aggregate 报表 / Unique 更新**。\n【标准回答】\n- **Duplicate（明细模型）**：不去重，存明细数据\n- **Aggregate（聚合模型）**：建表时指定聚合方式（SUM / MAX / MIN / REPLACE），导入时预聚合\n- **Unique（唯一模型）**：主键唯一，用 REPLACE 语义实现更新\n选型口诀：**明细用 Duplicate、报表用 Aggregate、更新用 Unique**。\n【数字钩子】**明 / 聚 / 唯——按业务选**\n【追问】**Aggregate 模型怎么保证查询正确？** → 查询时自动按建表指定的聚合函数再合并，所以明细数据查出来也是聚合后的值，不适合查明细。\n【追问】**Unique 模型怎么做更新？** → 主键相同的数据导入后直接替换（REPLACE），底层可视为特殊的 Aggregate。",
+"【一句话】两层：**分区按时间范围切，分桶按高基数 join key 哈希**。\n【标准回答】Doris 分两层：\n- **分区（Partition）**：按时间或范围切分，利于分区裁剪和冷热分离\n- **分桶（Bucket）**：按高基数 join key 做哈希分桶，桶数经验值是 BE 数量 × 其核数左右，单个桶数据量 1-10G 为佳\n【数字钩子】**分区管裁剪、分桶管并行；桶数 ≈ BE × 核数，单桶 1-10G**\n【追问】**桶数设太多会怎样？** → 小文件多、元数据压力大、compaction 负担重；太少则并行度不足、单桶过大。\n【追问】**分桶键怎么选？** → 选高基数、且经常作为 join key 或 group by 的列，避免数据分布不均。",
+"【一句话】**Hive/Spark 管离线批量加工，Doris 管交互式查询和高并发报表**。\n【标准回答】Hive/Spark 负责离线批量加工（T+1 大规模 ETL），Doris 负责交互式查询和高并发报表（亚秒级响应）。常用链路是：DWD/DWS 的结果通过 Broker Load 或例行导入进入 Doris，对外提供查询服务。关键词「**湖仓加工、MPP 服务**」。\n【数字钩子】**离线加工在 Hive，在线服务在 Doris**\n【追问】**为什么不让 Doris 直接把活全干了？** → Doris 不擅长超大规模 ETL（join 能力与容错不如 Spark），而 Hive/Spark 给不了亚秒级高并发，两者分工互补。\n【追问】**数据怎么同步？** → Broker Load、Routine Load（流式）、Stream Load、外部表（Multi-Catalog 直接查 Hive）。",
+"【一句话】数字钩子「**基建 10 个月 + 质量 2-3 个月**」。\n【标准回答】主要负责订单域，用户、商品也有涉及。整体以需求为导向，最开始构建数仓基建：\n- **模型前期调研**：划分数据域、数据分层、表命名规范、开发规范 —— 1-2 个月\n- **模型建设**：ODS 1-2 个月；DWD 2-3 个月；DWS 2-3 个月；ADS 1-2 个月 —— 合计约 10 个月\n- **质量规则、告警配置、报表、指标开发** —— 2-3 个月\n之后就是持续做日常需求，并在过程中加强数仓建设。\n【难点】\n- **指标不一致**：从模型层面、规范机制层面、质量监控层面三层解决\n- **数据质量差**：加强质量监控 + 交叉验证\n- 兜底答法：结合业务讲难点，**复杂业务怎么抽象建模**\n【提醒】文档里「嵌套很深的 JSON 字段处理」「缓慢变化维处理」「数据倾斜处理」三条已划掉，不要主动说。\n【数字钩子】**1-2 调研 / 10 个月建设 / 2-3 个月质量**",
+"【一句话】三板斧：**棘手问题 → 职业发展 → 数仓未来**。\n【标准回答】\n① **最棘手的问题**：需求理解上大家对不齐的指标。业务在评审会上说这样算，会后可能就不承认了，但我们按他说的开发出来，最后他说我们开发得不对，把我们投诉了。当下的处理是**拉上下游对齐口径**看怎么解决；为了以后不再发生，建立**统一的机制和平台**让大家遵守，并把**公共逻辑下沉到 DWS**，保证数据一致性、同一指标都从这里取数。\n② **职业发展**：做好公司内部数仓的基础建设 → 加深对数据的理解 → 通过数据赋能业务、给公司带来业务价值 → 或者结合 AI 做一些数据的工作。\n③ **数仓未来方向**：结合 AI 会有智能化升级，三个方向——**开发提效**（代码纠错、智能补全）、**智能答疑**（AI 自动识别问题、扫描知识库给出答案）、**ChatBI 智能体**（只需写具体需求，自动开发并产出结果，部分需求不需要数据同学承接）。\n【附】还可能被追问：模型设计中最大的挑战（缓慢变化维、复杂业务逻辑抽象）；如何保证数据质量、数据稽核方案；这个项目你最遗憾的地方、如果可以重来会怎么做（考察复盘与优化能力）。"
+];
+
+/* ================= 架构图渲染器（纯 SVG，无依赖） ================= */
+const DC = {
+  ink:'#2c2c2a', sub:'#55534c', muted:'#888780', line:'#d3d1c7', panel:'#faf9f5',
+  blue:{bg:'#e6f1fb',fg:'#185fa5',bd:'#b5d4f4'},
+  green:{bg:'#eaf3de',fg:'#3b6d11',bd:'#c0dd97'},
+  amber:{bg:'#faeeda',fg:'#854f0b',bd:'#fac775'},
+  red:{bg:'#fcebeb',fg:'#993c1d',bd:'#f7c1c1'},
+  purple:{bg:'#eeedfe',fg:'#534ab7',bd:'#cecbf6'},
+  teal:{bg:'#e1f5ee',fg:'#0f6e56',bd:'#9fe1cb'},
+  gray:{bg:'#f1efe8',fg:'#5f5e5a',bd:'#d3d1c7'}
+};
+const DES = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const DW = (s, fs) => { let w=0; for(const ch of String(s==null?'':s)) w += /[\u2e80-\u9fff\uff00-\uffef\u3000-\u303f]/.test(ch) ? 1 : 0.55; return w*fs; };
+function DWRAP(s, fs, maxW){
+  const out=[]; let cur='';
+  String(s==null?'':s).split('\n').forEach((para,pi)=>{
+    if(pi) { out.push(cur); cur=''; }
+    for(const ch of para){
+      if(cur && DW(cur+ch, fs) > maxW){ out.push(cur); cur=ch; } else cur += ch;
+    }
+    if(cur){ out.push(cur); cur=''; }
+  });
+  if(!out.length) out.push('');
+  return out;
+}
+function DSVG(w, h, body){
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,PingFang SC,Microsoft YaHei,sans-serif">${body}</svg>`;
+}
+function dTitle(w, t){
+  if(!t) return '';
+  return `<text x="14" y="22" font-size="13" font-weight="700" fill="${DC.ink}">${DES(t)}</text>`;
+}
+const dTop = t => t ? 40 : 14;
+
+/* 分层图：从上到下堆叠，每层一行 */
+function dLayers(t, rows){
+  const W=640, P=14, GAP=8;
+  let y = dTop(t), body='';
+  rows.forEach(r=>{
+    const c = DC[r.c || 'gray'];
+    const lines = DWRAP(r.d || '', 12, W-2*P-24);
+    const h = 26 + lines.length*16 + 6;
+    body += `<rect x="${P}" y="${y}" width="${W-2*P}" height="${h}" rx="10" fill="${c.bg}" stroke="${c.bd}"/>`;
+    body += `<text x="${P+12}" y="${y+19}" font-size="13" font-weight="700" fill="${c.fg}">${DES(r.k)}</text>`;
+    lines.forEach((ln,i)=>{ body += `<text x="${P+12}" y="${y+38+i*16}" font-size="12" fill="${DC.ink}">${DES(ln)}</text>`; });
+    y += h + GAP;
+  });
+  return DSVG(W, y-GAP+14, dTitle(W,t)+body);
+}
+
+/* 竖向流程：编号圆点 + 标题 + 说明 */
+function dFlow(t, steps){
+  const W=640, P=14, X=P+15, TX=X+24;
+  const TW = W - TX - P - 4;
+  const hs = steps.map(s=> 22 + DWRAP(s.d||'',12,TW).length*16);
+  const cys=[]; let yy = dTop(t);
+  hs.forEach(h=>{ cys.push(yy+11); yy += h+10; });
+  const total = yy-10;
+  let body='';
+  if(steps.length>1) body += `<line x1="${X}" y1="${cys[0]}" x2="${X}" y2="${cys[cys.length-1]}" stroke="${DC.line}" stroke-width="2"/>`;
+  steps.forEach((s,i)=>{
+    const c = DC[s.c || 'blue'];
+    body += `<circle cx="${X}" cy="${cys[i]}" r="11" fill="${c.bg}" stroke="${c.bd}"/>`;
+    body += `<text x="${X}" y="${cys[i]+4}" font-size="11" font-weight="700" fill="${c.fg}" text-anchor="middle">${i+1}</text>`;
+    body += `<text x="${TX}" y="${cys[i]+4}" font-size="13" font-weight="700" fill="${DC.ink}">${DES(s.k)}</text>`;
+    DWRAP(s.d||'',12,TW).forEach((ln,j)=>{ body += `<text x="${TX}" y="${cys[i]+22+j*16}" font-size="12" fill="${DC.sub}">${DES(ln)}</text>`; });
+  });
+  return DSVG(W, total+14, dTitle(W,t)+body);
+}
+
+/* 横向链条：短词 + 箭头，超宽自动折行 */
+function dChain(t, items, note){
+  const W=640, P=14, AR=22, BH=30, MAX=W-2*P;
+  const boxes = items.map(it => typeof it==='string' ? {k:it} : it);
+  const bw = boxes.map(b => Math.max(56, DW(b.k,12.5)+24));
+  const rows=[]; let cur=[], w=0;
+  boxes.forEach((b,i)=>{
+    const add = (cur.length?AR:0) + bw[i];
+    if(cur.length && w+add > MAX){ rows.push({idx:cur,w:w}); cur=[]; w=0; }
+    w += (cur.length?AR:0) + bw[i]; cur.push(i);
+  });
+  if(cur.length) rows.push({idx:cur,w:w});
+  let y = dTop(t), body='';
+  rows.forEach(r=>{
+    let x = P + (MAX - r.w)/2;
+    r.idx.forEach((bi,j)=>{
+      const b = boxes[bi], c = DC[b.c||'blue'];
+      body += `<rect x="${x}" y="${y}" width="${bw[bi]}" height="${BH}" rx="8" fill="${c.bg}" stroke="${c.bd}"/>`;
+      body += `<text x="${x+bw[bi]/2}" y="${y+20}" font-size="12.5" font-weight="600" fill="${c.fg}" text-anchor="middle">${DES(b.k)}</text>`;
+      x += bw[bi];
+      if(j < r.idx.length-1){
+        const cx = x + AR/2;
+        body += `<line x1="${x+3}" y1="${y+BH/2}" x2="${x+AR-6}" y2="${y+BH/2}" stroke="${DC.muted}" stroke-width="1.6"/>`;
+        body += `<path d="M${x+AR-8} ${y+BH/2-4} L${x+AR-2} ${y+BH/2} L${x+AR-8} ${y+BH/2+4} Z" fill="${DC.muted}"/>`;
+        x += AR;
+      }
+    });
+    y += BH + 14;
+  });
+  if(note){
+    DWRAP(note, 11.5, MAX).forEach((ln,i)=>{ body += `<text x="${P}" y="${y+4+i*15}" font-size="11.5" fill="${DC.muted}">${DES(ln)}</text>`; });
+    y += DWRAP(note,11.5,MAX).length*15;
+  }
+  return DSVG(W, y+12, dTitle(W,t)+body);
+}
+
+/* 并排对比：2-3 列卡片 */
+function dCompare(t, cols){
+  const W=640, P=14, GAP=10, n=cols.length;
+  const cw = (W-2*P-(n-1)*GAP)/n;
+  const blocks = cols.map(col=>{
+    const c = DC[col.c||'blue'];
+    const items = (col.items||[]).map(it=>({lines:DWRAP(it,11.5,cw-24)}));
+    let h = 44; items.forEach(it=>{ h += it.lines.length*15 + 7; });
+    return {col,c,items,h:Math.max(h,72)};
+  });
+  const maxH = Math.max(...blocks.map(b=>b.h));
+  const y0 = dTop(t);
+  let body='';
+  blocks.forEach((b,i)=>{
+    const x = P + i*(cw+GAP);
+    body += `<rect x="${x}" y="${y0}" width="${cw}" height="${maxH}" rx="10" fill="#fff" stroke="${b.c.bd}"/>`;
+    body += `<path d="M${x} ${y0+26} L${x} ${y0+10} Q${x} ${y0} ${x+10} ${y0} L${x+cw-10} ${y0} Q${x+cw} ${y0} ${x+cw} ${y0+10} L${x+cw} ${y0+26} Z" fill="${b.c.bg}"/>`;
+    body += `<text x="${x+cw/2}" y="${y0+18}" font-size="12.5" font-weight="700" fill="${b.c.fg}" text-anchor="middle">${DES(b.col.k)}</text>`;
+    let yy = y0 + 42;
+    b.items.forEach(it=>{
+      body += `<circle cx="${x+13}" cy="${yy+4}" r="2.5" fill="${b.c.fg}"/>`;
+      it.lines.forEach((ln,j)=>{ body += `<text x="${x+21}" y="${yy+9+j*15}" font-size="11.5" fill="${DC.ink}">${DES(ln)}</text>`; });
+      yy += it.lines.length*15 + 7;
+    });
+  });
+  return DSVG(W, y0+maxH+14, dTitle(W,t)+body);
+}
+
+/* 树形：根 + 一排子节点 */
+function dTree(t, root, kids){
+  const W=640, P=14, GAP=10, n=kids.length;
+  const y0 = dTop(t);
+  let body='';
+  const rw = Math.max(120, DW(root,13)+30);
+  body += `<rect x="${W/2-rw/2}" y="${y0}" width="${rw}" height="34" rx="10" fill="${DC.gray.bg}" stroke="${DC.gray.bd}"/>`;
+  body += `<text x="${W/2}" y="${y0+22}" font-size="13" font-weight="700" fill="${DC.ink}" text-anchor="middle">${DES(root)}</text>`;
+  const cw = (W-2*P-(n-1)*GAP)/n;
+  const kh = kids.map(k => 34 + DWRAP(k.d||'',11,cw-20).length*14);
+  const maxKH = Math.max(...kh, 56);
+  const cy0 = y0 + 34 + 26;
+  body += `<line x1="${W/2}" y1="${y0+34}" x2="${W/2}" y2="${cy0-13}" stroke="${DC.line}" stroke-width="2"/>`;
+  if(n>1) body += `<line x1="${P+cw/2}" y1="${cy0-13}" x2="${W-P-cw/2}" y2="${cy0-13}" stroke="${DC.line}" stroke-width="2"/>`;
+  kids.forEach((k,i)=>{
+    const x = P + i*(cw+GAP), c = DC[k.c||'blue'];
+    body += `<line x1="${x+cw/2}" y1="${cy0-13}" x2="${x+cw/2}" y2="${cy0}" stroke="${DC.line}" stroke-width="2"/>`;
+    body += `<rect x="${x}" y="${cy0}" width="${cw}" height="${maxKH}" rx="10" fill="${c.bg}" stroke="${c.bd}"/>`;
+    body += `<text x="${x+cw/2}" y="${cy0+21}" font-size="12.5" font-weight="700" fill="${c.fg}" text-anchor="middle">${DES(k.k)}</text>`;
+    DWRAP(k.d||'',11,cw-20).forEach((ln,j)=>{ body += `<text x="${x+cw/2}" y="${cy0+40+j*14}" font-size="11" fill="${DC.ink}" text-anchor="middle">${DES(ln)}</text>`; });
+  });
+  return DSVG(W, cy0+maxKH+14, dTitle(W,t)+body);
+}
+
+/* 表格 / 矩阵：支持单元格多行 */
+function dMatrix(t, colHdr, rowHdr, cells, corner){
+  const W=640, P=14;
+  const n = colHdr.length;
+  const firstW = Math.min(160, Math.max(80, Math.max(...rowHdr.map(r=>DW(r,12)))+22));
+  const cw = (W-2*P-firstW)/n;
+  const rowLines = cells.map((row,ri)=> row.map((c,ci)=> DWRAP(c,11.5,cw-12)));
+  const rowLH = rowLines.map(row => Math.max(1, ...row.map(l=>l.length)));
+  const rowH = rowLH.map(l => l*15 + 14);
+  const headH = 30;
+  const y0 = dTop(t);
+  const totalH = headH + rowH.reduce((a,b)=>a+b,0);
+  let body = `<rect x="${P}" y="${y0}" width="${W-2*P}" height="${totalH}" rx="10" fill="#fff" stroke="${DC.line}"/>`;
+  body += `<path d="M${P} ${y0+headH} L${P} ${y0+10} Q${P} ${y0} ${P+10} ${y0} L${P+W-2*P-10} ${y0} Q${P+W-2*P} ${y0} ${P+W-2*P} ${y0+10} L${P+W-2*P} ${y0+headH} Z" fill="#f1efe8"/>`;
+  body += `<text x="${P+10}" y="${y0+20}" font-size="11" font-weight="700" fill="#888780">${DES(corner||'')}</text>`;
+  colHdr.forEach((c,i)=>{ body += `<text x="${P+firstW+i*cw+cw/2}" y="${y0+20}" font-size="12" font-weight="700" fill="${DC.ink}" text-anchor="middle">${DES(c)}</text>`; });
+  let yy = y0+headH;
+  rowHdr.forEach((r,ri)=>{
+    const h = rowH[ri];
+    body += `<line x1="${P}" y1="${yy}" x2="${P+W-2*P}" y2="${yy}" stroke="${DC.line}" stroke-dasharray="3 3"/>`;
+    DWRAP(r,12,firstW-16).forEach((ln,j)=>{ body += `<text x="${P+10}" y="${yy+18+j*15}" font-size="12" font-weight="600" fill="${DC.sub}">${DES(ln)}</text>`; });
+    rowLines[ri].forEach((lines,ci)=>{
+      lines.forEach((ln,j)=>{ body += `<text x="${P+firstW+ci*cw+cw/2}" y="${yy+18+j*15}" font-size="11.5" fill="${DC.ink}" text-anchor="middle">${DES(ln)}</text>`; });
+    });
+    yy += h;
+  });
+  return DSVG(W, y0+totalH+14, dTitle(W,t)+body);
+}
+
+/* 时间轴：交替上下标注 */
+function dTimeline(t, pts){
+  const W=640, P=34, n=pts.length;
+  const y0 = dTop(t);
+  const step = n>1 ? (W-2*P)/(n-1) : 0;
+  const meta = pts.map((p,i)=>({
+    lines: DWRAP(p.d||'', 10.5, Math.min(step-6, 130)),
+    up: i%2===0,
+    anchor: i===0 ? 'start' : (i===n-1 ? 'end' : 'middle')
+  }));
+  const above = meta.filter(m=>m.up).map(m=>m.lines.length*13+28);
+  const maxAbove = above.length ? Math.max(...above) : 0;
+  const below = meta.filter(m=>!m.up).map(m=>m.lines.length*13+30);
+  const maxBelow = below.length ? Math.max(...below) : 0;
+  const axisY = y0 + maxAbove + 10;
+  let body = `<line x1="${P}" y1="${axisY}" x2="${W-P}" y2="${axisY}" stroke="${DC.line}" stroke-width="2"/>`;
+  pts.forEach((p,i)=>{
+    const x = P + i*step, c = DC[p.c||'blue'], m = meta[i];
+    const tx = i===0 ? Math.max(x,P) : (i===n-1 ? Math.min(x,W-P) : x);
+    body += `<line x1="${x}" y1="${axisY}" x2="${x}" y2="${m.up?axisY-11:axisY+11}" stroke="${c.fg}" stroke-width="1.5"/>`;
+    body += `<circle cx="${x}" cy="${axisY}" r="5.5" fill="${c.bg}" stroke="${c.fg}" stroke-width="2"/>`;
+    if(m.up){
+      const top = axisY - maxAbove;
+      body += `<text x="${tx}" y="${top+14}" font-size="12" font-weight="700" fill="${c.fg}" text-anchor="${m.anchor}">${DES(p.k)}</text>`;
+      m.lines.forEach((ln,j)=>{ body += `<text x="${tx}" y="${top+30+j*13}" font-size="10.5" fill="${DC.sub}" text-anchor="${m.anchor}">${DES(ln)}</text>`; });
+    } else {
+      body += `<text x="${tx}" y="${axisY+26}" font-size="12" font-weight="700" fill="${c.fg}" text-anchor="${m.anchor}">${DES(p.k)}</text>`;
+      m.lines.forEach((ln,j)=>{ body += `<text x="${tx}" y="${axisY+40+j*13}" font-size="10.5" fill="${DC.sub}" text-anchor="${m.anchor}">${DES(ln)}</text>`; });
+    }
+  });
+  return DSVG(W, axisY + maxBelow + 14, dTitle(W,t)+body);
+}
+
+/* 键值列表 */
+function dKV(t, pairs){
+  const W=640, P=14, LW=108;
+  let y = dTop(t), body='';
+  pairs.forEach(p=>{
+    const c = DC[p.c||'blue'];
+    const lines = DWRAP(p.v,12,W-2*P-LW-20);
+    const h = Math.max(32, lines.length*16+16);
+    body += `<rect x="${P}" y="${y}" width="${W-2*P}" height="${h}" rx="9" fill="${c.bg}" fill-opacity="0.55" stroke="${c.bd}"/>`;
+    body += `<text x="${P+12}" y="${y+h/2+4}" font-size="12" font-weight="700" fill="${c.fg}">${DES(p.k)}</text>`;
+    lines.forEach((ln,i)=>{ body += `<text x="${P+LW}" y="${y+(h-lines.length*16)/2+12+i*16}" font-size="12" fill="${DC.ink}">${DES(ln)}</text>`; });
+    y += h + 7;
+  });
+  return DSVG(W, y-7+14, dTitle(W,t)+body);
+}
+
+/* ================= 每题一张架构图 ================= */
+const DIAGRAMS = [
+/* 0 总线架构 */ () => dMatrix('总线矩阵：行 = 业务过程 / 列 = 一致性维度',
+  ['商品','品牌','类目','城市','金额'],
+  ['下单','支付','发货','确认收货'],
+  [['✓','✓','✓','✓','✓'],['✓','✓','✓','✓','✓'],['✓','✗','✓','✓','✗'],['✓','✗','✗','✓','✗']], '过程 ＼ 维度'),
+/* 1 主题域划分 */ () => dCompare('三种划分方式，为什么选业务划分',
+  [{k:'部门职能划分',c:'gray',items:['按组织架构切','适合跨部门数据多的场景','我们跨部门数据少 → 排除']},
+   {k:'系统划分',c:'amber',items:['适合传统数仓','电信 / 证券 / 基金','系统稳定、耦合低、易划分']},
+   {k:'业务划分 ✓',c:'green',items:['抽象核心实体 + 动作','实体：用户 / 商品 / 订单','动作：浏览 / 下单 / 退款','收敛为 7 大主题域']}]),
+/* 2 一致性维度表 */ () => dTree('一套维度表，N 张事实表共享',
+  '一致性维度表（唯一主键 · 统一定义）',
+  [{k:'订单事实表',d:'引用商品 / 用户维',c:'blue'},{k:'支付事实表',d:'引用用户 / 渠道维',c:'green'},
+   {k:'退款事实表',d:'引用订单 / 商品维',c:'amber'},{k:'曝光事实表',d:'引用用户 / 商品维',c:'purple'}]),
+/* 3 一致性事实表 */ () => dFlow('一致性事实表：一个指标一个口径',
+  [{k:'先定原子指标的唯一口径',d:'销售额是否包含运费、是否扣除退款，只允许一种算法'},
+   {k:'沉淀为一致性事实表',d:'拥有唯一的指标定义，计算口径和单位全域统一'},
+   {k:'派生指标向上生长',d:'转化率、客单价、退款率等都在该口径基础上二次计算',c:'green'}]),
+/* 4 OneData */ () => dTree('OneData：统一 · 规范 · 可共享',
+  'OneData 方法论',
+  [{k:'OneModel',d:'模型统一：分层 / 数据域 / 总线矩阵',c:'blue'},
+   {k:'OneID',d:'实体统一：核心实体跨系统唯一标识',c:'green'},
+   {k:'OneService',d:'服务统一：统一数据出口与接口',c:'purple'}]),
+/* 5 Kimball vs 范式 */ () => dCompare('业务驱动 vs 数据驱动',
+  [{k:'Kimball 维度建模',c:'green',items:['业务驱动，快速构建数据集市','表分事实表 + 维度表','结构：星型 / 雪花模型','四步：过程 - 粒度 - 维度 - 事实']},
+   {k:'范式模型',c:'blue',items:['数据驱动，企业级全局设计','开始就做全局设计','尽量避免数据冗余','构建周期长']}]),
+/* 6 星型 vs 雪花 */ () => dCompare('三种建模结构怎么选',
+  [{k:'星型模型 ✓',c:'green',items:['事实表 + 一层维度表','维度表允许字段冗余','空间换时间，取数高效','case：订单事实 + 商品 / 用户维']},
+   {k:'雪花模型',c:'blue',items:['事实表 + 多层维度表','存储上更有优势','多层 join 影响查询性能','case：商品维再延伸行业 / 类目']},
+   {k:'星系模型',c:'purple',items:['星型模型的集合','多张事实表共享同一套维度表','本质就是总线架构的图形表达']}]),
+/* 7 DWS 跨域 */ () => dTree('DWS 跨域：边界明确，实体宽表必跨',
+  'DWS 层现状',
+  [{k:'主体边界明确',d:'各域职责划分清楚',c:'green'},{k:'用户实体宽表',d:'一定会跨域',c:'amber'},
+   {k:'商家实体宽表',d:'一定会跨域',c:'amber'},{k:'历史遗留跨域',d:'逐步收敛治理',c:'gray'}]),
+/* 8 建模经验 */ () => dTree('建模三条经验',
+  '建模经验',
+  [{k:'高内聚低耦合',d:'业务相近 / 粒度相同放一起\n高概率同时访问的放一起',c:'blue'},
+   {k:'公共逻辑下沉 DWS',d:'常用指标下沉\n口径统一、多方复用',c:'green'},
+   {k:'核心 / 扩展模型分离',d:'高复用字段进核心表\n低复用字段进扩展表',c:'purple'}]),
+/* 9 数仓四层 */ () => dLayers('数仓四层：贴源 - 明细 - 汇总 - 应用',
+  [{k:'ODS 贴源层',d:'同构抽取，几乎就是原始数据，只多了分区字段、数据来源等技术字段',c:'gray'},
+   {k:'DWD 明细层',d:'清洗、转换、维度退化；按业务过程拆成事实表（订单 → 下单 / 支付 / 退款）',c:'blue'},
+   {k:'DWS 汇总层',d:'轻度汇总：商家 × 用户 / 渠道 / 商品，算下单支付人数、商品数、客单价、笔单价',c:'green'},
+   {k:'ADS 应用层',d:'面向应用：经营分析、用户画像、商品分析，用于报表数据展示',c:'amber'}]),
+/* 10 规模速记 */ () => dKV('规模速记（给区间即可，不必精确）',
+  [{k:'ODS',v:'100 - 200 张表',c:'gray'},{k:'DWD',v:'100 张左右',c:'blue'},
+   {k:'DWS',v:'150 张左右',c:'green'},{k:'ADS',v:'上百 - 上千张都有',c:'amber'},
+   {k:'DIM',v:'150 张左右',c:'purple'},
+   {k:'主题域',v:'7 个：用户 / 行为 / 商品 / 广告 / 订单 / 触点 / 商家',c:'teal'}]),
+/* 11 维度退化 */ () => dTree('维度退化：三类属性适合冗余进事实表',
+  '关键维度属性直接冗余进事实表',
+  [{k:'高基数属性',d:'维度值多、唯一性强\n订单编号 / 发票号',c:'blue'},
+   {k:'简单维度',d:'只有简单几条记录\n订单状态 / 优惠券类型',c:'green'},
+   {k:'高复用属性',d:'查询频繁\n交易时间戳',c:'purple'},
+   {k:'退化力度',d:'DWD 谨慎退化（保原子性）\nDWS 积极退化（优化查询）',c:'amber'}]),
+/* 12 维度表建设 */ () => dFlow('维度表建设四步',
+  [{k:'识别维度',d:'基于业务需求和场景确定维度，维度源表一般从 ODS 层获取'},
+   {k:'定业务主键 + 描述属性',d:'主键必须唯一，同时列出描述性属性。如商品维度主键 sku，属性含品类、品牌'},
+   {k:'维度退化处理',d:'尽量将维度属性冗余到事实表中'},
+   {k:'缓慢变化维处理',d:'SCD1 覆盖 / SCD2 加行 / SCD3 加列',c:'green'}]),
+/* 13 缓慢变化维 */ () => dCompare('缓慢变化维三招',
+  [{k:'SCD1 覆盖',c:'red',items:['直接覆盖原有数据','用于历史数据有错的场景','例：手机号注册错误','代价：历史不可追溯']},
+   {k:'SCD2 加行 ✓',c:'green',items:['新增一行，用起始 / 有效时间','标记数据生命周期','拉链表的基础','代价：数据量膨胀']},
+   {k:'SCD3 加列',c:'blue',items:['把历史值写到新增字段','只保留有限次历史','适合变化少、取值有限的维度']}]),
+/* 14 拉链表 */ () => dTimeline('拉链表：起始时间 + 有效时间标记生命周期',
+  [{k:'开链',d:'起始 = 2024-01-01\n有效 = 9999-12-31',c:'green'},
+   {k:'属性变更',d:'2024-03-15 用户等级变化\n老记录闭链 → 03-14',c:'amber'},
+   {k:'重新开链',d:'起始 = 2024-03-15\n有效 = 9999-12-31',c:'green'},
+   {k:'查历史',d:'start ≤ 某天 < end',c:'blue'}]),
+/* 15 三种事实表 */ () => dCompare('三种事实表：看事件 / 看状态 / 看一生',
+  [{k:'事务事实表',c:'blue',items:['每行 = 一个业务事件','如每笔下单、每笔支付','最细粒度，增量写入']},
+   {k:'周期快照事实表',c:'green',items:['记录一个周期末的状态','产出按周期来，如月表','如每日库存、每月账户余额']},
+   {k:'累计快照事实表',c:'amber',items:['一行 = 一个业务全生命周期','覆盖下单 → 支付 → 收货 → 售后','里程碑时间随流程不断更新']}]),
+/* 16 退款 15 天 */ () => dTimeline('退款周期 15 天：必须用更宽的时间窗口回溯',
+  [{k:'T 支付',d:'订单进入已支付状态',c:'blue'},
+   {k:'T+15 才退款',d:'退款事件可能晚于支付 15 天',c:'red'},
+   {k:'筛选近 1 个月',d:'周期 15 天 → 筛过去一个月数据',c:'amber'},
+   {k:'增量写入',d:'状态 = 退款 且 退款时间 = 昨天',c:'green'}]),
+/* 17 宽表放哪层 */ () => dCompare('订单全链路明细宽表放哪层',
+  [{k:'DWD ✓',c:'green',items:['只是明细多表关联，不做聚合','放这里保住原子性与一致性','字段膨胀 → 核心 / 扩展模型分离','技术层面可用数据湖 Iceberg']},
+   {k:'DWM',c:'gray',items:['粒度不变 / 轻度聚合 + 宽表','字节有这一层','我们为简化层级没有设计 DWM']},
+   {k:'DWS',c:'blue',items:['高度聚合（按天 / 地区 / 商品 / 类目）','放这里会丢失订单明细粒度']}]),
+/* 18 订单环节时效 */ () => dFlow('订单各环节时效：核心是数据回刷',
+  [{k:'建单事务事实表',d:'下单 / 支付 / 发货 / 收货各一张，不同状态数据放各自时间分区'},
+   {k:'建多事务宽表',d:'以下单为左表，LEFT JOIN 支付、发货、收货、退款等状态表'},
+   {k:'回刷过去 30 天',d:'按 o.order_date 分区范围回刷，保证后到的状态能挂上原订单'},
+   {k:'CASE WHEN 定状态',d:'按退款完成 → 退款申请 → 收货 → 发货 → 支付 → 创建的优先级输出 current_status',c:'green'}]),
+/* 19 OSM */ () => dLayers('OSM：目标 → 策略 → 度量，指标分三级',
+  [{k:'一级指标（战略）',d:'GMV（商品交易总额）、订单完成金额（实际支付金额，剔除退款）',c:'red'},
+   {k:'二级指标（策略）',d:'订单数 / 金额、下单转化率、支付转化率、客单价、退款率',c:'amber'},
+   {k:'三级指标（诊断）',d:'按渠道（APP / 小程序 / PC）、品类商品、新老客、地区、时间段拆分，定位波动原因',c:'green'}]),
+/* 20 UJM */ () => dMatrix('UJM 六要素拆解（以支付环节为例）',
+  ['拆解内容'],
+  ['用户行为','业务目标','接触点','潜在痛点','机会点','衡量指标'],
+  [['选择商品、填写收货地址、选择支付方式、确认付款'],
+   ['降低支付环节流失率，提升下单成功率'],
+   ['订单确认页、支付方式选择页、收银台'],
+   ['支付流程繁琐、支持的支付方式少、页面加载慢'],
+   ['优化一键支付流程、接入更多主流支付工具、提升页面性能'],
+   ['下单转化率、支付成功率、订单流失率、平均支付时长']], '要素'),
+/* 21 一致性保障 */ () => dLayers('数据一致性：三个层面一起兜',
+  [{k:'模型层',d:'把控数据出入口：DWD 统一接入多源；公共逻辑下沉 DWS；建立一致性维度表',c:'blue'},
+   {k:'平台规范层',d:'指标管理平台统一指标的生产消费定义；制定指标开发规范、命名规范',c:'green'},
+   {k:'质量层',d:'表级（数据量波动）、字段级（空值率、主键唯一、数值范围）监控 + 交叉验证',c:'amber'}]),
+/* 22 质量监控 */ () => dCompare('监控三对象 + 治理四步',
+  [{k:'表级别',c:'blue',items:['数据唯一性','数据量级波动','例：订单量突增几倍即告警']},
+   {k:'字段级别',c:'green',items:['核心字段空值率','数值范围是否正确','格式 / 枚举值范围']},
+   {k:'任务时效',c:'amber',items:['重要任务挂载基线','保证链路按时产出','报错或延迟即告警']}]),
+/* 23 四重验证 */ () => dFlow('一条记录 = 5，凭什么说它对',
+  [{k:'源数据直查',d:'直接查看原始数据，判断当前结果是否正确'},
+   {k:'质量监控',d:'波动或阈值监控，看其他指标是否异常'},
+   {k:'多源交叉验证',d:'5 个订单 → 物流是否有 5 个包裹 → 库存是否相应减少',c:'green'},
+   {k:'业务合理性',d:'和近 30 天对比，数据是否有明显异常'}]),
+/* 24 ETL */ () => dFlow('ETL：抽 - 转 - 载',
+  [{k:'数据抽取 Extract',d:'从业务系统获取原始数据，按数据量和业务判断增量还是全量，用内部 wedata 平台完成'},
+   {k:'数据转换 Transform',d:'清洗：表级去重、字段级完整性 / 正确性 / 一致性；转换：格式标准化、字段拆合、关联维表、衍生指标'},
+   {k:'数据加载 Load',d:'将满足质量要求的数据加载到目标表，分增量加载和全量加载',c:'green'}]),
+/* 25 评价数仓 */ () => dTree('评价数仓做得好不好：三个视角',
+  '数仓做得好',
+  [{k:'质量',d:'时效性、正确性高\n不破基线',c:'blue'},
+   {k:'应用',d:'口径一致性高\n模型复用率高（DWS 直接取）',c:'green'},
+   {k:'业务',d:'有效赋能业务\n交付效率高、资产有价值',c:'amber'}]),
+/* 26 大促 2.5pp */ () => dFlow('数据赋能路径：从 ID 打通到运营圈人',
+  [{k:'打通跨设备 ID',d:'基于已有的 idmapping 表，把同一用户在不同设备上的行为串起来'},
+   {k:'构建行为宽表',d:'制作用户基础行为事件的宽表，作为标签加工的底表'},
+   {k:'设计三类标签',d:'统计类（累计消费）、规则类（近 30 天消费 > 500 = 高价值流失人群）、算法类（流失风险分）'},
+   {k:'BI 平台圈人',d:'运营勾选标签圈定人群包，展开运营动作 → 大促转化率提升 2.5pp',c:'green'}]),
+/* 27 Hadoop */ () => dTree('Hadoop 三大组件',
+  'Hadoop',
+  [{k:'HDFS',d:'主从架构：NameNode 存元数据\nDataNode 存数据块，默认 3 副本\n适合一次写入多次读取',c:'blue'},
+   {k:'MapReduce',d:'分而治之，分 map / reduce 两阶段\n切片 → <k,v> → 环形缓冲区 → 溢写',c:'green'},
+   {k:'YARN',d:'RM 管全局资源，NM 管节点资源\nAM 申请容器执行具体任务',c:'amber'}]),
+/* 28 MR shuffle */ () => dFlow('Shuffle 六步：map 三拍 + reduce 三拍',
+  [{k:'Map-1 分区',d:'缓冲区快满（80%）时分区，默认规则 key 的 hash % ReduceTask 数量，保证同 key 同分区'},
+   {k:'Map-2 排序溢写',d:'每个分区内部按 key 快速排序，排序后溢写到磁盘'},
+   {k:'Map-3 合并',d:'多次溢写产生多个小文件，map 结束前归并排序合并为最终输出文件'},
+   {k:'Reduce-1 拷贝',d:'reduce 启动多个拷贝线程，从各 map 节点拉取自己分区的数据',c:'green'},
+   {k:'Reduce-2 归并',d:'先放内存，达阈值溢写磁盘；后台线程归并排序形成更大的有序文件',c:'green'},
+   {k:'Reduce-3 输入计算',d:'有序文件作为 Reduce 函数输入，处理后外写结果',c:'green'}]),
+/* 29 MR 优势 */ () => dTree('MapReduce 框架的三条优势',
+  'MapReduce 优势',
+  [{k:'数据本地性',d:'尽量把 map 任务分配到数据所在节点\n思想：移动计算而不是移动数据',c:'blue'},
+   {k:'容错机制',d:'任务失败自动换节点重启\n整个作业不需要重新开始',c:'green'},
+   {k:'并行海量数据',d:'分而治之，横向扩展',c:'amber'}]),
+/* 30 Spark 执行流程 */ () => dFlow('Spark 提交流程：四步链',
+  [{k:'惰性记录 RDD 依赖',d:'提交应用后，Spark 惰性记录 RDD 之间的依赖关系，在内存中构建 DAG（逻辑计划）'},
+   {k:'DAGScheduler 切 stage',d:'分析宽窄依赖，遇到宽依赖就划分出一个新的 stage'},
+   {k:'按分区生成 task',d:'根据 stage 的分区生成对应的 task'},
+   {k:'TaskScheduler 分发',d:'把 task 分发给合适的 executor，executor 启动线程池并行执行',c:'green'}]),
+/* 31 Spark SQL */ () => dFlow('Spark SQL 执行过程：Catalyst + Tungsten',
+  [{k:'SQL → 未解析逻辑计划',d:'Catalyst（Spark 核心查询优化器）先把 SQL 解析成未解析的逻辑计划'},
+   {k:'Catalog 绑定元数据',d:'Catalog 是存储所有表、字段、函数等元数据的注册中心，把抽象表名列名与元数据绑定'},
+   {k:'优化逻辑计划',d:'优化器做谓词下推、列值剪裁等优化动作'},
+   {k:'生成物理计划',d:'将逻辑计划转化为一个或多个物理计划'},
+   {k:'Tungsten 生成字节码',d:'基于 Tungsten 生成 Java 字节码',c:'green'},
+   {k:'转 RDD 集群执行',d:'最终转化为 RDD 任务在集群上运行',c:'green'}]),
+/* 32 Spark vs MR */ () => dCompare('Spark vs MapReduce（前三条是重点）',
+  [{k:'Spark ✓',c:'green',items:['内存计算，中间结果优先存内存','DAG 执行引擎，自动合并算子','Lineage 血缘容错，只重算丢失分区','多线程执行，线程池复用','shuffle 非必要不排序']},
+   {k:'MapReduce',c:'gray',items:['磁盘计算，每阶段结果落盘，IO 大','固定 Map + Reduce 两阶段','任务失败换节点重启整个作业','多进程执行，每个任务独立 JVM','shuffle 强制全局排序']}]),
+/* 33 RDD */ () => dTree('RDD 的三个切面',
+  'RDD 弹性分布式数据集',
+  [{k:'依赖与阶段划分',d:'宽依赖：一父对多子，需 shuffle\n窄依赖：一对一，无需 shuffle',c:'blue'},
+   {k:'容错与持久化',d:'记录血缘关系\n分区丢失只重算父分区，不从头回溯',c:'green'},
+   {k:'操作方式',d:'转换算子（map/filter/join）惰性\n行动算子（count/collect）触发计算',c:'amber'}]),
+/* 34 数据倾斜 */ () => dCompare('数据倾斜：三类原因对应三板斧',
+  [{k:'聚合倾斜',c:'blue',items:['shuffle 聚合热点 key','两阶段聚合 + 加盐打散','先按 user_id + 盐局部聚合','再去盐做全局聚合']},
+   {k:'join 倾斜',c:'amber',items:['大表 join 小表：广播小表','热点 key 分离，两表都加盐','大表 join 大表：分桶表 + 分桶 join','同 key 同桶，直接桶对桶免 shuffle']},
+   {k:'空值倾斜',c:'red',items:['null 全被分到同一个 reduce','null 不匹配任意值（含 null）','随机值替换空值','或分离处理，null 单独 UNION ALL']}]),
+/* 35 系统优化 */ () => dTree('系统优化：三分类 + 数据流视角',
+  '系统优化',
+  [{k:'参数优化',d:'executor 核数与内存\nshuffle 分区数（默认 200）\nAQE、小文件自动合并',c:'blue'},
+   {k:'数据倾斜',d:'聚合加盐 / join 大小表分开\n空值分离处理\nSpark 3 直接开 AQE',c:'amber'},
+   {k:'SQL 优化',d:'分区与列值剪裁、谓词下推\njoin 顺序优化\nwith 语句代替子查询',c:'green'}]),
+/* 36 shuffle 演进 */ () => dFlow('Shuffle 演进：三代 + 三种写入器',
+  [{k:'Hash Shuffle（早期）',d:'每个 map 为下游每个 reduce 生成一个文件，海量小文件 M × R，实现简单无排序，已弃用',c:'red'},
+   {k:'合并的 Hash Shuffle',d:'map 复用 executor 中的文件组，文件数降到 Core × R，仍没解决根本问题',c:'amber'},
+   {k:'Sort Shuffle（默认）',d:'每个 map 排序合并后生成 1 个数据文件 + 1 个索引文件，文件数 2 × M，代价是额外 CPU 排序',c:'green'},
+   {k:'BypassMergeSortShuffleWriter',d:'无聚合 且 分区数 ≤ bypassMergeThreshold（默认 200）时自动选择，避免排序开销',c:'blue'},
+   {k:'UnsafeShuffleWriter',d:'无聚合 且 序列化器支持重定位、分区数 ≤ 2 的 24 次方；二进制上排序，省内存、降 GC',c:'blue'},
+   {k:'SortShuffleWriter',d:'最通用：需要聚合或排序时使用，内存不够溢写磁盘，溢写前和合并时都按 key 排序',c:'blue'}]),
+/* 37 小文件 */ () => dCompare('小文件：三大危害 vs 事前事后治理',
+  [{k:'三大危害',c:'red',items:['NameNode 元数据内存耗尽','海量 task 调度开销 > 计算时间','task 频繁启停，资源利用率低、吞吐下降']},
+   {k:'治理两段',c:'green',items:['事前预防：写入时用 repartition / coalesce 控制数量','事后治理：对已存在的小文件定期合并','参数侧：开启小文件自动合并']}]),
+/* 38 reduceByKey vs groupByKey */ () => dCompare('reduceByKey vs groupByKey',
+  [{k:'reduceByKey ✓',c:'green',items:['先在节点内部做本地聚合','大幅减少需要 shuffle 的数据量','有聚合语义时首选']},
+   {k:'groupByKey',c:'red',items:['所有数据通过网络全量 shuffle','性能比较差','只有需要某 key 全量明细时才用']}]),
+/* 39 Flink 与湖仓 */ () => dLayers('Flink 四大特性 + 数据湖 / 湖仓一体',
+  [{k:'时间语义',d:'事件时间 / 处理时间 / 摄入时间；强调基于事件时间处理乱序或延迟数据，保证结果准确',c:'blue'},
+   {k:'水位线 Watermark',d:'衡量事件时间进展的机制，标记「小于等于某时间戳的数据已全部到达」，据此决定窗口何时触发计算',c:'teal'},
+   {k:'状态管理',d:'提供托管状态或状态后端，状态存内存或 RocksDB，支持有状态计算',c:'green'},
+   {k:'容错 checkpoint',d:'定期异步地把整个应用状态做快照，持久化到 HDFS 等可靠存储，实现精准一次；故障时自动从最近一次成功 checkpoint 恢复',c:'amber'},
+   {k:'数据湖 / 湖仓一体',d:'数据湖：原始格式全量存储，Schema-on-Read，灵活但治理难；湖仓一体三优势：事务支持（ACID）、开放格式、流批统一',c:'purple'}]),
+/* 40 UDF */ () => dTree('写过的两个 UDF',
+  'Spark SQL UDF（UserDefinedFunction）',
+  [{k:'getLastMonthDays',d:'取当前日期的上个月\n上个月第一天 + 一个月 - 一天\n求两者差值 = 上月天数',c:'blue'},
+   {k:'getUpdateCycle',d:'查看表的分区字段\n按数据长度判断日更 / 周更 / 月更',c:'green'},
+   {k:'性能坑',d:'UDF 对优化器是黑盒\n无法下推、无法谓词推导、逐行调用\n能用内置函数就别用 UDF',c:'red'}]),
+/* 41 排名函数 */ () => dMatrix('a,b,b,c,c 三种排名结果对比',
+  ['ROW_NUMBER','DENSE_RANK','RANK'],
+  ['a（第1行）','b（第2行）','b（第3行）','c（第4行）','c（第5行）'],
+  [['1','1','1'],['2','2','2'],['3','2','2'],['4','3','4'],['5','3','4']], '数据行'),
+/* 42 分区 vs 分桶 */ () => dCompare('分区 vs 分桶',
+  [{k:'分区 Partition',c:'blue',items:['代表 HDFS 中的一个目录','按时间 / 范围切分','利于分区裁剪、冷热分离','无分桶时会扫描目录下所有文件']},
+   {k:'分桶 Bucket',c:'green',items:['代表目录中的一个个文件','函数：ntile() over()、hash','大表 join 按 key 分桶，同 key 同桶','桶对桶连接减少 shuffle','高效随机抽样（各桶均匀抽）']}]),
+/* 43 行转列 / 列转行 */ () => dCompare('行转列 vs 列转行',
+  [{k:'行转列（转宽）',c:'blue',items:['MAX(CASE WHEN subject=… THEN score END)','配合 GROUP BY student_id','把多行课程成绩拍成一行三列']},
+   {k:'列转行（转长）',c:'green',items:['多段 UNION ALL','每段固定 subject 字面量','把宽表的三个成绩列拆回多行']}]),
+/* 44 中位数 */ () => dCompare('求中位数的两种方法',
+  [{k:'方法一：精确',c:'blue',items:['ROW_NUMBER() 排名 + COUNT(*) OVER() 总数','取 rnk IN (FLOOR((n+1)/2), CEIL((n+1)/2))','外层 AVG 求平均','n 为奇数取中间一个，偶数取中间两个']},
+   {k:'方法二：近似',c:'green',items:['percentile_approx(salary, 0.5)','数据量大、可接受近似时用','可调精度参数']}]),
+/* 45 最大在线人数 */ () => dTimeline('在线人数曲线：进 +1 / 出 -1，累计求和取峰值',
+  [{k:'10:00',d:'1 号进入 → 在线 1',c:'green'},
+   {k:'10:01',d:'2 号进入 → 在线 2',c:'green'},
+   {k:'10:02',d:'1 号离开 → 在线 1',c:'red'},
+   {k:'10:03',d:'3 号进入 → 在线 2',c:'green'},
+   {k:'10:04',d:'2 号离开 → 在线 1',c:'red'}]),
+/* 46 连续登录 */ () => dMatrix('日期 - 排名 = 组号：同组即连续',
+  ['排名 rn','日期 - rn = 组号'],
+  ['01-01','01-02','01-03','01-05','01-06','01-07'],
+  [['1','2023-12-31'],['2','2023-12-31'],['3','2023-12-31'],['4','2024-01-01'],['5','2024-01-01'],['6','2024-01-01']], '登录日期'),
+/* 47 双向好友 */ () => dCompare('双向好友的两种解法',
+  [{k:'自 JOIN 反转匹配',c:'blue',items:['f1.user1 = f2.user2 AND f1.user2 = f2.user1','WHERE f1.user1 < f1.user2 防重复计数','一条 SQL 直接 COUNT']},
+   {k:'归一 + HAVING',c:'green',items:['IF(u1<u2,u1,u2) 把每对关系（小, 大）归一','GROUP BY u1, u2','HAVING COUNT(*) > 1 即双向']}]),
+/* 48 四个 SQL 套路 */ () => dFlow('四个高频 SQL 题，一套思路',
+  [{k:'留存率',d:'min(event_date) = 注册日 → date_add(注册日, n) = event_date 打标 → 人数比值'},
+   {k:'TopN',d:'ROW_NUMBER() OVER(PARTITION BY 部门 ORDER BY 薪资 DESC) ≤ N'},
+   {k:'连续出现 3 次',d:'id - ROW_NUMBER() OVER(PARTITION BY num) 得到组号 → GROUP BY 后 HAVING COUNT(*) ≥ 3'},
+   {k:'波峰波谷',d:'LAG / LEAD 取前后价格，CASE WHEN 双向比较：≥ 前后为峰，≤ 前后为谷',c:'green'}]),
+/* 49 Doris 架构 */ () => dTree('Doris 架构：FE 管算，BE 管存',
+  'Doris',
+  [{k:'FE（Frontend）',d:'元数据管理、查询解析\n查询规划、集群管理\n—— 大脑',c:'blue'},
+   {k:'BE（Backend）',d:'数据存储、查询执行\n—— 肌肉',c:'green'},
+   {k:'元数据一致性',d:'BDB JE\n类 Paxos 多数派',c:'purple'}]),
+/* 50 Doris 为什么快 */ () => dTree('Doris 的三个快',
+  'Doris 为什么快',
+  [{k:'MPP 架构',d:'多节点并行执行\n一份数据多副本分摊查询\n无共享、可线性扩展',c:'blue'},
+   {k:'列存 + 前缀索引',d:'按列存储，压缩率高\n前缀索引（有序稀疏索引）\n快速定位数据块，加速过滤',c:'green'},
+   {k:'预聚合模型',d:'建表即选定聚合方式\n导入时预聚合\n查询直接读结果',c:'amber'}]),
+/* 51 三种数据模型 */ () => dCompare('Doris 三种数据模型怎么选',
+  [{k:'Duplicate',c:'blue',items:['不去重，存明细数据','选型：需要查明细时用']},
+   {k:'Aggregate',c:'green',items:['建表时指定聚合方式','SUM / MAX / MIN / REPLACE','导入时预聚合','选型：报表场景']},
+   {k:'Unique',c:'amber',items:['主键唯一','REPLACE 语义实现更新','选型：需要按主键更新']}]),
+/* 52 Doris 分区分桶 */ () => dLayers('Doris 两层数据分布',
+  [{k:'分区 Partition',d:'按时间 / 范围切分，利于分区裁剪和冷热分离',c:'blue'},
+   {k:'分桶 Bucket',d:'按高基数 join key 哈希分桶，决定并行度和数据分布',c:'green'},
+   {k:'经验值',d:'桶数 ≈ BE 数量 × 其核数左右；单个桶数据量 1 - 10G 为佳；分桶键选高基数且常做 join key 的列',c:'amber'}]),
+/* 53 Doris + Hive 分工 */ () => dFlow('湖仓加工 → MPP 服务',
+  [{k:'业务系统 / 日志',d:'数据产生的源头，经 ODS 同构抽取进入数仓'},
+   {k:'Hive / Spark 离线加工',d:'承担 T+1 大规模 ETL：DWD 明细、DWS 轻度汇总'},
+   {k:'同步进 Doris',d:'DWD / DWS 结果通过 Broker Load、Routine Load 等例行导入 Doris'},
+   {k:'对外服务',d:'Doris 承接交互式查询和高并发报表，亚秒级响应 BI / 前端',c:'green'}]),
+/* 54 项目叙事 */ () => dTimeline('项目时间线：基建 10 个月 + 质量 2-3 个月',
+  [{k:'调研 1-2 月',d:'划分数据域、数据分层\n表命名规范、开发规范',c:'gray'},
+   {k:'ODS 1-2 月',d:'贴源层建设',c:'blue'},
+   {k:'DWD 2-3 月',d:'明细层，按业务过程拆事实表',c:'blue'},
+   {k:'DWS 2-3 月',d:'汇总层，商家 × 用户 / 渠道 / 商品',c:'green'},
+   {k:'ADS 1-2 月',d:'应用层报表与指标',c:'green'},
+   {k:'质量 2-3 月',d:'质量规则、告警配置、报表指标开发',c:'amber'}]),
+/* 55 开放题 */ () => dTree('开放题三板斧',
+  '开放题怎么答',
+  [{k:'最棘手的问题',d:'口径对不齐被投诉\n当下一：拉上下游对齐\n长期：统一机制平台 + 公共逻辑下沉 DWS',c:'red'},
+   {k:'职业发展',d:'内部数仓基建 → 加深数据理解\n→ 赋能业务价值 / 结合 AI 做数据',c:'blue'},
+   {k:'数仓未来',d:'开发提效（补全纠错）\n智能答疑（扫描知识库）\nChatBI 智能体（说需求即出数）',c:'green'}])
+];
+
+/* ================= 配置 ================= */
+const LS_KEY = 'sim-2026dd';
+const CARD_KEY = 'sr-2026dd';
+const GRADES = [
+  {t:'没答上来', c:'#f09595', cls:'b', v:0},
+  {t:'磕巴', c:'#ef9f27', cls:'m', v:1},
+  {t:'挺顺', c:'#5dcaa5', cls:'g', v:2}
+];
+
+/* ================= 状态 ================= */
+let cfg = {cats:[], count:5, limit:90, pick:'weak'};
+let queue = [], qi = 0, graded = [];
+let rec = null, listening = false, finalText = '', interimText = '';
+let t0 = 0, timerId = null, curIdx = -1;
+
+/* ================= 视图切换 ================= */
+function show(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+/* ================= 首页初始化 ================= */
+function uniqCats(){
+  const o = [];
+  CARDS.forEach(c=>{ if(o.indexOf(c.b)<0) o.push(c.b); });
+  return o;
+}
+
+function buildHome(){
+  document.getElementById('poolTotal').textContent = CARDS.length;
+
+  const cc = document.getElementById('catChips');
+  cc.innerHTML = '<button class="chip on" data-v="__all">全部</button>' +
+    uniqCats().map(c=>`<button class="chip" data-v="${escAttr(c)}">${esc(c)}</button>`).join('');
+  cc.onclick = e=>{
+    const b = e.target.closest('.chip'); if(!b) return;
+    const all = cc.querySelector('[data-v="__all"]');
+    if(b.dataset.v === '__all'){
+      all.classList.add('on');
+      cc.querySelectorAll('.chip:not([data-v="__all"])').forEach(x=>x.classList.remove('on'));
+    } else {
+      b.classList.toggle('on');
+      all.classList.remove('on');
+      const any = [...cc.querySelectorAll('.chip:not([data-v="__all"])')].some(x=>x.classList.contains('on'));
+      if(!any) all.classList.add('on');
+    }
+  };
+
+  chipGroup('cntChips', [[5,'5 题'],[10,'10 题'],[16,'16 题'],[999,'全部']], 5, v=>cfg.count=+v);
+  chipGroup('limChips', [[60,'60 秒'],[90,'90 秒'],[120,'120 秒'],[0,'不限时']], 90, v=>cfg.limit=+v);
+  chipGroup('pickChips', [['weak','优先薄弱'],['random','随机'],['order','顺序']], 'weak', v=>cfg.pick=v);
+
+  checkMic();
+  renderHistory();
+}
+
+function chipGroup(id, opts, def, cb){
+  const box = document.getElementById(id);
+  box.innerHTML = opts.map(([v,l])=>`<button class="chip${v===def?' on':''}" data-v="${v}">${l}</button>`).join('');
+  box.onclick = e=>{
+    const b = e.target.closest('.chip'); if(!b) return;
+    box.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    cb(b.dataset.v);
+  };
+}
+
+/* ================= 麦克风能力探测 ================= */
+function SRClass(){ return window.SpeechRecognition || window.webkitSpeechRecognition || null; }
+
+function checkMic(){
+  const n = document.getElementById('micNote');
+  const has = !!SRClass();
+  const secure = window.isSecureContext;
+  const isChrome = /Chrome|Chromium/.test(navigator.userAgent) && !/Edg/.test(navigator.userAgent);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  if(!has){
+    n.className = 'note warn';
+    n.innerHTML = '⚠️ 当前浏览器不支持语音识别，将进入<b>纯计时口述</b>模式：照样抽题、计时、揭晓答案，只是不显示实时字幕。建议改用 Safari 打开本页。';
+    return;
+  }
+  if(!secure){
+    n.className = 'note err';
+    n.innerHTML = '🔒 语音识别需要 HTTPS 或 localhost。请通过线上地址或本地服务器打开，不要双击文件。';
+    return;
+  }
+  if(isChrome){
+    n.className = 'note warn';
+    n.innerHTML = '⚠️ 检测到 Chrome：它的语音识别走 Google 服务，国内网络下常报 <code>network</code> 错误。<b>建议改用 Safari</b>（走 Apple 服务，中文可用）。继续用 Chrome 也能跑，识别失败会自动降级为计时口述。';
+    return;
+  }
+  n.className = 'note ok';
+  n.innerHTML = (isSafari ? '✅ Safari 语音识别可用' : '✅ 当前浏览器支持语音识别') + '，首次点麦克风会请求权限。<br>建议戴耳机或找安静环境，识别更准。';
+}
+
+/* ================= 抽题 ================= */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function readCardProgress(){
+  try{ return JSON.parse(localStorage.getItem(CARD_KEY)||'{}').cards || {}; }
+  catch(e){ return {}; }
+}
+
+function buildQueue(){
+  const cats = [...document.querySelectorAll('#catChips .chip.on')].map(b=>b.dataset.v);
+  const useAll = cats.indexOf('__all')>=0 || !cats.length;
+  let pool = CARDS.map((c,i)=>i).filter(i=>useAll || cats.indexOf(CARDS[i].b)>=0);
+  if(!pool.length) pool = CARDS.map((c,i)=>i);
+
+  if(cfg.pick === 'weak'){
+    const p = readCardProgress();
+    const today = todayStr();
+    pool.sort((a,b)=>{
+      const sa = p[a]||{}, sb = p[b]||{};
+      const wa = (sa.f||0)*3 + (sa.iv?0:1.5) + ((sa.due&&sa.due<=today)?2:0);
+      const wb = (sb.f||0)*3 + (sb.iv?0:1.5) + ((sb.due&&sb.due<=today)?2:0);
+      return wb - wa;
+    });
+    // 同一权重段内打乱，避免每次都是同样顺序
+    const head = pool.slice(0,6), tail = shuffle(pool.slice(6));
+    pool = shuffle(head).concat(tail);
+  } else if(cfg.pick === 'random'){
+    shuffle(pool);
+  }
+  const n = Math.min(cfg.count > pool.length ? pool.length : cfg.count, pool.length);
+  return pool.slice(0, n);
+}
+
+/* ================= 轮次 ================= */
+function startRound(){
+  queue = buildQueue();
+  if(!queue.length){ alert('选题范围太窄，没有可练的题'); return; }
+  qi = 0; graded = [];
+  show('v-quiz');
+  loadCard();
+}
+
+function loadCard(){
+  curIdx = queue[qi];
+  const c = CARDS[curIdx];
+  finalText = ''; interimText = '';
+  document.getElementById('qProg').textContent = `第 ${qi+1} / ${queue.length} 题`;
+  document.getElementById('qCat').textContent = c.b;
+  document.getElementById('qText').innerHTML = esc(c.q);
+  document.getElementById('qTrack').style.width = (qi/queue.length*100)+'%';
+  document.getElementById('subs').innerHTML = '<span class="ph">你讲的话会实时显示在这里…</span>';
+  stopMic();
+  document.getElementById('micBtn').className = 'micBtn';
+  document.getElementById('micBtn').textContent = '🎤 开始回答';
+  document.getElementById('micStatus').textContent = '点一下开始，然后大声把答案讲出来';
+  resetTimer();
+}
+
+/* ================= 计时 ================= */
+function resetTimer(){
+  clearInterval(timerId); timerId = null;
+  const el = document.getElementById('qTimer');
+  if(!cfg.limit){ el.textContent = '不限时'; el.classList.remove('hurry'); return; }
+  el.textContent = fmtSec(cfg.limit);
+  el.classList.remove('hurry');
+  t0 = Date.now();
+  timerId = setInterval(()=>{
+    const left = cfg.limit - Math.floor((Date.now()-t0)/1000);
+    if(left <= 0){
+      clearInterval(timerId); timerId = null;
+      el.textContent = '时间到';
+      el.classList.add('hurry');
+      reveal(true);
+      return;
+    }
+    el.textContent = fmtSec(left);
+    if(left <= 15) el.classList.add('hurry');
+  }, 250);
+}
+
+function fmtSec(s){ return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }
+function elapsedSec(){ return t0 ? Math.round((Date.now()-t0)/1000) : 0; }
+
+/* ================= 语音 ================= */
+function paintSubs(){
+  const box = document.getElementById('subs');
+  const f = esc(finalText), i = esc(interimText);
+  if(!f && !i){ box.innerHTML = '<span class="ph">你讲的话会实时显示在这里…</span>'; return; }
+  box.innerHTML = (f?`<span class="fin">${f}</span>`:'') + (i?`<span class="inter">${i}</span>`:'');
+  box.scrollTop = box.scrollHeight;
+}
+
+function startMic(){
+  const C = SRClass();
+  if(!C){ micFallback(); return; }
+  try{
+    if(!rec) rec = new C();
+    rec.lang = 'zh-CN';
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.maxAlternatives = 1;
+    rec.onresult = e=>{
+      let inter = '';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const t = e.results[i][0].transcript;
+        if(e.results[i].isFinal) finalText += t; else inter += t;
+      }
+      interimText = inter;
+      paintSubs();
+    };
+    rec.onerror = e=>onMicError(e.error);
+    rec.onend = ()=>{
+      if(listening){ try{ rec.start(); }catch(err){ setTimeout(()=>{ if(listening){ try{rec.start();}catch(x){} } }, 250); } }
+    };
+    listening = true;
+    rec.start();
+    document.getElementById('micBtn').className = 'micBtn live';
+    document.getElementById('micBtn').textContent = '⏹ 讲完了';
+    document.getElementById('micStatus').textContent = '正在听…（Safari 静默几秒会自动续听）';
+  }catch(err){
+    micFallback();
+  }
+}
+
+function stopMic(){
+  listening = false;
+  if(rec){ try{ rec.stop(); }catch(e){} }
+  const b = document.getElementById('micBtn');
+  if(b){ b.className = 'micBtn'; if(b.textContent.indexOf('⏹')>=0) b.textContent = '🎤 继续补充'; }
+}
+
+function toggleMic(){
+  if(listening){ stopMic(); document.getElementById('micStatus').textContent = '已暂停。可以继续补充，或直接看参考答案。'; }
+  else startMic();
+}
+
+let fellBack = false;
+function micFallback(){
+  fellBack = true;
+  listening = false;
+  document.getElementById('micBtn').className = 'micBtn';
+  document.getElementById('micBtn').textContent = '⏱ 计时口述中';
+  document.getElementById('micStatus').textContent = '当前环境拿不到语音识别，改用计时口述：照样讲出来，计时结束看答案。';
+}
+
+function onMicError(err){
+  const s = document.getElementById('micStatus');
+  if(err === 'no-speech' || err === 'aborted'){ return; }
+  if(err === 'not-allowed' || err === 'service-not-allowed'){
+    listening = false;
+    s.textContent = '麦克风被拒绝：点地址栏左侧的锁图标 → 允许麦克风，再刷新页面。';
+    document.getElementById('micBtn').className = 'micBtn';
+    return;
+  }
+  if(err === 'network'){
+    listening = false;
+    s.textContent = '语音服务连不上（Chrome 在国内的典型问题）→ 换 Safari 打开本页即可。';
+    document.getElementById('micBtn').className = 'micBtn';
+    return;
+  }
+  if(err === 'audio-capture'){
+    s.textContent = '没有检测到麦克风设备。';
+    listening = false;
+    return;
+  }
+  s.textContent = '语音识别出错：' + err;
+}
+
+/* ================= 揭晓答案 ================= */
+let curDur = 0;
+function reveal(auto){
+  if(document.getElementById('v-answer').classList.contains('on')) return;
+  curDur = cfg.limit ? Math.min(elapsedSec(), cfg.limit) : elapsedSec();
+  stopMic();
+  clearInterval(timerId); timerId = null;
+
+  const c = CARDS[curIdx];
+  document.getElementById('aStd').innerHTML = c.a;
+
+  const words = countWords(finalText);
+  const y = document.getElementById('yours');
+  if(words > 0){
+    y.innerHTML = `<div class="lbl">你的口述 · ${curDur} 秒 · ${words} 字 · 约 ${Math.round(words/Math.max(curDur,1)*60)} 字/分钟</div>
+      <div class="txt">${esc(finalText)}</div>`;
+  } else {
+    y.innerHTML = `<div class="lbl">你的口述 · ${curDur} 秒</div>
+      <div class="txt empty">${fellBack ? '（计时口述模式，未记录转写）' : '（这一题没有记录到语音内容）'}</div>`;
+  }
+
+  const d = DETAILS[curIdx];
+  document.getElementById('detailBody').innerHTML = (d && d.length) ? fmtDetail(d) : '<div>这题暂无详解</div>';
+  document.getElementById('detailBody').style.display = 'none';
+  document.getElementById('btnDetail').textContent = '📖 展开详解（追问 · 数字钩子）';
+  document.getElementById('diaBody').innerHTML = '';
+  document.getElementById('diaBody').style.display = 'none';
+  document.getElementById('btnDia').textContent = '🏗 展开架构图';
+
+  document.getElementById('glabel').textContent = auto ? '时间到了，先自评' : '刚才这一题讲得怎么样？';
+  show('v-answer');
+}
+
+function countWords(t){
+  if(!t) return 0;
+  const cn = (t.match(/[\u4e00-\u9fa5]/g)||[]).length;
+  const other = (t.replace(/[\u4e00-\u9fa5]/g,' ').match(/[A-Za-z0-9]+/g)||[]).length;
+  return cn + other;
+}
+
+function togglePart(which){
+  const isDetail = which === 'detail';
+  const body = document.getElementById(isDetail ? 'detailBody' : 'diaBody');
+  const btn = document.getElementById(isDetail ? 'btnDetail' : 'btnDia');
+  const open = body.style.display !== 'none';
+  if(open){ body.style.display = 'none'; btn.textContent = isDetail ? '📖 展开详解（追问 · 数字钩子）' : '🏗 展开架构图'; return; }
+  if(!isDetail && !body.innerHTML){
+    try{ body.innerHTML = DIAGRAMS[curIdx] ? DIAGRAMS[curIdx]() : '<div style="padding:10px;color:#888780">这题暂无架构图</div>'; }
+    catch(e){ body.innerHTML = '<div style="padding:10px;color:#a32d2d">图渲染失败：' + esc(e.message) + '</div>'; }
+  }
+  body.style.display = 'block';
+  btn.textContent = isDetail ? '📖 收起详解' : '🏗 收起架构图';
+}
+
+function skipCard(){
+  graded.push({i:curIdx, g:-1, dur:0, w:0});
+  nextCard();
+}
+
+function grade(g){
+  const words = countWords(finalText);
+  graded.push({i:curIdx, g, dur:curDur, w:words});
+  nextCard();
+}
+
+function nextCard(){
+  qi++;
+  if(qi >= queue.length) showReport();
+  else { show('v-quiz'); loadCard(); }
+}
+
+/* ================= 报告 ================= */
+function showReport(){
+  const done = graded.filter(x=>x.g >= 0);
+  const total = graded.length;
+  const good = graded.filter(x=>x.g===2).length;
+  const mid = graded.filter(x=>x.g===1).length;
+  const bad = graded.filter(x=>x.g===0).length;
+  const skipped = graded.filter(x=>x.g===-1).length;
+  const totW = graded.reduce((a,b)=>a+b.w,0);
+  const totD = graded.reduce((a,b)=>a+b.dur,0);
+  const acc = total ? Math.round(good/total*100) : 0;
+
+  document.getElementById('rSub').textContent =
+    `共 ${total} 题 · 平均每题口述 ${total?Math.round(totD/total):0} 秒 · 全程说了 ${totW} 字`;
+
+  document.getElementById('rStats').innerHTML = `
+    <div class="stat"><div class="n">${acc}%</div><div class="l">讲得顺的比例</div></div>
+    <div class="stat"><div class="n">${totW}</div><div class="l">累计口述字数</div></div>
+    <div class="stat"><div class="n">${total?Math.round(totW/Math.max(totD,1)*60):0}</div><div class="l">平均语速 字/分</div></div>`;
+
+  // 分类表现
+  const byCat = {};
+  graded.forEach(x=>{
+    const b = CARDS[x.i].b;
+    if(!byCat[b]) byCat[b] = {got:0, sum:0};
+    if(x.g >= 0){ byCat[b].got++; byCat[b].sum += x.g; }
+  });
+  const rows = Object.keys(byCat).filter(k=>byCat[k].got>0).map(k=>({k, avg:byCat[k].sum/byCat[k].got, n:byCat[k].got}))
+    .sort((a,b)=>a.avg-b.avg); // 最弱在前
+  document.getElementById('rCats').innerHTML = rows.length ? rows.map(r=>{
+    const pct = Math.round(r.avg/2*100);
+    const col = pct >= 75 ? '#5dcaa5' : (pct >= 45 ? '#ef9f27' : '#f09595');
+    return `<div class="catRow"><span class="nm">${esc(r.k)}</span>
+      <span class="bw"><i style="width:${pct}%;background:${col}"></i></span>
+      <span class="vv">${r.n} 题 · ${pct}%</span></div>`;
+  }).join('') : '<div style="color:#a5a5a0;font-size:13px">本轮没有完成自评的题</div>';
+
+  // 逐题
+  document.getElementById('rList').innerHTML = graded.map((x,idx)=>{
+    const c = CARDS[x.i];
+    const gg = x.g < 0 ? {t:'跳过', c:'#b4b2a9', cls:'m'} : GRADES[x.g];
+    return `<div class="rItem"><span class="dot ${gg.cls}"></span>
+      <span class="rt">${esc(c.q)}<div class="rm">${esc(c.b)} · ${gg.t}${x.dur?` · ${x.dur} 秒`:''}${x.w?` · ${x.w} 字`:''}</div></span></div>`;
+  }).join('');
+
+  // 存本次
+  try{
+    const all = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
+    all.unshift({ts:Date.now(), total, good, mid, bad, skipped, totW, acc});
+    localStorage.setItem(LS_KEY, JSON.stringify(all.slice(0,20)));
+  }catch(e){}
+
+  window.__lastReport = {total, good, mid, bad, skipped, totW, totD, acc, rows, graded:graded.slice()};
+  show('v-report');
+}
+
+function copyReport(){
+  const r = window.__lastReport; if(!r) return;
+  const d = new Date();
+  let s = `【面试模拟报告】${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}\n`;
+  s += `题量 ${r.total} · 挺顺 ${r.good} / 磕巴 ${r.mid} / 没答上来 ${r.bad}${r.skipped?` / 跳过 ${r.skipped}`:''}\n`;
+  s += `累计口述 ${r.totW} 字 · 平均语速 ${r.total?Math.round(r.totW/Math.max(r.totD,1)*60):0} 字/分钟\n`;
+  if(r.rows && r.rows.length){
+    s += `\n【薄弱分类】\n`;
+    r.rows.slice(0,4).forEach(x=>{ s += `· ${x.k}  ${Math.round(x.avg/2*100)}%（${x.n} 题）\n`; });
+  }
+  s += `\n【逐题】\n`;
+  r.graded.forEach((x,n)=>{
+    const c = CARDS[x.i];
+    const t = x.g < 0 ? '跳过' : GRADES[x.g].t;
+    s += `${n+1}. [${t}] ${c.q}\n`;
+  });
+  copyText(s);
+}
+
+function copyText(t){
+  const b = document.getElementById('btnCopy');
+  const done = ()=>{ if(b){ b.textContent = '已复制 ✓'; setTimeout(()=>b.textContent='复制报告', 1600); } };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t, done));
+  } else fallbackCopy(t, done);
+}
+
+function fallbackCopy(t, cb){
+  const ta = document.createElement('textarea');
+  ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ alert(t); }
+  document.body.removeChild(ta);
+}
+
+function backHome(){ renderHistory(); show('v-setup'); }
+
+function renderHistory(){
+  let all = [];
+  try{ all = JSON.parse(localStorage.getItem(LS_KEY)||'[]'); }catch(e){}
+  const card = document.getElementById('histCard');
+  if(!all.length){ card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  document.getElementById('histList').innerHTML = all.slice(0,6).map(x=>{
+    const d = new Date(x.ts);
+    return `<div class="histRow"><span>${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}</span>
+      <span>${x.total} 题 · 挺顺 ${x.good} · 磕巴 ${x.mid} · 没答上来 ${x.bad}</span></div>`;
+  }).join('');
+}
+
+/* ================= 工具 ================= */
+function esc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
+function pad(n){ return String(n).padStart(2,'0'); }
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+}
+
+/* 详解格式化：先切代码围栏，再做行内格式（顺序不能反，否则围栏会被行内 code 正则吃掉） */
+function fmtDetail(t){
+  const esc0 = s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const inline = s=>esc0(s)
+    .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>');
+  const out = []; let inCode = false, buf = [];
+  String(t).split('\n').forEach(line=>{
+    const s = line.trim();
+    if(/^```/.test(s)){
+      if(inCode){ out.push('<pre class="fcode">'+esc0(buf.join('\n'))+'</pre>'); buf = []; inCode = false; }
+      else inCode = true;
+      return;
+    }
+    if(inCode){ buf.push(line); return; }
+    if(!s) return;
+    const m = s.match(/^【([^】]+)】\s*([\s\S]*)$/);
+    if(m){
+      const tag = m[1].trim(), rest = m[2];
+      if(/^追问/.test(tag)){ out.push('<div class="fq">🎤 '+inline(rest||tag)+'</div>'); return; }
+      const warn = /^(提醒|注意|坑)/.test(tag);
+      out.push('<div class="fsec'+(warn?' warn':'')+'">'+esc0(tag)+'</div>'+(rest?'<div>'+inline(rest)+'</div>':''));
+      return;
+    }
+    if(/^(追问|\*\*追问)/.test(s)){ out.push('<div class="fq">🎤 '+inline(s.replace(/^(\*\*追问\*\*|追问)[：: ]*/,''))+'</div>'); return; }
+    if(/^- /.test(s)){ out.push('<div class="li">• '+inline(s.slice(2))+'</div>'); return; }
+    out.push('<div>'+inline(s)+'</div>');
+  });
+  if(inCode && buf.length) out.push('<pre class="fcode">'+esc0(buf.join('\n'))+'</pre>');
+  return out.join('');
+}
+
+/* ================= 启动 ================= */
+buildHome();
+window.addEventListener('beforeunload', ()=>{ listening = false; if(rec){ try{rec.stop();}catch(e){} } });
+</script>
+</body>
+</html>
