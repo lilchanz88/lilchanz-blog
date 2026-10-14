@@ -43,6 +43,25 @@
     }
     .print-btn:hover { transform: translateY(-2px); }
 
+    /* 划词朗读控制条：选中文字即朗读 */
+    #tts-bar {
+      position: fixed; left: 24px; bottom: 24px; z-index: 10;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+      padding: 8px 12px; border-radius: 12px;
+      background: rgba(255,255,255,0.96); border: 1px solid #e2e8ee;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      font-size: 0.85em; color: #333;
+    }
+    #tts-bar button {
+      font: inherit; cursor: pointer; border: 1px solid #d5dde5; background: #f6f8fa;
+      border-radius: 7px; padding: 3px 9px; color: #333;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    #tts-bar button:hover { border-color: #42b883; color: #1a7f4e; }
+    #tts-bar button.is-active { background: #42b883; border-color: #42b883; color: #fff; }
+    #tts-bar .tts-sep { color: #d0d7de; }
+    #tts-bar .tts-label { color: #888; }
+
     /* 深色模式覆盖：必须放在全部基础规则之后，否则会被前面的同优先级规则覆盖 */
     @media (prefers-color-scheme: dark) {
       body { color: #e6e6e6; background: #14171a; }
@@ -53,10 +72,16 @@
       .en p { color: #f3f6f9; }
       .cn p { color: #9aa4ae; }
       .divider { border-top-color: #30363d; }
+      #tts-bar { background: rgba(26,30,34,0.96); border-color: #30363d; color: #e6e6e6; }
+      #tts-bar button { background: #1d232a; border-color: #3a424b; color: #e6e6e6; }
+      #tts-bar button:hover { border-color: #42b883; color: #4fd39a; }
+      #tts-bar .tts-sep { color: #3a424b; }
+      #tts-bar .tts-label { color: #9aa4ae; }
     }
 
     @media print {
       .print-btn { display: none; }
+      #tts-bar { display: none; }
       body { padding: 0; max-width: none; }
       .part { break-inside: avoid; }
       .en p, .cn p { break-inside: avoid; }
@@ -227,5 +252,85 @@
   </div>
 
   <button class="print-btn" onclick="window.print()">🖨 打印 / 保存 PDF</button>
+
+  <div id="tts-bar">
+    <button id="tts-toggle" aria-pressed="true" title="开启后，选中页面上的文字即可自动朗读">🔊 划词朗读：开</button>
+    <span class="tts-sep">|</span>
+    <span class="tts-label">语速</span>
+    <button class="tts-rate" data-rate="0.8">0.8×</button>
+    <button class="tts-rate is-active" data-rate="1">1.0×</button>
+    <button class="tts-rate" data-rate="1.2">1.2×</button>
+  </div>
+
+  <script>
+  (function () {
+    var bar = document.getElementById('tts-bar');
+    if (!('speechSynthesis' in window)) { if (bar) bar.style.display = 'none'; return; }
+    var synth = window.speechSynthesis;
+    var enabled = true, rate = 1, lastText = '', lastAt = 0;
+    var voices = [];
+
+    function loadVoices() { voices = synth.getVoices() || []; }
+    loadVoices();
+    synth.onvoiceschanged = loadVoices;
+
+    function pickVoice(text) {
+      var isZh = /[\u4e00-\u9fff]/.test(text);
+      var prefix = isZh ? 'zh' : 'en';
+      var cands = voices.filter(function (v) { return (v.lang || '').toLowerCase().indexOf(prefix) === 0; });
+      if (!cands.length) return null;
+      var prefer = ['premium', 'enhanced', 'natural', 'samantha', 'ava', 'allison', 'zoe', 'anna', 'daniel', 'google', 'tingting', 'meijia'];
+      function score(v) {
+        var n = (v.name || '').toLowerCase(), s = 0;
+        for (var i = 0; i < prefer.length; i++) { if (n.indexOf(prefer[i]) !== -1) s += prefer.length - i; }
+        if (v.localService) s += 1;
+        return s;
+      }
+      cands.sort(function (a, b) { return score(b) - score(a); });
+      return cands[0];
+    }
+
+    function speak(text) {
+      synth.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      var v = pickVoice(text);
+      if (v) { u.voice = v; u.lang = v.lang; }
+      else { u.lang = /[\u4e00-\u9fff]/.test(text) ? 'zh-CN' : 'en-US'; }
+      u.rate = rate;
+      synth.speak(u);
+    }
+
+    /* 划词朗读：松开鼠标后朗读选中内容 */
+    document.addEventListener('mouseup', function () {
+      if (!enabled) return;
+      setTimeout(function () {
+        var sel = window.getSelection();
+        var text = sel ? sel.toString().trim() : '';
+        if (!text) return;
+        if (text.length > 500) text = text.slice(0, 500);
+        var now = Date.now();
+        if (text === lastText && now - lastAt < 800) return;
+        lastText = text; lastAt = now;
+        speak(text);
+      }, 10);
+    });
+
+    var toggle = document.getElementById('tts-toggle');
+    toggle.addEventListener('click', function () {
+      enabled = !enabled;
+      toggle.textContent = enabled ? '🔊 划词朗读：开' : '🔇 划词朗读：关';
+      toggle.setAttribute('aria-pressed', String(enabled));
+      if (!enabled) { synth.cancel(); lastText = ''; }
+    });
+
+    var rateBtns = Array.prototype.slice.call(document.querySelectorAll('.tts-rate'));
+    rateBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        rate = parseFloat(btn.getAttribute('data-rate')) || 1;
+        rateBtns.forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
