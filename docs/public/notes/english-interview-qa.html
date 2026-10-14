@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>英语面试题 · 一问一答（中英文对照）</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      max-width: 760px; margin: 0 auto; padding: 48px 24px 64px;
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.8; color: #1f2328; background: #ffffff;
+    }
+    h1 {
+      font-size: 1.6em; text-align: center;
+      border-bottom: 2px solid #42b883; padding-bottom: 12px; margin-bottom: 8px;
+    }
+    .meta {
+      color: #888; font-size: 0.9em; text-align: center; margin-bottom: 32px;
+    }
+    .intro { color: #4b5563; margin-bottom: 8px; }
+
+    /* 每道题卡片 */
+    .qa {
+      border-left: 4px solid #42b883;
+      padding: 4px 0 4px 20px;
+      margin: 36px 0 24px;
+    }
+    .q-head { display: flex; align-items: baseline; gap: 10px; }
+    .q-num {
+      flex: 0 0 auto;
+      display: inline-block;
+      background: #42b883; color: #ffffff;
+      width: 26px; height: 26px; line-height: 26px;
+      text-align: center; border-radius: 50%;
+      font-size: 0.85em; font-weight: 700;
+      transform: translateY(2px);
+    }
+    .q-head h2 { font-size: 1.2em; color: #42b883; line-height: 1.4; }
+    .q-cn { color: #6b7280; font-size: 0.92em; margin-top: 6px; }
+
+    .tag {
+      display: inline-block; font-size: 0.78em; font-weight: 700;
+      background: #e6f4ec; color: #1a7f4e; padding: 2px 10px; border-radius: 12px;
+      margin: 16px 0 8px; letter-spacing: 0.5px;
+    }
+    .en p, .cn p { margin-bottom: 12px; }
+    .en p { color: #111418; }
+    .cn p { color: #6b7280; }
+
+    /* 背诵建议表格 */
+    .recite { border-collapse: collapse; width: 100%; margin: 16px 0 28px; font-size: 0.9em; }
+    .recite th, .recite td {
+      border: 1px solid #d0d7de; padding: 8px 10px; text-align: left; vertical-align: top;
+    }
+    .recite th { background: #e6f4ec; color: #1a7f4e; font-weight: 700; }
+    .recite td { color: #374151; }
+
+    h2.section {
+      font-size: 1.25em; color: #42b883;
+      border-left: 4px solid #42b883; padding-left: 12px;
+      margin: 40px 0 8px;
+    }
+    ol.steps { padding-left: 1.4em; color: #374151; }
+    ol.steps li { margin-bottom: 6px; }
+
+    .print-btn {
+      position: fixed; right: 24px; bottom: 24px;
+      background: #42b883; color: #fff; border: none; cursor: pointer;
+      padding: 12px 20px; border-radius: 28px; font-size: 0.95em; font-weight: 700;
+      box-shadow: 0 4px 14px rgba(66,184,131,0.4); transition: transform .15s;
+    }
+    .print-btn:hover { transform: translateY(-2px); }
+
+    /* 深色模式覆盖：必须放在全部基础规则之后，否则会被前面的同优先级规则覆盖 */
+    @media (prefers-color-scheme: dark) {
+      body { color: #e6e6e6; background: #14171a; }
+      .intro, .recite td, ol.steps { color: #c2cad2; }
+      .meta, .q-cn { color: #9aa4ae; }
+      .q-head h2, h2.section { color: #4fd39a; }
+      .tag { background: #1f6f4a; color: #d8f5e6; }
+      .en p { color: #f3f6f9; }
+      .cn p { color: #9aa4ae; }
+      .recite th, .recite td { border-color: #30363d; }
+      .recite th { background: #1f6f4a; color: #d8f5e6; }
+    }
+
+    @media print {
+      .print-btn { display: none; }
+      body { padding: 0; max-width: none; }
+      .qa { break-inside: avoid; }
+      .en p, .cn p { break-inside: avoid; }
+      .recite tr { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>英语面试题 · 一问一答</h1>
+  <p class="meta">中英文对照 · 大数据 / 数据仓库开发方向 · 共 8 题</p>
+  <p class="intro">结合大数据开发、数据仓库开发相关工作背景，整理了以下 8 道常见英语面试题。每道题包含英文问题、英文回答和中文翻译，方便理解与背诵。</p>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">1</span><h2>Tell me about yourself.</h2></div>
+    <p class="q-cn">问题：请介绍一下你自己。</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>Hello, my name is Li Qianzhen.</p>
+      <p>I graduated in 2025 with a degree in a computer-related field.</p>
+      <p>I have experience in big data platforms and data warehouse development. I have worked with technologies such as Hadoop, Hive, Spark, and Doris.</p>
+      <p>In my previous work, I was responsible for cluster maintenance, SQL optimization, data processing, and troubleshooting.</p>
+      <p>I am a hardworking person, and I enjoy learning new technologies. Now, I hope to improve my development skills and gain more experience in data warehouse development.</p>
+      <p>Thank you.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>大家好，我叫李前振。</p>
+      <p>我于 2025 年毕业，所学专业属于计算机相关领域。</p>
+      <p>我拥有大数据平台和数据仓库开发方面的经验，接触过 Hadoop、Hive、Spark 和 Doris 等技术。</p>
+      <p>在之前的工作中，我主要负责集群维护、SQL 优化、数据处理和故障排查。</p>
+      <p>我是一个勤奋的人，喜欢学习新技术。现在，我希望提升自己的开发能力，并积累更多数据仓库开发经验。</p>
+      <p>谢谢。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">2</span><h2>What are your strengths and weaknesses?</h2></div>
+    <p class="q-cn">问题：你的优势和劣势是什么？</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>My biggest strength is that I am responsible and willing to learn.</p>
+      <p>When I face a problem, I try to understand the cause and find a solution.</p>
+      <p>I also have experience with big data technologies, such as Hadoop, Hive, and Doris.</p>
+      <p>My weakness is that I sometimes spend too much time on details. Now, I am learning to manage my time better and focus on the most important tasks first.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>我最大的优势是有责任心，并且愿意学习。</p>
+      <p>遇到问题时，我会努力理解问题的原因并寻找解决方案。</p>
+      <p>我也有一些大数据技术方面的经验，例如 Hadoop、Hive 和 Doris。</p>
+      <p>我的不足是有时候会在细节上花费太多时间。现在，我正在学习更好地管理时间，并优先处理最重要的任务。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">3</span><h2>Describe a successful project or a difficult situation.</h2></div>
+    <p class="q-cn">问题：请描述一个成功的项目或遇到的困难。</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>In one of my previous projects, I worked with a big data platform.</p>
+      <p>We had a slow SQL query that took more than ten minutes to finish.</p>
+      <p>I analyzed the query and found that the table design and data scanning needed improvement.</p>
+      <p>I optimized the partition design and adjusted the table structure.</p>
+      <p>After optimization, the query performance improved significantly.</p>
+      <p>This experience taught me the importance of problem analysis and SQL optimization.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>在我之前参与的一个项目中，我负责大数据平台相关工作。</p>
+      <p>当时，有一条运行缓慢的 SQL 查询，需要十多分钟才能完成。</p>
+      <p>我分析了这条 SQL，发现表设计和数据扫描方面还有优化空间。</p>
+      <p>随后，我优化了分区设计并调整了表结构。</p>
+      <p>优化之后，查询性能得到了明显提升。</p>
+      <p>这次经历让我认识到问题分析和 SQL 优化的重要性。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">4</span><h2>How do you balance your life and work?</h2></div>
+    <p class="q-cn">问题：你如何平衡工作和生活？</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>I think work-life balance is very important.</p>
+      <p>At work, I focus on my tasks and try to finish them efficiently.</p>
+      <p>After work, I spend time exercising, relaxing, and learning new technologies.</p>
+      <p>I also make plans to manage my time better.</p>
+      <p>I believe a healthy lifestyle helps me stay productive and motivated.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>我认为工作与生活的平衡非常重要。</p>
+      <p>工作时，我会专注于自己的任务，并努力高效地完成工作。</p>
+      <p>下班后，我会花时间锻炼、放松以及学习新技术。</p>
+      <p>我也会制定计划，更好地管理时间。</p>
+      <p>我相信健康的生活方式能够帮助我保持高效和积极的状态。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">5</span><h2>Tell me about your hobbies.</h2></div>
+    <p class="q-cn">问题：请介绍一下你的兴趣爱好。</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>My hobbies are playing basketball and learning new technologies.</p>
+      <p>I enjoy playing basketball because it helps me stay healthy and reduce stress.</p>
+      <p>I also like learning about big data and new technologies.</p>
+      <p>In my free time, I practice technical skills and improve my professional knowledge.</p>
+      <p>These hobbies help me maintain a good balance between work and life.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>我的兴趣爱好是打篮球和学习新技术。</p>
+      <p>我喜欢打篮球，因为它可以帮助我保持健康、缓解压力。</p>
+      <p>我也喜欢学习大数据和新技术。</p>
+      <p>在空闲时间，我会练习技术技能，提升自己的专业知识。</p>
+      <p>这些爱好帮助我保持工作与生活之间的良好平衡。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">6</span><h2>What will you do if you disagree with your manager?</h2></div>
+    <p class="q-cn">问题：如果你和上级意见不一致，你会怎么做？</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>If I disagree with my manager, I will stay calm and listen carefully to their ideas.</p>
+      <p>Then, I will explain my opinions and provide reasons or data to support them.</p>
+      <p>I believe good communication is very important.</p>
+      <p>If my manager makes the final decision, I will respect it and do my best to complete the task.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>如果我和上级意见不一致，我会保持冷静，并认真听取对方的想法。</p>
+      <p>然后，我会解释自己的观点，并提供理由或数据来支持自己的看法。</p>
+      <p>我认为良好的沟通非常重要。</p>
+      <p>如果上级做出了最终决定，我会尊重这个决定，并尽最大努力完成任务。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">7</span><h2>What are your future career plans?</h2></div>
+    <p class="q-cn">问题：你未来的职业规划是什么？</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>In the short term, I want to improve my skills in data warehouse development and big data technologies.</p>
+      <p>I plan to gain more practical experience with SQL, Spark, Hive, and Doris.</p>
+      <p>In the long term, I hope to become a senior data engineer.</p>
+      <p>I want to improve my technical skills and contribute more value to my team and company.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>短期内，我希望提升自己在数据仓库开发和大数据技术方面的能力。</p>
+      <p>我计划在 SQL、Spark、Hive 和 Doris 等技术方面积累更多实践经验。</p>
+      <p>从长期来看，我希望成为一名高级数据工程师。</p>
+      <p>我希望不断提升技术能力，为团队和公司创造更多价值。</p>
+    </div>
+  </article>
+
+  <article class="qa">
+    <div class="q-head"><span class="q-num">8</span><h2>Introduce your hometown.</h2></div>
+    <p class="q-cn">问题：请介绍一下你的家乡。</p>
+    <span class="tag">English · Answer</span>
+    <div class="en">
+      <p>My hometown is Urumqi, the capital city of Xinjiang, China.</p>
+      <p>It is a beautiful city with amazing natural scenery and a rich cultural background.</p>
+      <p>Urumqi is famous for its delicious food, especially lamb kebabs and other local dishes.</p>
+      <p>People from different ethnic groups live here, so the culture is diverse and interesting.</p>
+      <p>I love my hometown because the people are friendly and the food is great. I am proud of my hometown.</p>
+    </div>
+    <span class="tag">中文翻译</span>
+    <div class="cn">
+      <p>我的家乡是乌鲁木齐，它是中国新疆的首府。</p>
+      <p>这是一座美丽的城市，拥有令人惊叹的自然风景和丰富的文化底蕴。</p>
+      <p>乌鲁木齐以美食闻名，尤其是羊肉串和其他当地特色菜肴。</p>
+      <p>这里生活着来自不同民族的人们，因此文化丰富多彩、充满趣味。</p>
+      <p>我热爱我的家乡，因为这里的人们很友好，美食也很棒。我为我的家乡感到自豪。</p>
+    </div>
+  </article>
+
+  <h2 class="section">背诵建议</h2>
+  <p>建议不要一开始就逐字背诵整篇答案，可以先记住每道题的关键词和回答结构。</p>
+
+  <table class="recite">
+    <thead>
+      <tr><th>题目</th><th>记忆关键词</th><th>回答思路</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>自我介绍</td><td>Graduate、Experience、Technology、Goal</td><td>学历 → 经验 → 技术 → 目标</td></tr>
+      <tr><td>优势与劣势</td><td>Responsible、Learning、Details</td><td>优势 → 不足 → 改进</td></tr>
+      <tr><td>项目经历</td><td>Problem、Analysis、Optimization、Result</td><td>问题 → 分析 → 优化 → 结果</td></tr>
+      <tr><td>工作与生活</td><td>Work、Exercise、Learning</td><td>工作 → 生活 → 平衡</td></tr>
+      <tr><td>兴趣爱好</td><td>Basketball、Technology、Relax</td><td>爱好 → 原因 → 收获</td></tr>
+      <tr><td>与上级意见不一致</td><td>Listen、Explain、Respect</td><td>倾听 → 表达 → 尊重决定</td></tr>
+      <tr><td>职业规划</td><td>Short term、Long term、Goal</td><td>短期目标 → 长期目标</td></tr>
+      <tr><td>家乡介绍</td><td>Location、Features、Feeling</td><td>地理位置 → 城市特点 → 个人感受</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="section">推荐背诵顺序</h2>
+  <ol class="steps">
+    <li><strong>先背第 1 题自我介绍</strong>：这是英语面试中最重要的基础题。</li>
+    <li><strong>再背第 3 题项目经历</strong>：与你的大数据工作经验最相关。</li>
+    <li><strong>接着背第 2、6、7 题</strong>：练习表达个人特点、沟通方式和职业规划。</li>
+    <li><strong>最后背第 4、5、8 题</strong>：这些题目可以用相对简单的句型回答。</li>
+  </ol>
+  <p>每天练习 2～3 道题即可。项目经历最好根据自己实际参与的工作来回答，并准备好用中文或英文解释 SQL 优化的具体过程。</p>
+
+  <button class="print-btn" onclick="window.print()">🖨 打印 / 保存 PDF</button>
+</body>
+</html>

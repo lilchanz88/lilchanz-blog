@@ -12,14 +12,6 @@
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
       line-height: 1.8; color: #1f2328; background: #ffffff;
     }
-    @media (prefers-color-scheme: dark) {
-      body { color: #e6e6e6; background: #14171a; }
-      .en p { color: #f3f6f9; }
-      .cn p { color: #9aa4ae; }
-      .part { border-left-color: #42b883; }
-      .tag { background: #1f6f4a; color: #e6e6e6; }
-      .divider { border-color: #30363d; }
-    }
     h1 {
       font-size: 1.6em; text-align: center;
       border-bottom: 2px solid #42b883; padding-bottom: 12px; margin-bottom: 8px;
@@ -50,6 +42,18 @@
       box-shadow: 0 4px 14px rgba(66,184,131,0.4); transition: transform .15s;
     }
     .print-btn:hover { transform: translateY(-2px); }
+
+    /* 深色模式覆盖：必须放在全部基础规则之后，否则会被前面的同优先级规则覆盖 */
+    @media (prefers-color-scheme: dark) {
+      body { color: #e6e6e6; background: #14171a; }
+      .part { border-left-color: #42b883; }
+      .part h2 { color: #4fd39a; }
+      .part .sub, .meta { color: #9aa4ae; }
+      .tag { background: #1f6f4a; color: #d8f5e6; }
+      .en p { color: #f3f6f9; }
+      .cn p { color: #9aa4ae; }
+      .divider { border-top-color: #30363d; }
+    }
 
     @media print {
       .print-btn { display: none; }
