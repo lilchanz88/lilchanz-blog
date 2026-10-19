@@ -1,5 +1,5 @@
 ---
 layout: home
 title: lilchanz'house
-description: 代码、思考与生活。记录前端开发、效率工具、编程心得和日常随想。
+description: 数据开发与数仓笔记。SQL 实战、数仓建模、Doris 调优与面试准备，附带可交互的刷题工具。
 ---

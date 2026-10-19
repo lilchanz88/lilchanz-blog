@@ -13,8 +13,9 @@ const siteOrigin = "https://lilchanz88.github.io";
 const siteUrl = `${siteOrigin}${base}`;
 const siteTitle = "lilchanz'house";
 const description =
-  "代码、思考与生活。记录前端开发、效率工具、编程心得和日常随想。";
-const keywords = "前端开发, Node.js, TypeScript, 效率工具, 编程心得, 随想";
+  "数据开发与数仓笔记。记录 SQL 实战、数仓建模、Doris 调优与面试准备，附带可交互的刷题工具。";
+const keywords =
+  "数据开发, 数仓建模, SQL, Apache Doris, 大数据, 面试, 数据仓库, 离线数仓";
 
 const toHtmlPath = (path: string) => {
   const normalized = path.replace(/^\/+/, "").replace(/\/$/, "");
@@ -126,7 +127,6 @@ export default defineConfig({
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:locale", content: "zh-CN" }],
     ["meta", { property: "og:site_name", content: siteTitle }],
-    ["meta", { property: "og:image", content: `${siteUrl}teek-logo-large.png` }],
     ["meta", { name: "author", content: "lilchanz" }],
     ["meta", { name: "keywords", content: keywords }],
   ],
@@ -147,14 +147,24 @@ export default defineConfig({
         ? ""
         : pageData.relativePath.replace(/\.md$/, ".html");
     const pageUrl = `${siteUrl}${pagePath}`;
+    // 文章配了 coverImg 就用它做分享卡图，否则回落到站点 logo
+    const coverImg =
+      typeof pageData.frontmatter.coverImg === "string"
+        ? pageData.frontmatter.coverImg.replace(/^\/+/, "")
+        : "";
+    const ogImage = coverImg
+      ? `${siteUrl}${coverImg}`
+      : `${siteUrl}teek-logo-large.png`;
 
     pageData.frontmatter.head = [
       ...(pageData.frontmatter.head || []),
       ["link", { rel: "canonical", href: pageUrl }],
+      ["meta", { property: "og:image", content: ogImage }],
       ["meta", { property: "og:title", content: pageTitle }],
       ["meta", { property: "og:description", content: pageDescription }],
       ["meta", { property: "og:url", content: pageUrl }],
       ["meta", { name: "twitter:card", content: "summary_large_image" }],
+      ["meta", { name: "twitter:image", content: ogImage }],
       ["meta", { name: "twitter:title", content: pageTitle }],
       ["meta", { name: "twitter:description", content: pageDescription }],
     ];
@@ -183,6 +193,9 @@ export default defineConfig({
         .filter(
           (item) =>
             !item.url.includes("/@pages/") &&
+            // public 下的 md 会被 VitePress 二次编译出 /public/notes/x.html，
+            // 与 /notes/x.md 重复，不该进 sitemap
+            !item.url.includes("/public/") &&
             !item.url.endsWith("/login.html") &&
             !item.url.endsWith("/risk-link.html")
         );
@@ -206,6 +219,7 @@ export default defineConfig({
     nav: [
       { text: "首页", link: "/" },
       { text: "博客", link: "/articleOverview" },
+      { text: "工具", link: "/工具/在线工具" },
       { text: "归档", link: "/archives" },
       { text: "关于", link: "/关于/关于" },
     ],
