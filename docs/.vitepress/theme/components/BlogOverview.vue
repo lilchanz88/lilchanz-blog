@@ -112,7 +112,6 @@ const getPostUrl = (post: BlogPostCard) => (post.url ? withBase(post.url) : "#")
 
       <div class="blog-overview__quicklinks">
         <a :href="withBase('/tags.html')">按标签浏览</a>
-        <a :href="withBase('/categories.html')">全部分类</a>
       </div>
     </div>
 

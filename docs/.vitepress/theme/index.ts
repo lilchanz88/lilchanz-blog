@@ -21,6 +21,7 @@ import "./styles/code-bg.scss";
 import "./styles/iframe.scss";
 import "./styles/article-experience.scss";
 import "./styles/visual-polish.scss";
+import "./styles/night-glass.scss"; // 暗夜玻璃视觉层，必须在 visual-polish 之后
 
 export default {
   extends: Teek,

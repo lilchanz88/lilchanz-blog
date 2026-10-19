@@ -220,7 +220,6 @@ export default defineConfig({
       { text: "首页", link: "/" },
       { text: "博客", link: "/articleOverview" },
       { text: "工具", link: "/工具/在线工具" },
-      { text: "归档", link: "/archives" },
       { text: "关于", link: "/关于/关于" },
     ],
     socialLinks: [

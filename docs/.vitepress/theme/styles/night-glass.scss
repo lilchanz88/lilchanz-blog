@@ -1,0 +1,554 @@
+/* ==========================================================================
+   暗夜玻璃 · Night Glass
+   在 visual-polish.scss 之后加载，做叠加增强。
+   设计基调：深蓝黑底 + 磨砂玻璃 + 克制霓虹（青为主，紫为辅）
+   ========================================================================== */
+
+:root {
+  --ng-cyan: #22d3ee;
+  --ng-violet: #a78bfa;
+  --ng-mint: #34d399;
+
+  --ng-glass-top: rgba(255, 255, 255, 0.1);
+  --ng-glass-btm: rgba(255, 255, 255, 0.045);
+  --ng-line: rgba(255, 255, 255, 0.14);
+  --ng-line-strong: rgba(255, 255, 255, 0.24);
+
+  --ng-radius: 18px;
+  --ng-blur: 18px;
+
+  --ng-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.92);
+  --ng-glow-cyan: 0 0 0 1px rgba(34, 211, 238, 0.28), 0 24px 60px -26px rgba(34, 211, 238, 0.45);
+}
+
+/* ---------- 1. 首屏：压到 70vh ---------- */
+
+.tk-banner-bg-image.full {
+  height: 70vh;
+  background-position: 62% 14%;
+  background-size: cover;
+}
+
+/* teek 原本渐到纯黑，与页面底色 #060a12 有色差；
+   直接把渐变写在遮罩层上，保证盖在图片之上 */
+.tk-banner-bg-image.full .mask {
+  background:
+    linear-gradient(
+      to top,
+      #060a12 0%,
+      rgba(6, 10, 18, 0.96) 8%,
+      rgba(6, 10, 18, 0.72) 24%,
+      rgba(6, 10, 18, 0.3) 42%,
+      transparent 62%
+    ),
+    linear-gradient(90deg, rgba(4, 9, 18, 0.62), rgba(4, 9, 18, 0.3) 46%, rgba(4, 9, 18, 0.64));
+}
+
+.tk-banner.is-full-img .tk-banner__content {
+  height: 70vh;
+}
+
+.tk-banner.is-full-img .tk-banner__content.no-feature {
+  padding-bottom: 5vh;
+}
+
+/* 图片下沿交给 teek 自带的遮罩，这里不再叠加，避免出现色带 */
+.tk-banner-content__title {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  filter:
+    drop-shadow(0 10px 26px rgba(0, 0, 0, 0.82))
+    drop-shadow(0 0 28px rgba(34, 211, 238, 0.22));
+}
+
+/* 描述做成玻璃胶囊，比裸文字更有质感 */
+.tk-banner-content__desc {
+  padding: 9px 24px;
+  color: rgba(236, 254, 255, 0.9);
+  background: rgba(10, 18, 32, 0.36);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 12px 30px -14px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  letter-spacing: 0.14em;
+}
+
+/* 按钮：玻璃质感 + 呼吸光 */
+.home-hero-actions a {
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.home-hero-actions__primary {
+  color: #041018;
+  background: linear-gradient(135deg, #a5f3fc, #67e8f9 45%, #86efac);
+  box-shadow:
+    0 16px 36px -14px rgba(34, 211, 238, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.home-hero-actions__primary:hover {
+  box-shadow:
+    0 20px 44px -14px rgba(34, 211, 238, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.home-hero-actions__secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ---------- 2. 全局背景：光斑 + 噪点 ---------- */
+
+/* 放在 html 上，body 是 transparent，不会被内容层盖住 */
+html.dark {
+  /* 统一底色：默认的 #1b1b1f 偏灰，换成深蓝黑，banner 与内容区才能无缝 */
+  --vp-c-bg: #060a12;
+  --vp-c-bg-alt: #080d16;
+  --vp-c-bg-elv: #0b111b;
+  --vp-c-bg-soft: #0a1018;
+
+  background-color: #060a12;
+  background-image:
+    radial-gradient(58% 44% at 12% 0%, rgba(34, 211, 238, 0.11), transparent 62%),
+    radial-gradient(52% 42% at 88% 10%, rgba(167, 139, 250, 0.1), transparent 64%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* 极细颗粒，压住大面积纯色的塑料感 */
+html.dark body::after {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  content: "";
+}
+
+/* 内容层全部透出 html 的光斑底色，别自己再铺一层，否则和 banner 接不上 */
+html.dark .VPContent,
+html.dark .VPDoc,
+html.dark .VPPage,
+html.dark .tk-article-page,
+html.dark .tk-home {
+  background-color: transparent;
+}
+
+/* ---------- 3. 导航栏：更透的玻璃 ---------- */
+
+.VPNavBar,
+.VPNavBar.home,
+.VPNavBar.home.top {
+  background: rgba(7, 11, 20, 0.55) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+}
+
+.VPNavBar .VPNavBarSearch .DocSearch-Button,
+.VPNavBar .VPNavBarSearch button {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.VPNavBarMenuLink {
+  letter-spacing: 0.02em;
+}
+
+/* 当前页导航项底部的一道光 */
+.VPNavBarMenuLink.active {
+  position: relative;
+}
+
+.VPNavBarMenuLink.active::after {
+  position: absolute;
+  inset: auto 10px -1px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--ng-cyan), transparent);
+  border-radius: 2px;
+  content: "";
+}
+
+/* ---------- 4. 卡片：玻璃主体 ---------- */
+
+.tk-post-item,
+.tk-post-item-card,
+.blog-overview__card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(158deg, var(--ng-glass-top), var(--ng-glass-btm));
+  border: 1px solid var(--ng-line);
+  border-radius: var(--ng-radius);
+  box-shadow:
+    var(--ng-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(var(--ng-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--ng-blur)) saturate(150%);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+/* 卡片上沿的一道细高光，玻璃的"边缘反光" */
+.tk-post-item::before,
+.blog-overview__card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(34, 211, 238, 0.35) 30%,
+    rgba(167, 139, 250, 0.35) 70%,
+    transparent
+  );
+  opacity: 0.55;
+  content: "";
+}
+
+.tk-post-item:hover,
+.tk-post-item-card:hover,
+.blog-overview__card:hover {
+  border-color: rgba(34, 211, 238, 0.32);
+  box-shadow:
+    var(--ng-glow-cyan),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+}
+
+/* 封面统一冷调，解决三张图色调打架 */
+.tk-post-item__right .cover .cover-img,
+.blog-overview__cover img {
+  filter: saturate(0.92) contrast(1.05);
+}
+
+.tk-post-item:hover .cover-img,
+.blog-overview__card:hover .blog-overview__cover img {
+  filter: saturate(1.06) contrast(1.08);
+  transform: scale(1.045);
+}
+
+/* 标签做成胶囊 */
+.blog-overview__content .tags span,
+.tk-post-item .tags span,
+.vp-doc .tag,
+.tk-post-item__left__tags span {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045) !important;
+  padding: 2px 10px;
+}
+
+/* ---------- 5. 内容页：正文与侧栏 ---------- */
+
+/* 侧边栏与目录浮起来，不要贴着边 */
+.VPSidebar {
+  background: rgba(7, 11, 20, 0.42);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.VPSidebarItem .text {
+  transition: color 0.2s ease;
+}
+
+.VPSidebarItem.is-active > .item .text {
+  color: var(--ng-cyan);
+}
+
+/* 正文 h2 加一道渐隐短线，制造版面节奏 */
+.vp-doc h2 {
+  position: relative;
+  margin-top: 34px;
+  padding-top: 24px;
+  padding-bottom: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.vp-doc h2::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ng-cyan), transparent);
+  border-radius: 2px;
+  content: "";
+}
+
+/* 引用块变玻璃卡 */
+.vp-doc blockquote {
+  padding: 16px 20px;
+  background: linear-gradient(158deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-left: 2px solid var(--ng-cyan);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 行内代码与表格细节 */
+.vp-doc :not(pre) > code {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.vp-doc table {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+}
+
+.vp-doc th {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+/* ---------- 5.5 文章总览：把小块封面放大成封面卡 ---------- */
+
+.blog-overview__hero h1 {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.blog-overview__card {
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 24px;
+  padding: 16px;
+  border-radius: var(--ng-radius);
+}
+
+/* 卡片之间松一点，别挤成一坨 */
+.blog-overview__list {
+  gap: 18px;
+}
+
+/* 封面撑满卡片高度，消灭右下角那片空白 */
+.blog-overview__cover {
+  height: 100%;
+  min-height: 168px;
+  aspect-ratio: auto;
+  border-radius: 13px;
+}
+
+.blog-overview__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4px 6px 4px 0;
+}
+
+.blog-overview__content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.blog-overview__tags span {
+  padding: 2px 9px;
+  color: var(--vp-c-text-3);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  font-size: 11.5px;
+}
+
+/* 分类标题：左侧一道渐变色条 */
+.blog-overview__group-header h2 {
+  position: relative;
+  padding-left: 14px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.blog-overview__group-header h2::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 18px;
+  background: linear-gradient(180deg, var(--ng-cyan), var(--ng-violet));
+  border-radius: 3px;
+  transform: translateY(-50%);
+  content: "";
+}
+
+/* ---------- 5.6 文章详情页：收敛三栏的硬边界 ---------- */
+
+/* 默认 h1 是 Vue 紫粉渐变，和这里的青蓝体系打架，换成冷色 */
+html.dark .VPDoc h1 {
+  background: linear-gradient(102deg, #a5f3fc 0%, #e0f2fe 44%, #c4b5fd 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 侧边栏从左往右淡出，不要一刀切的实心黑 */
+html.dark .VPSidebar {
+  background: linear-gradient(
+    90deg,
+    rgba(8, 13, 22, 0.94) 0%,
+    rgba(8, 13, 22, 0.72) 68%,
+    rgba(8, 13, 22, 0.18) 100%
+  );
+  border-right: 0;
+}
+
+/* 右侧目录同样处理，视觉重心回到正文 */
+html.dark .tk-article-page__aside {
+  background: linear-gradient(
+    270deg,
+    rgba(8, 13, 22, 0.9) 0%,
+    rgba(8, 13, 22, 0.55) 65%,
+    rgba(8, 13, 22, 0.08) 100%
+  );
+}
+
+/* 目录标题别抢正文的戏 */
+.tk-article-page__aside .tk-aside-outline--title {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+}
+
+/* ---------- 6. 浅色模式：别把浅色用户坑了 ---------- */
+
+html:not(.dark) .tk-post-item,
+html:not(.dark) .tk-post-item-card,
+html:not(.dark) .blog-overview__card {
+  background: linear-gradient(158deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.62));
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 20px 46px -26px rgba(15, 23, 42, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html:not(.dark) .VPNavBar,
+html:not(.dark) .VPNavBar.home,
+html:not(.dark) .VPNavBar.home.top {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+html:not(.dark) .tk-banner-content__desc {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(8, 16, 30, 0.34);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+html:not(.dark) .VPSidebar {
+  background: rgba(255, 255, 255, 0.66);
+  border-right: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+html:not(.dark) .vp-doc blockquote {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: rgba(15, 23, 42, 0.08);
+  border-left-color: var(--vp-c-brand-1);
+}
+
+html:not(.dark) .blog-overview__tags span {
+  color: var(--vp-c-text-2);
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+/* 浅色模式下 banner 底部要渐到白，否则会压出一条黑带 */
+html:not(.dark) .tk-banner-bg-image.full .mask {
+  background:
+    linear-gradient(
+      to top,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0.94) 8%,
+      rgba(255, 255, 255, 0.66) 24%,
+      rgba(255, 255, 255, 0.22) 42%,
+      transparent 62%
+    ),
+    linear-gradient(90deg, rgba(4, 9, 18, 0.58), rgba(4, 9, 18, 0.28) 46%, rgba(4, 9, 18, 0.6));
+}
+
+/* ---------- 7. 动效与降级 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-post-item,
+  .tk-post-item-card,
+  .blog-overview__card,
+  .blog-overview__cover img,
+  .tk-post-item .cover-img {
+    transition: none;
+  }
+
+  .tk-post-item:hover,
+  .tk-post-item-card:hover,
+  .blog-overview__card:hover {
+    transform: none;
+  }
+}
+
+/* 移动端：首屏再矮一点，玻璃少一点开销 */
+@media (max-width: 640px) {
+  .tk-banner-bg-image.full,
+  .tk-banner.is-full-img .tk-banner__content {
+    height: 62vh;
+  }
+
+  .tk-banner-content__desc {
+    padding: 7px 18px;
+    font-size: 13.5px;
+    letter-spacing: 0.08em;
+  }
+
+  .tk-post-item,
+  .blog-overview__card {
+    border-radius: 14px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* 移动端回到单列，封面恢复比例 */
+  .blog-overview__card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .blog-overview__cover {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  /* 筛选与快捷入口：允许收缩，别把页面撑出横向滚动 */
+  .blog-overview__tools,
+  .blog-overview__filters,
+  .blog-overview__quicklinks {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .blog-overview__filters button,
+  .blog-overview__quicklinks a {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  html.dark body::after {
+    display: none;
+  }
+}
